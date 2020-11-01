@@ -18,7 +18,9 @@ class LoginController extends Controller
     public function resendOtp(Request $request){
         $sendsms = new AllFunction();
         $otp = $sendsms->sendSms($request->mobile_no);
-        $data = User::where('mobile_no',$request->mobile_no)->get()->first();
+        $data = User::where('mobile_no',$request->mobile_no)
+                ->get()
+                ->first();
         $data->verification_code = $otp;
         $data1 = $data->save();
         if($data1 == 1){
@@ -53,11 +55,11 @@ class LoginController extends Controller
                     
                 }
             }else{
-                return array('status'=>false,'msg'=>'some problem occured');
+                return array('status'=>false,'msg'=>'Some Problem Occured');
             }
             
         }catch(Exception $e){
-            return array('status'=>false,'msg'=>'Some error occured');
+            return array('status'=>false,'msg'=>'Some Error Occured');
         }
     }
 
