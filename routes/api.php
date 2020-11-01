@@ -22,16 +22,14 @@ Route::post('/register',[LoginController::class , 'register']);
 Route::post('/login',[LoginController::class , 'login']);
 Route::post('/resendotp' , [LoginController::class , 'resendotp']);
 
+
 // Route::group([
-
-//     'middleware' => 'api',
-//     'prefix' => 'auth'
-
-// ], function ($router) {
-
-//     Route::post('login', 'AuthController@login');
-//     Route::post('logout', 'AuthController@logout');
-//     Route::post('refresh', 'AuthController@refresh');
-//     Route::post('me', 'AuthController@me');
-
+//         'middleware' => 'auth:sanctum',
+//         'prefix'=>'v1'
+//     ], function () {
+//         Route::get('/user',[LoginController::class , 'user']);
 // });
+Route::group(['middleware' => 'auth:sanctum','prefix' => 'v1'], function(){
+    Route::get('/user',[LoginController::class , 'user']);
+
+    });

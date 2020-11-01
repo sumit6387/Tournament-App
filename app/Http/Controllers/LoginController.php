@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\User;
+use App\Models\Token;
 use App\Functions\AllFunction;
-use Session;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -30,7 +31,7 @@ class LoginController extends Controller
         }else{
             return response()->json([
                 'status' => false , 
-                'msg' => 'Some Error occured'
+                'msg' => 'OTP not send. Try Again!'
             ]);
         }
     }
@@ -64,11 +65,25 @@ class LoginController extends Controller
     public function login(Request $req){
         $data = User::where('mobile_no',$req->mobile_no)->get()->first();
         if (Hash::check($req->password, $data->password)) {
+            $user = Token::where('tokenable_id',$data->id)->get()->first();
+                $token = $data->createToken('my-app-token')->plainTextToken;
             return response()->json([
+                'status' => true,
                 'msg' => 'Login Successfully',
-                'parmanently_token' => Str::random(30)
+                'token' => $token
+        ]);
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => 'Credential are wrong',
         ]);
         }
         
+    }
+    public function user(){
+        return response()->json([
+            'status' =>true,
+            'data'=>User::all()
+        ]);
     }
 }

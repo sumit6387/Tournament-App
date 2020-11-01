@@ -20,9 +20,10 @@ class CreateUsersTable extends Migration
             $table->string('mobile_no')->unique();
             $table->string('password');
             $table->string('verification_code')->nullable();
-            $table->string('memberships')->nullable();
-            $table->string('membership_exDate')->nullable();
+            $table->string('membership')->nullable();
+            $table->string('Ex_date_membership')->nullable();
             $table->string('reset_password_verify')->nullable();
+            $table->rememberToken();
             $table->timestamps();
         });
     }
