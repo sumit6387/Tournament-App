@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\User;
+use App\Models\UserInfo;
 use App\Functions\AllFunction;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +22,12 @@ class LoginController extends Controller
         $data = User::where('mobile_no',$request->mobile_no)
                 ->get()
                 ->first();
+            if(!$otp){
+                return response()->json([
+                    'status' =>false,
+                    'msg' =>'OTP Not Sent. Try Again.'
+                ]);
+            }
         $data->verification_code = $otp;
         $data1 = $data->save();
         if($data1 == 1){
@@ -49,7 +56,13 @@ class LoginController extends Controller
             $new_user->verification_code = $otp;
             if($otp){
                 if($new_user->save()==1){
+                    $referal = Str::random(6);
                     $token = Str::random(20);
+                    $user_info = new UserInfo();
+                    $user_info->user_id = $new_user->id;
+                    $user_info->token = $token;
+                    $user_info->refferal_code = $referal;
+                    $user_info->save();
                     return array('status'=>true,'msg'=>'user registered successfully','token'=>$token,'otp'=>$new_user->verification_code);
                 }else{
                     
