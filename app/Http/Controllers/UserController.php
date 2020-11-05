@@ -26,7 +26,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(),['image'=>'required']);
         if($validator->passes()){
             $filename = Str::random(15).".jpg";
-            $path = $request->file('image')->move(public_path('/images/user_image'),$filename);
+            $path = $request->file('image')->move(public_path('/images/user image'),$filename);
             $url = url('/images/user_image/'.$filename);
             $user_info = UserInfo::where('user_id' , auth()->user()->id)->get()->first();
             $user_info->profile_image = $url;

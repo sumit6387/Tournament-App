@@ -13,17 +13,10 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    public function uploadImage(Request $req){
-        
-    }
-    public function test(){
-        echo Str::random(20);
-    }
 
     public function resendOtp(Request $request){
         $validator = Validator::make($request->all(),['mobile_no'=>'required']);
         if($validator->passes()){
-
             $sendsms = new AllFunction();
             $otp = $sendsms->sendSms($request->mobile_no);
             $data = User::where('mobile_no',$request->mobile_no)
