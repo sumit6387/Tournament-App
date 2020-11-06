@@ -1,6 +1,6 @@
 <?php
     namespace App\Functions;
-    
+    use Mail;
     class AllFunction{
         public function sendSms($number){
             $curl = curl_init();
@@ -36,6 +36,27 @@
                 }
 
             }
+
+            public function sendEmail($email){
+                $code = rand(0000,9999);
+                $to_name = 'User';
+                $to_email = $email;
+                $data = ['code'=> $code];
+               $status =  Mail::send('emails.verificationEmail', $data, function($message) use ($to_name, $to_email) {
+                    $message->to($to_email, $to_name)
+                    ->subject('Email Verification of Tournament App');
+                    $message->from('groceryshop6387@gmail.com','Tournament App');
+                });
+                return $code;
+                       
+        }
+
+
+
+
+
+
+
         }
             
 
