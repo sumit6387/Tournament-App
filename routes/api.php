@@ -22,13 +22,6 @@ Route::post('/register',[LoginController::class , 'register']);
 Route::post('/login',[LoginController::class , 'login']);
 Route::post('/resendotp' , [LoginController::class , 'resendotp']);
 
-
-// Route::group([
-//         'middleware' => 'auth:sanctum',
-//         'prefix'=>'v1'
-//     ], function () {
-//         Route::get('/user',[LoginController::class , 'user']);
-// });
 Route::group(['middleware' => 'auth:sanctum','prefix' => 'v1'], function(){
     Route::get('/user',[LoginController::class , 'user']);
 });
