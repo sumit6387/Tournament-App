@@ -5,43 +5,29 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\User;
-use App\Models\UserInfo;
-use Validator;
+use App\Models\Token;
 use App\Functions\AllFunction;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-
     public function resendOtp(Request $request){
-        $validator = Validator::make($request->all(),['mobile_no'=>'required']);
-        if($validator->passes()){
-            $sendsms = new AllFunction();
-            $otp = $sendsms->sendSms($request->mobile_no);
-            $data = User::where('mobile_no',$request->mobile_no)
-                    ->get()
-                    ->first();
-                if(!$otp){
-                    return response()->json([
-                        'status' =>false,
-                        'msg' =>'OTP Not Sent. Try Again.'
-                    ]);
-                }
-            $data->verification_code = $otp;
-            $data1 = $data->save();
-            if($data1 == 1){
-                return response()->json([
-                    'status' => true,
-                    'otp' => $otp,
-                    'msg' => 'OTP resend successfully'
-                ]);
-            }else{
-                return response()->json([
-                    'status' => false , 
-                    'msg' => 'OTP not send. Try Again!'
-                ]);
-            }
+        $sendsms = new AllFunction();
+        $otp = $sendsms->sendSms($request->mobile_no);
+        $data = User::where('mobile_no',$request->mobile_no)
+                ->get()
+                ->first();
+        //Here you have to create new Otp then update and resend to the user
+        //Please do not use the old OTP 
+        $data->verification_code = $otp;
+        $data1 = $data->save();
+        if($data1 == 1){
+            return response()->json([
+                'status' => true,
+                'otp' => $otp,
+                'msg' => 'OTP resend successfully'
+            ]);
         }else{
             return response()->json([
                 'status' => false , 
@@ -87,12 +73,10 @@ class LoginController extends Controller
                 }catch(\Exception $e){
                     return array('status'=>false,'msg'=>'Some Error Occured');
                 }
-        }else{
-            return response()->json([
-                    'status'=>false,
-                    'msg'=>$validator->errors()->all()
-                ]);
-        }
+            }else{
+                return array('status'=>false,'msg'=>'Some Problem Occured');
+            }
+        
     }
 
     public function login(Request $req){
@@ -157,6 +141,4 @@ class LoginController extends Controller
             ]);
         }
     }
-
-    
 }
