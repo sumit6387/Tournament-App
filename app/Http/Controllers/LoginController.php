@@ -67,16 +67,18 @@ class LoginController extends Controller
                         if($new_user->save()==1){
                             $image = "https://ui-avatars.com/api/?name=".$new_user->name;
                             $referal = Str::random(6);
-                            $token = Str::random(20);
                             $user_info = new UserInfo();
                             $user_info->user_id = $new_user->id;
-                            $user_info->token = $token;
                             $user_info->refferal_code = $referal;
                             $user_info->profile_image = $image;
                             $user_info->save();
-                            return array('status'=>true,'msg'=>'user registered successfully','token'=>$token,'otp'=>$new_user->verification_code);
+                            return response()->json(array('status'=>true,'msg'=>'user registered successfully','otp'=>$new_user->verification_code));
                         }else{
-                            
+                            return response()->json([
+
+                                'status' => false,
+                                'msg' => 'Some Problem Occured'
+                            ]);
                         }
                     }else{
                         return array('status'=>false,'msg'=>'Some Problem Occured');
