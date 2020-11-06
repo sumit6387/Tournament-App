@@ -18,8 +18,8 @@ class CreateUserInfoTable extends Migration
             $table->string('user_id');
             $table->string('token');
             $table->string('profile_image')->nullable();
-            $table->string('player_id_name')->nullable();
-            $table->string('game')->nullable(); //which game play user
+           // $table->string('player_id_name')->nullable();
+           // $table->string('game')->nullable(); //which game play user
             $table->string('refferal_code'); 
             $table->string('ref_by')->nullable();
             $table->string('first_time_payment')->default('0');
