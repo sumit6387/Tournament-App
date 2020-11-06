@@ -6,9 +6,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\Token;
+use App\Models\UserInfo;
 use App\Functions\AllFunction;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+
 
 class LoginController extends Controller
 {
@@ -18,8 +21,6 @@ class LoginController extends Controller
         $data = User::where('mobile_no',$request->mobile_no)
                 ->get()
                 ->first();
-        //Here you have to create new Otp then update and resend to the user
-        //Please do not use the old OTP 
         $data->verification_code = $otp;
         $data1 = $data->save();
         if($data1 == 1){
@@ -39,7 +40,6 @@ class LoginController extends Controller
     public function register(Request $request){
         $validator = Validator::make($request->all(),['name'=>'required','mobile_no'=>'required','email'=>'required','password'=>'required']);
         if($validator->passes()){
-    
                 try{
                     $new_user = new User();
                     $sendsms = new AllFunction();
@@ -70,7 +70,7 @@ class LoginController extends Controller
                         return array('status'=>false,'msg'=>'Some Problem Occured');
                     }
                     
-                }catch(\Exception $e){
+                }catch(Exception $e){
                     return array('status'=>false,'msg'=>'Some Error Occured');
                 }
             }else{
@@ -94,21 +94,23 @@ class LoginController extends Controller
                 return response()->json([
                     'status' => false,
                     'msg' => 'Credential are wrong',
-            ]);
-            }
+                    ]);
+                }
         }else{
             return response()->json([
                 'status' => false,
                 'msg' => $validator->errors()->all(),
-        ]);
-        }
-        
+                ]);
+            }
     }
 
     public function verifyOtp(Request $request){
         $validator = Validator::make($request->all(),['mobile_no'=>'required','otp'=>'required']);
         if($validator->passes()){
-            $user = User::where('mobile_no',$request->mobile_no)->where('verification_code' , $request->otp)->get()->first();
+            $user = User::where('mobile_no',$request->mobile_no)
+            ->where('verification_code' , $request->otp)
+            ->get()
+            ->first();
             if(!$user){
                 return response()->json([
                     'status' => false,
