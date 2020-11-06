@@ -31,7 +31,7 @@ class LoginController extends Controller
         }else{
             return response()->json([
                 'status' => false , 
-                'msg' => 'OTP not send. Try Again!'
+                'msg' => $validator->errors()->all()
             ]);
         }
     }
@@ -63,27 +63,65 @@ class LoginController extends Controller
     }
 
     public function login(Request $req){
-        $data = User::where('mobile_no',$req->mobile_no)->get()->first();
-        if (Hash::check($req->password, $data->password)) {
-            $user = Token::where('tokenable_id',$data->id)->get()->first();
-                $token = $data->createToken('my-app-token')->plainTextToken;
-            return response()->json([
-                'status' => true,
-                'msg' => 'Login Successfully',
-                'token' => $token
-        ]);
+        $validator = Validator::make($req->all(),['mobile_no'=>'required']);
+        if($validator->passes()){
+            $data = User::where('mobile_no',$req->mobile_no)->get()->first();
+            if (Hash::check($req->password, $data->password)) {
+                    $token = $data->createToken('my-app-token')->plainTextToken;
+                return response()->json([
+                    'status' => true,
+                    'msg' => 'Login Successfully',
+                    'token' => $token
+            ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Credential are wrong',
+            ]);
+            }
         }else{
             return response()->json([
                 'status' => false,
-                'msg' => 'Credential are wrong',
+                'msg' => $validator->errors()->all(),
         ]);
         }
         
     }
-    public function user(){
-        return response()->json([
-            'status' =>true,
-            'data'=>User::all()
-        ]);
+
+    public function verifyOtp(Request $request){
+        $validator = Validator::make($request->all(),['mobile_no'=>'required','otp'=>'required']);
+        if($validator->passes()){
+            $user = User::where('mobile_no',$request->mobile_no)->where('verification_code' , $request->otp)->get()->first();
+            if(!$user){
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Enter Right Credentials'
+                ]); 
+            }
+            if($user->verified== 1){
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'You Are Already Verified'
+                ]);
+            }
+            if($user){
+                $user->verified = '1';
+                $user->update();
+                return response()->json([
+                    'status' => true,
+                    'msg' => 'OTP Verified Successfully'
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Enter Valid OTP'
+                ]);
+            }
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => $validator->errors()->all();
+            ]);
+        }
     }
 }

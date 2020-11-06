@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\LoginController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,4 +16,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/test',[LoginController::class , 'test']);
+// Route::get('/test',[LoginController::class , 'test']);
+// Route::view('/image','images');
+// Route::post('/uploadImage',[LoginController::class , 'uploadImage']);
