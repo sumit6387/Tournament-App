@@ -10,7 +10,6 @@ use App\Functions\AllFunction;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Validator;
-// use Illuminate\Routing\Route;
 
 
 

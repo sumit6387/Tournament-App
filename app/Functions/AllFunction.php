@@ -38,7 +38,7 @@
             }
 
             public function sendEmail($email){
-                $code = rand(0000,9999);
+                $code = rand(1111,9999);
                 $to_name = 'User';
                 $to_email = $email;
                 $data = ['code'=> $code];
