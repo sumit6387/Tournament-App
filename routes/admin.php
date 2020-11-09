@@ -11,6 +11,9 @@ Route::post('/verifyotp',[AdminController::class , 'verifyOtp']);
 Route::post('/resendotp' , [AdminController::class , 'resendOtp']);
 
 Route::group(['middleware' => 'auth:sanctum'] , function(){
-    Route::get('/user',[AdminController::class , 'user']);
+    Route::group(['middleware' => 'CheckAdmin'] , function(){
+        Route::get('/user',[AdminController::class , 'user'])->middleware('CheckAdmin');
+    });
 });
+
 
