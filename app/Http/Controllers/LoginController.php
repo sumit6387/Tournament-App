@@ -10,30 +10,38 @@ use App\Functions\AllFunction;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Validator;
+use Exception;
 
 
 
 class LoginController extends Controller
 {
     public function resendOtp(Request $request){
-        $sendsms = new AllFunction();
-        $otp = $sendsms->sendSms($request->mobile_no);
-        $data = User::where('mobile_no',$request->mobile_no)
-                ->get()
-                ->first();
-        $data->verification_code = $otp;
-        $data1 = $data->save();
-        if($data1 == 1){
+        try{
+            $sendsms = new AllFunction();
+            $otp = $sendsms->sendSms($request->mobile_no);
+            $data = User::where('mobile_no',$request->mobile_no)
+                    ->get()
+                    ->first();
+            $data->verification_code = $otp;
+            $data1 = $data->save();
+            if($data1 == 1){
+                return response()->json([
+                    'status' => true,
+                    'otp' => $otp,
+                    'msg' => 'OTP resend successfully'
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false , 
+                    'msg' => $validator->errors()->all()
+                ]);
+            }
+        }catch(Exception $e){
             return response()->json([
-                'status' => true,
-                'otp' => $otp,
-                'msg' => 'OTP resend successfully'
-            ]);
-        }else{
-            return response()->json([
-                'status' => false , 
-                'msg' => $validator->errors()->all()
-            ]);
+                'status' => false,
+                'msg' => 'Something went wrong'
+             ]);
         }
     }
 
@@ -71,7 +79,7 @@ class LoginController extends Controller
                     }
                     
                 }catch(Exception $e){
-                    return array('status'=>false,'msg'=>'Some Error Occured');
+                    return array('status'=>false,'msg'=>'Entered Email Or Mobile No alredy registered.');
                 }
             }else{
                 return array('status'=>false,'msg'=>'Some Problem Occured');
@@ -82,6 +90,7 @@ class LoginController extends Controller
     public function login(Request $req){
         $validator = Validator::make($req->all(),['mobile_no'=>'required']);
         if($validator->passes()){
+          try{
             $data = User::where('mobile_no',$req->mobile_no)->get()->first();
             if (Hash::check($req->password, $data->password)) {
                     $token = $data->createToken('my-app-token')->plainTextToken;
@@ -96,7 +105,13 @@ class LoginController extends Controller
                     'msg' => 'Credential are wrong',
                     ]);
                 }
-        }else{
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Something Went Wrong'
+            ]);
+        }
+    }else{
             return response()->json([
                 'status' => false,
                 'msg' => $validator->errors()->all(),
@@ -107,6 +122,7 @@ class LoginController extends Controller
     public function verifyOtp(Request $request){
         $validator = Validator::make($request->all(),['mobile_no'=>'required','otp'=>'required']);
         if($validator->passes()){
+        try{
             $user = User::where('mobile_no',$request->mobile_no)
             ->where('verification_code' , $request->otp)
             ->get()
@@ -136,7 +152,13 @@ class LoginController extends Controller
                     'msg' => 'Enter Valid OTP'
                 ]);
             }
-        }else{
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false , 
+                'msg' => 'Something Went Wrong'
+                ]);
+        }
+    }else{
             return response()->json([
                 'status' => false,
                 'msg' => $validator->errors()->all()

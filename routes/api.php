@@ -11,8 +11,7 @@ Route::group(['prefix' => 'v1','middleware' => 'CheckVersion'],function(){
     Route::post('/login',[LoginController::class , 'login']);
     Route::post('/resendotp' , [LoginController::class , 'resendotp']);
     Route::post('/verifyotp',[LoginController::class , 'verifyOtp']);
-
-    Route::group(['middleware' => 'auth:sanctum'], function(){
+    Route::group(['middleware' => 'auth:sanctum','api'], function(){
         Route::get('/user', [UserController::class , 'user']);
         Route::post('/uploadImage',[UserController::class , 'store']);
         Route::post('/apply_ref_code',[UserController::class,'applyRefCode'])

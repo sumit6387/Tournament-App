@@ -15,6 +15,7 @@ class AdminController extends Controller
     public function register(Request $request){
         $valid = Validator::make($request->all(),['name'=>'required','email'=>'required','password'=>'required']);
         if($valid->passes()){
+          try{
             $user = new Admin();
             $secret_key = 'AkhilFarhanSumit';
             $user->name = $request->name;
@@ -32,7 +33,13 @@ class AdminController extends Controller
                     'msg' => 'Some Error Occur'
                  ]);
             }
-        }else{
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Something Went Wrong'
+            ]);
+        }
+    }else{
             return response()->json([
                 'status' =>false , 
                 'msg' => $valid->errors()->all()
@@ -44,6 +51,7 @@ class AdminController extends Controller
     public function login(Request $request){
         $valid = Validator::make($request->all(),['email' => 'required' , 'password' => 'required', 'secret_key' => 'required']);
         if($valid->passes()){
+          try{
             $admin = Admin::where('email', $request->email)->where('secret_key', $request->secret_key)->get()->first();
             if(Hash::check($request->password, $admin->password)){
                 $token = $admin->createToken('my-app-token')->plainTextToken;
@@ -67,7 +75,13 @@ class AdminController extends Controller
                     'msg' => 'Incorrect Password'
                 ]);
             }
-        }else{
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Something Went Wrong'
+            ]);
+        }
+    }else{
             return response()->json([
                 'status' => false,
                 'msg' => $valid->errors()->all()
@@ -78,6 +92,7 @@ class AdminController extends Controller
     public function verifyOtp(Request $request){
         $valid = Validator::make($request->all() , ['email' => 'required' , 'otp' => 'required']);
         if($valid->passes()){
+          try{
             $user = Admin::where(['email'=>$request->email , 'email_verification_code' => $request->otp])->get()->first();
             if($user){
                 return response()->json([
@@ -90,6 +105,12 @@ class AdminController extends Controller
                     'msg' => 'Enter Right OTP'
                 ]);
             }
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Something went wrong'
+            ]);
+        }
         }else{
             return response()->json([
                 'status' => false,
@@ -101,6 +122,7 @@ class AdminController extends Controller
     public function resendOtp(Request $request){
         $valid = Validator::make($request->all() , ['email' => 'required']);
         if($valid->passes()){
+          try{
             $admin = Admin::where('email' , $request->email)->get()->first();
             if($admin){
                 $email = new AllFunction();
@@ -123,7 +145,13 @@ class AdminController extends Controller
                     'msg' => 'Try Again'
                 ]);
             }
-        }else{
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Something went wrong'
+            ]);
+        }
+    }else{
             return response()->json([
                 'status' => false,
                 'msg' => $valid->errors()->all()
