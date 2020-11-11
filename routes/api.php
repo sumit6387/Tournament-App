@@ -17,6 +17,11 @@ Route::group(['prefix' => 'v1','middleware' => 'CheckVersion'],function(){
         Route::post('/apply_ref_code',[UserController::class,'applyRefCode'])
         ->middleware('CheckRefCode');  
     });
+    Route::fallback(function(){
+        return response()->json([
+            'status' => false,
+            'msg' => 'Route Not Found'
+        ]);
+    });
+    
 });
-
-
