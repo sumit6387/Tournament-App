@@ -18,9 +18,9 @@ Route::group(['middleware' => 'auth:sanctum' , 'api'] , function(){
         Route::post('/addVersion' , [MainController::class , 'addVersion']);
         Route::post('/addGame' , [MainController::class , 'addGame']);
         Route::post('/addMembership' , [MainController::class , 'addMembership']);
+        Route::post('/addTournament' , [MainController::class , 'addTournament']);
     });
 });
-
 
 Route::fallback(function(){
     return response()->json([

@@ -1,6 +1,11 @@
 <?php
     namespace App\Functions;
     use Mail;
+    use App\Models\Tournament;
+    use App\Models\User;
+    use App\Models\Admin;
+    use Exception;
+
     class AllFunction{
         public function sendSms($number){
             $curl = curl_init();
@@ -50,13 +55,36 @@
                 return $code;
                        
         }
-
-
-
-
-
-
-
+        public function registerTournament($data){
+            try{
+                $new_tournament = new Tournament();
+                $new_tournament->prize_pool = $data['prize_pool'];
+                $new_tournament->winning = $data['winning'];
+                $new_tournament->per_kill = $data['per_kill'];
+                $new_tournament->entry_fee = $data['entry_fee'];
+                $new_tournament->type = $data['type'];
+                $new_tournament->map = $data['map'];
+                $new_tournament->max_user_participated = $data['max_user_participated'];
+                $new_tournament->game_type = $data['game_type'];
+                $new_tournament->tournament_type = $data['tournament_type'];
+                $new_tournament->tournament_type = $data['tournament_type'];
+                $email = User::where('email' , auth()->user()->email)->get()->first();
+                if($email){
+                    $created_by = 'User';
+                    $new_tournament->id = $email->id;
+                }
+                $record = Admin::where('email' , auth()->user()->email)->get()->first();
+                if($record){
+                    $created_by = 'Admin';
+                }
+                $new_tournament->created_by = $created_by;
+                $new_tournament->tournament_start_at = $data['tournament_start_at'];
+                $new_tournament->save();
+                return true;
+            }catch(Exception $e){
+                return false;
+            }
+        }
         }
             
 

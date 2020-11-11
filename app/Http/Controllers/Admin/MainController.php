@@ -11,6 +11,7 @@ use App\Models\Membership;
 use Validator;
 use Exception;
 use Illuminate\Support\Str;
+use App\Functions\AllFunction;
 
 class MainController extends Controller
 {
@@ -140,5 +141,47 @@ class MainController extends Controller
                   'msg' => $valid->errors()->all()
               ]);
           }
+    }
+
+    public function addTournament(Request $request){
+        $valid = Validator::make($request->all(),[
+            'prize_pool' => 'required',
+            'winning' => 'required',
+            'per_kill' => 'required',
+            'entry_fee' => 'required',
+            'type' => 'required',
+            'map' => 'required',
+            'max_user_participated' => 'required',
+            'game_type' => 'required',
+            'tournament_type' => 'required',
+            'tournament_start_at' => 'required'
+        ]);
+        if($valid->passes()){
+            try{
+                $new = new AllFunction();
+                $data = $new->registerTournament($request->all());
+                if($data == true){
+                    return response()->json([
+                        'status' => true,
+                        'msg' => 'Tournament Registered'
+                    ]);
+                }else{
+                    return response()->json([
+                        'status' => true,
+                        'msg' => 'Some problemm occur! Try Again'
+                    ]);
+                }
+            }catch(Exception $e){
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Something Went Wrong'
+                ]);
+            }
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => $valid->errors()->all()
+            ]);
+        }
     }
 }
