@@ -22,12 +22,12 @@ class CreateHistoryTable extends Migration
             $table->string('type'); //solo , squad,Duo
             $table->string('map');
             $table->boolean('completed')->default(false); //1 for completed oro for  not
-            $table->string('joined_user'); // how many user joined tournament
+            $table->string('joined_user')->nullable(); // how many user joined tournament
             $table->string('max_user_participated'); //max user participate in the tournaments
             $table->string('game_type'); //Faug,Pubg
             $table->string('tournament_type'); //public/private
             $table->string('created_by'); //user or admin
-            $table->string('id'); //if tournament created by user then its user_id
+            $table->string('id')->nullable(); //if tournament created by user then its user_id
             $table->string('tournament_start_at'); //starting type of tournament
             $table->timestamps();
         });

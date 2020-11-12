@@ -8,6 +8,8 @@ use App\Models\Announcement;
 use App\Models\AppVersion;
 use App\Models\Game;
 use App\Models\Membership;
+use App\Models\Tournament;
+use App\Models\History;
 use Validator;
 use Exception;
 use Illuminate\Support\Str;
@@ -184,4 +186,64 @@ class MainController extends Controller
             ]);
         }
     }
+
+    public function updateIdPassword(Request $request){
+        $valid = Validator::make($request->all(),['tournament_id' => 'required','user_id' => 'required' , 'password' => 'required']);
+        if($valid->passes()){
+            $tournament = Tournament::where('tournament_id' , $request->tournament_id)->update(['user_id' => $request->user_id,'password' => $request->password]);
+            if($tournament){
+                return response()->json([
+                    'status' => true,
+                    'msg' => 'UserId And Password Added'
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Something Went Wrong'
+                ]);
+            }
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => $valid->errors()->all()
+            ]);
+        }
+        return $request->all();
+    }
+
+    public function UpdateTournamentComplete(Request $req){
+        $data = Tournament::where('tournament_id',$req->tournament_id)->update(['completed' => 1]);
+        
+        if($data){
+            $data1 = Tournament::where('tournament_id',$req->tournament_id)->get()->first();
+            $history = new History();
+            $history->tournament_id  = $data1->tournament_id;
+            $history->prize_pool  = $data1->prize_pool;
+            $history->winning  = $data1->winning;
+            $history->per_kill  = $data1->per_kill;
+            $history->entry_fee  = $data1->entry_fee;
+            $history->type  = $data1->type;
+            $history->map  = $data1->map;
+            $history->completed  = $data1->completed;
+            $history->joined_user  = $data1->joined_user;
+            $history->max_user_participated  = $data1->max_user_participated;
+            $history->game_type  = $data1->game_type;
+            $history->tournament_type  = $data1->tournament_type; 
+            $history->created_by  = $data1->created_by; 
+            $history->id  = $data1->id; 
+            $history->tournament_start_at  = $data1->tournament_start_at; 
+            $history->save();
+            return response()->json([
+                'status' => true,
+                'msg' => 'status updated'
+            ]);
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => 'Something Went Wrong'
+            ]);
+        }
+        
+    }
+
 }

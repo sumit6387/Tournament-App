@@ -16,9 +16,10 @@ class CreateTransactionsTable extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->string('user_id');
-            $table->string('ammount');
-            $table->string('payment_id');
-            $table->string('razorpay_id')->nullable();
+            $table->string('reciept_id');
+            $table->string('amount');
+            $table->string('payment_id'); //this is order id of requesting payment
+            $table->string('razorpay_id')->nullable(); //that is the razorpay id
             $table->boolean('payment_done')->default(false);
             $table->timestamps();
         });
