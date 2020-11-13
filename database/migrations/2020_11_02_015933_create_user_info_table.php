@@ -18,6 +18,8 @@ class CreateUserInfoTable extends Migration
             $table->string('user_id');
             $table->string('profile_image')->nullable();
             $table->string('gender')->nullable();
+            $table->string('state')->nullable();
+            $table->string('country')->nullable();
             $table->string('refferal_code'); 
             $table->string('ref_by')->nullable();
             $table->string('first_time_payment')->default('0');

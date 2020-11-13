@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ShowController;
 
 Route::group(['prefix' => 'v1','middleware' => 'CheckVersion'],function(){
     Route::post('/register',[LoginController::class , 'register']);
@@ -13,13 +14,20 @@ Route::group(['prefix' => 'v1','middleware' => 'CheckVersion'],function(){
     Route::post('/verifyotp',[LoginController::class , 'verifyOtp']);
     Route::group(['middleware' => 'auth:sanctum','api'], function(){
         Route::get('/user', [UserController::class , 'user']);
-        Route::post('/uploadImage',[UserController::class , 'store']);
+        Route::post('/updatedata',[UserController::class , 'store']);
         Route::post('/apply_ref_code',[UserController::class,'applyRefCode'])
         ->middleware('CheckRefCode');  
         Route::post('/payment-request' , [PaymentController::class , 'createPaymentOrder']);
         Route::post('/joinTournament' , [UserController::class , 'joinTournament']);
         Route::post('/addTournament' , [UserController::class , 'createUserTournament']);
         Route::post('/updatePassword' , [UserController::class , 'updatePassword']);
+
+
+
+
+
+        // show data
+        Route::get('/showtournament' , [ShowController::class , 'showTournaments']);
     });
     Route::fallback(function(){
         return response()->json([

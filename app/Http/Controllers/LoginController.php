@@ -13,7 +13,6 @@ use Validator;
 use Exception;
 
 
-
 class LoginController extends Controller
 {
     public function resendOtp(Request $request){
