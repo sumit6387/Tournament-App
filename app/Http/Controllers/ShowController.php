@@ -8,14 +8,14 @@ use App\Models\Tournament;
 class ShowController extends Controller
 {
     public function showTournaments(){
-        $adminTournament = Tournament::where(['created_by'=>'Admin','tournament_type' => 'public'])->get();
+        $adminTournament = Tournament::where(['created_by'=>'Admin','tournament_type' => 'public','completed'=> 0])->get();
         if($adminTournament){
             $tour = true;
         }else{
             $adminTournament = "Nothing";
         }
 
-        $userTournament = Tournament::where(['created_by'=>'User','tournament_type' => 'public'])->get();
+        $userTournament = Tournament::where(['created_by'=>'User','tournament_type' => 'public','completed'=> 0])->get();
         if($userTournament){
             $userTour = true;
         }else{

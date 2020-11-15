@@ -9,6 +9,7 @@ use App\Models\AppVersion;
 use App\Models\Game;
 use App\Models\Membership;
 use App\Models\Tournament;
+use App\Models\Result;
 use Validator;
 use Exception;
 use Illuminate\Support\Str;
@@ -211,19 +212,37 @@ class MainController extends Controller
     }
 
     public function UpdateTournamentComplete(Request $req){
-        $data = Tournament::where('tournament_id',$req->tournament_id)->update(['completed' => 1]);
-        if($data){
-            return response()->json([
-                'status' => true,
-                'msg' => 'status updated'
-            ]);
+        $valid = Validator::make($req->all(),['tournament_id'=> 'required' , 'results' => 'required']);
+        if($valid->passes()){
+            $result = new Result();
+            $result->tournament_id = $req->tournament_id;
+            $result->results = $req->results;
+            $winner = json_decode($req->results);
+            foreach ($winner as $key => $value) {
+                if($value->winner == 1){
+                    $result->winner_id = $value->user_id;
+                }
+            }
+            $result->save();
+            $data = Tournament::where('tournament_id',$req->tournament_id)->update(['completed' => 1]);
+            if($data){
+                return response()->json([
+                    'status' => true,
+                    'msg' => 'status updated'
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Something Went Wrong'
+                ]);
+            }
+        
         }else{
             return response()->json([
                 'status' => false,
-                'msg' => 'Something Went Wrong'
+                'msg' => $valid->errors()->all()
             ]);
         }
-        
     }
 
 

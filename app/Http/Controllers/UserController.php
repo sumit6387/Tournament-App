@@ -174,6 +174,15 @@ class UserController extends Controller
     public function updatePassword(Request $request){
         $valid = Validator::make($request->all(),['tournament_id' => 'required','user_id' => 'required' , 'password' => 'required']);
         if($valid->passes()){
+            $tournament1 = Tournament::where(['tournament_id' => $request->tournament_id , 'created_by' => 'User','id'=>auth()->user()->id])->get()->first();
+            $arr = explode(',',$tournament1->joined_user);
+            $resp = count($arr);
+            if($resp< (($tournament1->max_user_participated*50)/100)){
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Minimum 50% user required for start the tournament'
+                ]);
+            }
             $tournament = Tournament::where(['tournament_id' => $request->tournament_id , 'created_by' => 'User','id'=>auth()->user()->id])->update(['user_id' => $request->user_id,'password' => $request->password]);
             if($tournament){
                 return response()->json([
@@ -193,5 +202,7 @@ class UserController extends Controller
             ]);
         }
     }
+
+    
 
 }

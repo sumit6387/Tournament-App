@@ -164,4 +164,16 @@ class LoginController extends Controller
             ]);
         }
     }
+
+    public function check(){
+        $arr = '[{"name" : "sumit" ,"class" : "BTECH CSE" , "roll" : 50},{"name" : "sumit" ,"class" : "BTECH CSE" , "roll" : 50},{"name" : "sumit" ,"class" : "BTECH CSE" , "roll" : 50}]';
+        $arr1 =json_decode($arr);
+        foreach ($arr1 as $key => $value) {
+            print_r($value);
+            echo "<br>";
+            echo $value->name;
+            echo "<br>";
+        }
+        
+    }
 }

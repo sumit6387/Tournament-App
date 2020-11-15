@@ -16,6 +16,6 @@ use App\Http\Controllers\LoginController;
 Route::get('/', function () {
     return view('welcome');
 });
-// Route::get('/test',[LoginController::class , 'test']);
+// Route::get('/test',[LoginController::class , 'check']);
 // Route::view('/image','images');
 // Route::post('/uploadImage',[LoginController::class , 'uploadImage']);
