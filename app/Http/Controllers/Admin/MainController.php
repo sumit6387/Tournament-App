@@ -10,10 +10,13 @@ use App\Models\Game;
 use App\Models\Membership;
 use App\Models\Tournament;
 use App\Models\Result;
+use App\Models\UserInfo;
 use Validator;
 use Exception;
 use Illuminate\Support\Str;
 use App\Functions\AllFunction;
+use App\Events\SubmitIdPassword;
+
 
 class MainController extends Controller
 {
@@ -192,10 +195,12 @@ class MainController extends Controller
         if($valid->passes()){
             $tournament = Tournament::where('tournament_id' , $request->tournament_id)->update(['user_id' => $request->user_id,'password' => $request->password]);
             if($tournament){
-                return response()->json([
-                    'status' => true,
-                    'msg' => 'UserId And Password Added'
-                ]);
+                $user = Tournament::where('tournament_id',$request->tournament_id)->get()->first()->joined_user;
+                event(new SubmitIdPassword($request->user_id,$request->password,$user));
+                // return response()->json([
+                //     'status' => true,
+                //     'msg' => 'UserId And Password Added'
+                // ]);
             }else{
                 return response()->json([
                     'status' => false,
@@ -218,9 +223,15 @@ class MainController extends Controller
             $result->tournament_id = $req->tournament_id;
             $result->results = $req->results;
             $winner = json_decode($req->results);
+            $prize  = new AllFunction();
             foreach ($winner as $key => $value) {
+                //prize distribution 
+                $prize->prizeDistribution($value->user_id,$value->kill,$value->winner,$req->tournament_id);
                 if($value->winner == 1){
                     $result->winner_id = $value->user_id;
+                    $users = UserInfo::where('user_id',$value->user_id)->get()->first();
+                    $users->ptr_reward = $users->ptr_reward+10;
+                    $users->save();
                 }
             }
             $result->save();

@@ -116,6 +116,7 @@ class UserController extends Controller
             }
             $tournament1 = Tournament::where('tournament_id',$request->tournament_id)->update(['joined_user' => $joined_user]);
             $user->wallet_amount = $user->wallet_amount - $tournament->entry_fee;
+            $user->ptr_reward = $user->ptr_reward + 2;
             $user->update();
             return response()->json([
                 'status' => true,

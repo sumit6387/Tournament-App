@@ -3,6 +3,7 @@
     use Mail;
     use App\Models\Tournament;
     use App\Models\User;
+    use App\Models\UserInfo;
     use App\Models\Admin;
     use Exception;
 
@@ -85,7 +86,19 @@
                 return false;
             }
         }
+
+        public function prizeDistribution($id,$kill,$winner,$tournament_id){
+           $users = UserInfo::where('user_id',$id)->get()->first();
+           $tournament = Tournament::where('tournament_id',$tournament_id)->get()->first();
+            $amount = $users->withdrawal_amount;
+            if($winner == 1){
+                $amount = $amount + $tournament->winning;
+            }
+            $amount = $amount + ($tournament->per_kill * $kill);
+            $users->withdrawal_amount = $amount;
+            $users->save();
         }
+}
             
 
 

@@ -16,7 +16,7 @@ class CreateCompletedtournamentResultsTable extends Migration
         Schema::create('completedtournamentResults', function (Blueprint $table) {
             $table->id();
             $table->string('tournament_id');
-            $table->longText('results'); //this field is in the array format
+            $table->longText('results')->unique(); //this field is in the array format
             $table->string('winner_id');
             $table->timestamps();
         });

@@ -15,6 +15,7 @@
         "laravel/framework": "^8.12",
         "laravel/sanctum": "^2.7",
         "laravel/tinker": "^2.5",
+        "pusher/pusher-php-server": "~4.0",
         "razorpay/razorpay": "2.*"
     },
     "require-dev": {
