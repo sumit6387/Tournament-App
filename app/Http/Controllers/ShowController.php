@@ -14,7 +14,6 @@ class ShowController extends Controller
         }else{
             $adminTournament = "Nothing";
         }
-
         $userTournament = Tournament::where(['created_by'=>'User','tournament_type' => 'public','completed'=> 0])->get();
         if($userTournament){
             $userTour = true;

@@ -21,11 +21,8 @@ Route::group(['prefix' => 'v1','middleware' => 'CheckVersion'],function(){
         Route::post('/joinTournament' , [UserController::class , 'joinTournament']);
         Route::post('/addTournament' , [UserController::class , 'createUserTournament']);
         Route::post('/updatePassword' , [UserController::class , 'updatePassword']);
-
-
-
-
-
+        Route::get('/claimPrize',[UserController::class , 'claimPrize']);
+        
         // show data
         Route::get('/showtournament' , [ShowController::class , 'showTournaments']);
     });

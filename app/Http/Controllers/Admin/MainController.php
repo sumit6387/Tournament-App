@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\Announcement;
 use App\Models\AppVersion;
 use App\Models\Game;
-use App\Models\Membership;
 use App\Models\Tournament;
 use App\Models\Result;
 use App\Models\UserInfo;
@@ -119,34 +118,7 @@ class MainController extends Controller
         }
     }
 
-    public function addMembership(Request $request){
-        $valid = Validator::make($request->all() , [
-            'rs'=> 'required',
-            'time' => 'required'
-          ]);
-          if($valid->passes()){
-            try{
-                    $membership = new Membership();
-                    $membership->rs = $request->rs;
-                    $membership->time = $request->time;
-                    $membership->save();
-                    return response()->json([
-                        'status' => true,
-                        'msg' => 'Membership Added'
-                    ]);
-            }catch(Exception $e){
-                return response()->json([
-                    'status' => false,
-                    'msg' => 'Something went wrong'
-                ]);
-            }
-          }else{
-              return response()->json([
-                  'status' => false,
-                  'msg' => $valid->errors()->all()
-              ]);
-          }
-    }
+
 
     public function addTournament(Request $request){
         $valid = Validator::make($request->all(),[

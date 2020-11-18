@@ -175,6 +175,7 @@ class UserController extends Controller
     public function updatePassword(Request $request){
         $valid = Validator::make($request->all(),['tournament_id' => 'required','user_id' => 'required' , 'password' => 'required']);
         if($valid->passes()){
+          try{
             $tournament1 = Tournament::where(['tournament_id' => $request->tournament_id , 'created_by' => 'User','id'=>auth()->user()->id])->get()->first();
             $arr = explode(',',$tournament1->joined_user);
             $resp = count($arr);
@@ -196,7 +197,13 @@ class UserController extends Controller
                     'msg' => 'Something Went Wrong'
                 ]);
             }
-        }else{
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Something Went Wrong'
+            ]);
+        }
+    }else{
             return response()->json([
                 'status' => false,
                 'msg' => $valid->errors()->all()
@@ -204,6 +211,43 @@ class UserController extends Controller
         }
     }
 
-    
+    public function claimPrize(){
+            try{
+                $user = UserInfo::where('user_id',auth()->user()->id)->get()->first();
+                if($user->ptr_reward < 10){
+                    return response()->json([
+                        'status' => false,
+                        'msg' => "Insufficient points"
+                    ]);
+                }else if($user->ptr_reward  >= 100){
+                    $user->ptr_reward = $user->ptr_reward - 100;
+                    $d2 = explode('T',strval(date('c', strtotime('30 days'))));
+                    $users = User::where('id',auth()->user()->id)->get()->first();
+                    $users->membership = 1;
+                    $users->Ex_date_membership = $d2[0];
+                    $users->save();
+                }else if($user->ptr_reward  >= 40 || $user->ptr_reward < 100){
+                    $user->ptr_reward = $user->ptr_reward - 40;
+                    $user->wallet_amount = $user->wallet_amount + 25;
+                }else if($user->ptr_reward  >= 20 || $user->ptr_reward < 40){
+                    $user->ptr_reward = $user->ptr_reward - 20;
+                    $user->wallet_amount = $user->wallet_amount + 12;
+                }else if($user->ptr_reward  >= 10 || $user->ptr_reward < 20){
+                    $user->ptr_reward = $user->ptr_reward - 10;
+                    $user->wallet_amount = $user->wallet_amount + 5;
+                }
+                $user->save();
+                return response()->json([
+                    'status' => true,
+                    'msg' => 'Your reward credited to your account'
+                ]);
+            }catch(Exception $e){
+                return response()->json([
+                    'status' => false,
+                    'msg' => "Something Went Wrong"
+                ]);
+            }
+        
+    }
 
 }

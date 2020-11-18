@@ -64,6 +64,7 @@ class LoginController extends Controller
                             $user_info->user_id = $new_user->id;
                             $user_info->refferal_code = $referal;
                             $user_info->profile_image = $image;
+                            $user_info->gender = $request->gender;
                             $user_info->save();
                             return response()->json(array('status'=>true,'msg'=>'user registered successfully','otp'=>$new_user->verification_code));
                         }else{
@@ -87,7 +88,7 @@ class LoginController extends Controller
     }
 
     public function login(Request $req){
-        $validator = Validator::make($req->all(),['mobile_no'=>'required']);
+        $validator = Validator::make($req->all(),['mobile_no'=>'required','password'=>'required']);
         if($validator->passes()){
           try{
             $data = User::where('mobile_no',$req->mobile_no)->get()->first();
@@ -165,15 +166,15 @@ class LoginController extends Controller
         }
     }
 
-    public function check(){
-        $arr = '[{"name" : "sumit" ,"class" : "BTECH CSE" , "roll" : 50},{"name" : "sumit" ,"class" : "BTECH CSE" , "roll" : 50},{"name" : "sumit" ,"class" : "BTECH CSE" , "roll" : 50}]';
-        $arr1 =json_decode($arr);
-        foreach ($arr1 as $key => $value) {
-            print_r($value);
-            echo "<br>";
-            echo $value->name;
-            echo "<br>";
-        }
+    // public function check(){
+    //     $arr = '[{"name" : "sumit" ,"class" : "BTECH CSE" , "roll" : 50},{"name" : "sumit" ,"class" : "BTECH CSE" , "roll" : 50},{"name" : "sumit" ,"class" : "BTECH CSE" , "roll" : 50}]';
+    //     $arr1 =json_decode($arr);
+    //     foreach ($arr1 as $key => $value) {
+    //         print_r($value);
+    //         echo "<br>";
+    //         echo $value->name;
+    //         echo "<br>";
+    //     }
         
-    }
+    // }
 }
