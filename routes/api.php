@@ -17,13 +17,16 @@ Route::group(['prefix' => 'v1','middleware' => 'CheckVersion'],function(){
         Route::post('/updatedata',[UserController::class , 'store']);
         Route::post('/apply_ref_code',[UserController::class,'applyRefCode'])
         ->middleware('CheckRefCode');  
-        Route::post('/payment-request' , [PaymentController::class , 'createPaymentOrder']);
         Route::post('/joinTournament' , [UserController::class , 'joinTournament']);
         Route::post('/addTournament' , [UserController::class , 'createUserTournament']);
         Route::post('/updatePassword' , [UserController::class , 'updatePassword']);
         Route::get('/claimPrize',[UserController::class , 'claimPrize']);
         
-        // show data
+        // payment route
+        Route::post('/payment-request' , [PaymentController::class , 'createPaymentOrder']);
+        Route::post('/payment-complete', [PaymentController::class , 'paymentComplete']);
+
+        // show data route
         Route::get('/showtournament' , [ShowController::class , 'showTournaments']);
     });
     Route::fallback(function(){

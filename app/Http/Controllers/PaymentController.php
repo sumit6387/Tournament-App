@@ -41,7 +41,8 @@ class PaymentController extends Controller
                 'amount' => $request->amount *100,
                 'userID' => auth()->user()->id,
                 'email' => auth()->user()->email,
-                'contact' => auth()->user()->mobile_no
+                'contact' => auth()->user()->mobile_no,
+                'name' => auth()->user()->name
             ]);
         }catch(Exception $e){
             return response()->json([
@@ -54,9 +55,48 @@ class PaymentController extends Controller
                 'status' => false,
                 'msg' => $valid->errors()->all()
             ]);
-        }
-        
+        }  
+    }
 
-        
+    public function paymentComplete(Request $request){
+        $valid = Validator::make($request->all(), [
+            'razorpay_payment_id' => 'required',
+            'razorpay_order_id' => 'required',
+            'razorpay_signature' => 'required'
+        ]);
+
+        if($valid->passes()){
+            $completeStatus = $this->verifySignature($request->razorpay_payment_id,$request->razorpay_order_id,$request->razorpay_signature);
+            if($completeStatus){
+                $transaction = Transaction::where('payment_id' , $request->razorpay_order_id)->update(['payment_done' => 1]);
+
+                return response()->json([
+                    'status' => true,
+                    'msg' => 'Payment Success'
+                ]);
+
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Something went wrong'
+                ]);
+            }
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => $valid->errors()->all()
+            ]);
+        }
+    }
+
+    private function verifySignature($razorpay_payment_id, $razorpay_order_id,$signature){
+       try{
+        $api = new Api($this->razorpayId, $this->razorpayKey);
+        $attributes  = array('razorpay_signature'  => $signature,  'razorpay_payment_id'  => $razorpay_payment_id ,  'order_id' => $razorpay_order_id);
+        $order  = $api->utility->verifyPaymentSignature($attributes);
+        return true;
+      }catch(Exception $e){
+          return false;
+      }
     }
 }
