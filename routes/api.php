@@ -34,6 +34,7 @@ Route::group(['prefix' => 'v1','middleware' => 'CheckVersion'],function(){
 
         // show data route
         Route::get('/showtournament' , [ShowController::class , 'showTournaments']);
+        Route::get('/pointTableUser' , [ShowController::class , 'pointTableUser']);
     });
     Route::fallback(function(){
         return response()->json([

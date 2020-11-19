@@ -19,32 +19,38 @@ class PaymentController extends Controller
         $valid = Validator::make($request->all(), ['amount' => 'required']);
         if($valid->passes()){
           try{
-            $api = new Api($this->razorpayId, $this->razorpayKey);
-            $reciept_id = Str::random(20);
-            $order = $api->order->create(array(
-                'receipt' => $reciept_id,
-                'amount' => $request->amount * 100,
-                'currency' => 'INR'
-                )
-            );
-            $newTransaction = new Transaction();
-            $newTransaction->user_id = auth()->user()->id;
-            $newTransaction->reciept_id = $reciept_id;
-            $newTransaction->amount = $request->amount;
-            $newTransaction->description = "For joinning tournament";
-            $newTransaction->payment_id = $order['id'];
-            $newTransaction->save();
+              if($request->amount < 10){
+                  return response()->json([
+                      'status' => false,
+                      'msg' => "You can't add less then 10 RS"
+                  ]);
+              }
+                $api = new Api($this->razorpayId, $this->razorpayKey);
+                $reciept_id = Str::random(20);
+                $order = $api->order->create(array(
+                    'receipt' => $reciept_id,
+                    'amount' => $request->amount * 100,
+                    'currency' => 'INR'
+                    )
+                );
+                $newTransaction = new Transaction();
+                $newTransaction->user_id = auth()->user()->id;
+                $newTransaction->reciept_id = $reciept_id;
+                $newTransaction->amount = $request->amount;
+                $newTransaction->description = "For joinning tournament";
+                $newTransaction->payment_id = $order['id'];
+                $newTransaction->save();
 
-            return response()->json([
-                'status' => true,
-                'razorpayID' => $this->razorpayId,
-                'orderID' => $order['id'],
-                'amount' => $request->amount *100,
-                'userID' => auth()->user()->id,
-                'email' => auth()->user()->email,
-                'contact' => auth()->user()->mobile_no,
-                'name' => auth()->user()->name
-            ]);
+                return response()->json([
+                    'status' => true,
+                    'razorpayID' => $this->razorpayId,
+                    'orderID' => $order['id'],
+                    'amount' => $request->amount *100,
+                    'userID' => auth()->user()->id,
+                    'email' => auth()->user()->email,
+                    'contact' => auth()->user()->mobile_no,
+                    'name' => auth()->user()->name
+                ]);
         }catch(Exception $e){
             return response()->json([
                 'status' => false,

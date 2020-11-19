@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Tournament;
+use App\Models\User;
+use App\Models\UserInfo;
 
 class ShowController extends Controller
 {
@@ -32,5 +34,10 @@ class ShowController extends Controller
                 'msg' => "Tournament Not Created"
             ]);
         }
+    }
+
+    public function pointTableUser(){
+        $users = User::select(['users.*','user_info.ptr_reward as ptr_reward'])->orderBy('ptr_reward','desc')->join('user_info','users.id','=','user_info.user_id')->take(20)->get();
+        return $users;
     }
 }
