@@ -31,6 +31,7 @@ class PaymentController extends Controller
             $newTransaction->user_id = auth()->user()->id;
             $newTransaction->reciept_id = $reciept_id;
             $newTransaction->amount = $request->amount;
+            $newTransaction->description = "For joinning tournament";
             $newTransaction->payment_id = $order['id'];
             $newTransaction->save();
 
@@ -68,8 +69,12 @@ class PaymentController extends Controller
         if($valid->passes()){
             $completeStatus = $this->verifySignature($request->razorpay_payment_id,$request->razorpay_order_id,$request->razorpay_signature);
             if($completeStatus){
-                $transaction = Transaction::where('payment_id' , $request->razorpay_order_id)->update(['payment_done' => 1]);
-
+                $transaction = Transaction::where('payment_id' , $request->razorpay_order_id)->get()->first();
+                $transaction->payment_done  = 1;
+                $transaction->save();
+                $user = UserInfo::where('user_id' , auth()->user()->id)->get()->first();
+                $user->wallet_amount = $user->wallet_amount + $transaction->amount;
+                $user->save();
                 return response()->json([
                     'status' => true,
                     'msg' => 'Payment Success'
@@ -99,4 +104,81 @@ class PaymentController extends Controller
           return false;
       }
     }
+
+
+
+
+    //  function for membership route
+    public function createMembershipOrder(){
+        try{
+            $api = new Api($this->razorpayId, $this->razorpayKey);
+            $reciept_id = Str::random(20);
+            $order = $api->order->create(array(
+                'receipt' => $reciept_id,
+                'amount' => 149 * 100,
+                'currency' => 'INR'
+                )
+            );
+            $newTransaction = new Transaction();
+            $newTransaction->user_id = auth()->user()->id;
+            $newTransaction->reciept_id = $reciept_id;
+            $newTransaction->amount = 149;
+            $newTransaction->description = "For Membership";
+            $newTransaction->payment_id = $order['id'];
+            $newTransaction->save();
+
+            return response()->json([
+                'status' => true,
+                'razorpayID' => $this->razorpayId,
+                'orderID' => $order['id'],
+                'amount' => 149 *100,
+                'userID' => auth()->user()->id,
+                'email' => auth()->user()->email,
+                'contact' => auth()->user()->mobile_no,
+                'name' => auth()->user()->name
+            ]);
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Something Went Wrong' 
+            ]);
+        }
+    }
+
+
+    public function paymentCompleteMembership(Request $request){
+        $valid = Validator::make($request->all(), [
+            'razorpay_payment_id' => 'required',
+            'razorpay_order_id' => 'required',
+            'razorpay_signature' => 'required'
+        ]);
+
+        if($valid->passes()){
+            $completeStatus = $this->verifySignature($request->razorpay_payment_id,$request->razorpay_order_id,$request->razorpay_signature);
+            if($completeStatus){
+                $transaction = Transaction::where('payment_id' , $request->razorpay_order_id)->update(['payment_done' => 1]);
+                $user = User::where('id' , auth()->user()->id)->get()->first();
+                $user->membership = 1;
+                $d2 = explode('T',strval(date('c', strtotime('30 days'))));
+                $user->Ex_date_membership = $d[0];
+                $user->save();
+                return response()->json([
+                    'status' => true,
+                    'msg' => 'Payment Success'
+                ]);
+
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Something went wrong'
+                ]);
+            }
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => $valid->errors()->all()
+            ]);
+        }
+    }
+    
 }

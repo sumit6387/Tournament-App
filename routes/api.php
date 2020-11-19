@@ -21,10 +21,16 @@ Route::group(['prefix' => 'v1','middleware' => 'CheckVersion'],function(){
         Route::post('/addTournament' , [UserController::class , 'createUserTournament']);
         Route::post('/updatePassword' , [UserController::class , 'updatePassword']);
         Route::get('/claimPrize',[UserController::class , 'claimPrize']);
+        Route::post('/changePassword' , [UserController::class , 'changePassword']);
         
-        // payment route
+        // payment route for join tournament
         Route::post('/payment-request' , [PaymentController::class , 'createPaymentOrder']);
         Route::post('/payment-complete', [PaymentController::class , 'paymentComplete']);
+
+
+        // payment route for membership
+        Route::post('/payment-request-membership' , [PaymentController::class , 'createMembershipOrder']);
+        Route::post('/payment-complete-membership', [PaymentController::class , 'paymentCompleteMembership']);
 
         // show data route
         Route::get('/showtournament' , [ShowController::class , 'showTournaments']);

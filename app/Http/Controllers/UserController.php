@@ -250,4 +250,41 @@ class UserController extends Controller
         
     }
 
+    public function changePassword(Request $request){
+        $valid = Validator::make($request->all() , [
+                'current_password' => 'required' ,
+                'new_password' => 'required' , 
+                'confirm_password' => 'required'
+            ]);
+            
+            if($valid->passes()){
+                $user  = User::where('id' , auth()->user()->id)->get()->first();
+                if(Hash::check($request->current_password , $user->password)){
+                    if($request->new_password == $request->confirm_password){
+                        $user->password = Hash::make($request->new_password);
+                        $user->save();
+                        return response()->json([
+                            'status' => true,
+                            'msg' => 'Your Password Changed'
+                        ]);
+                    }else{
+                        return response()->json([
+                            'status' => false,
+                            'msg' => 'Enter same password'
+                        ]);
+                    }
+                }else{
+                    return response()->json([
+                        'status' => false,
+                        'msg' => 'Enter current password right'
+                    ]);
+                }
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'msg' => $valid->errors()->all()
+                ]);
+            }
+    }
+
 }
