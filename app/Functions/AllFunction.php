@@ -93,9 +93,23 @@
            $amount = $users->withdrawal_amount;
            if($winner == 1){
                $amount = $amount + $tournament->winning;
+               $test = 1;
            }
            $amount = $amount + ($tournament->per_kill * $kill);
            $users->withdrawal_amount = $amount;
+           $transaction = new Transaction();
+            $transaction->user_id = $id;
+            $transaction->reciept_id = Str::random(20);
+            $transaction->amount = $amount;
+           if($test == 1 ){
+               $transaction->description = 'For Winning Tournament';
+           }else{
+            $transaction->description = 'For Tournament Reward';
+           }
+            $transaction->payment_id = Str::random(10);
+            $transaction->action = 'Credit';
+            $transaction->payment_done = 1;
+            $transaction->save();
            $users->save();
         }
 }

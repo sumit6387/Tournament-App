@@ -7,22 +7,13 @@ use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\UserInfo;
 use App\Models\Tournament;
+use App\Models\Transaction;
 use Validator;
 use App\Functions\AllFunction;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function user(){
-        try{
-            return response()->json([
-                'status' =>true,
-                'data'=>User::all()
-            ]);
-        }catch(RouteNotFoundException $e){
-            return $e;
-        }
-    }
 
     public function store(Request $request){
         $user_info = UserInfo::where('user_id' , auth()->user()->id)->get()->first();
@@ -118,6 +109,16 @@ class UserController extends Controller
             $user->wallet_amount = $user->wallet_amount - $tournament->entry_fee;
             $user->ptr_reward = $user->ptr_reward + 2;
             $user->update();
+            $transaction = new Transaction();
+            $transaction->user_id = auth()->user()->id;
+            $transaction->reciept_id = Str::random(20);
+            $transaction->amount = $tournament->entry_fee;
+            $transaction->description = 'For join the '.$tournament->game_type.' Tournament';
+            $transaction->payment_id = Str::random(10);
+            $transaction->action = 'Withdraw';
+            $transaction->payment_done = 1;
+            $transaction->save();
+
             return response()->json([
                 'status' => true,
                 'msg' => 'You Joined The Tournament'
@@ -225,18 +226,31 @@ class UserController extends Controller
                     $users = User::where('id',auth()->user()->id)->get()->first();
                     $users->membership = 1;
                     $users->Ex_date_membership = $d2[0];
+                    $amount = 149;
                     $users->save();
-                }else if($user->ptr_reward  >= 40 || $user->ptr_reward < 100){
+                }else if($user->ptr_reward  >= 40 && $user->ptr_reward < 100){
                     $user->ptr_reward = $user->ptr_reward - 40;
                     $user->wallet_amount = $user->wallet_amount + 25;
-                }else if($user->ptr_reward  >= 20 || $user->ptr_reward < 40){
+                    $amount = 25;
+                }else if($user->ptr_reward  >= 20 && $user->ptr_reward < 40){
                     $user->ptr_reward = $user->ptr_reward - 20;
                     $user->wallet_amount = $user->wallet_amount + 12;
-                }else if($user->ptr_reward  >= 10 || $user->ptr_reward < 20){
+                    $amount = 12;
+                }else if($user->ptr_reward  >= 10 && $user->ptr_reward < 20){
                     $user->ptr_reward = $user->ptr_reward - 10;
                     $user->wallet_amount = $user->wallet_amount + 5;
+                    $amount = 5;
                 }
                 $user->save();
+                $transaction = new Transaction();
+                $transaction->user_id = auth()->user()->id;
+                $transaction->reciept_id = Str::random(20);
+                $transaction->amount = $amount;
+                $transaction->description = 'For Claim The Prize';
+                $transaction->payment_id = Str::random(10);
+                $transaction->action = 'Credit';
+                $transaction->payment_done = 1;
+                $transaction->save();
                 return response()->json([
                     'status' => true,
                     'msg' => 'Your reward credited to your account'

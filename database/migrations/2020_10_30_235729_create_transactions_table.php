@@ -20,6 +20,7 @@ class CreateTransactionsTable extends Migration
             $table->string('amount');
             $table->string('description')->nullable();
             $table->string('payment_id'); //this is order id of requesting payment
+            $table->string('action'); //action field is for like debit credit  
             $table->string('razorpay_id')->nullable(); //that is the razorpay id
             $table->boolean('payment_done')->default(false);
             $table->timestamps();

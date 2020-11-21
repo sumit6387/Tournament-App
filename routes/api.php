@@ -35,6 +35,10 @@ Route::group(['prefix' => 'v1','middleware' => 'CheckVersion'],function(){
         // show data route
         Route::get('/showtournament' , [ShowController::class , 'showTournaments']);
         Route::get('/pointTableUser' , [ShowController::class , 'pointTableUser']);
+        Route::get('/mywallet' , [ShowController::class , 'myWallet']);
+        Route::get('/allTransactions' , [ShowController::class , 'allTransactions']);
+        Route::get('/allPoint' , [ShowController::class , 'allPoint']);
+        Route::get('/referAndEarn' , [ShowController::class , 'referAndEarn']);
     });
     Route::fallback(function(){
         return response()->json([

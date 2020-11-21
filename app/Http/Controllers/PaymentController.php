@@ -37,7 +37,8 @@ class PaymentController extends Controller
                 $newTransaction->user_id = auth()->user()->id;
                 $newTransaction->reciept_id = $reciept_id;
                 $newTransaction->amount = $request->amount;
-                $newTransaction->description = "For joinning tournament";
+                $newTransaction->description = "Adding Amount";
+                $newTransaction->action = "Add Money";
                 $newTransaction->payment_id = $order['id'];
                 $newTransaction->save();
 
@@ -81,6 +82,14 @@ class PaymentController extends Controller
                 $user = UserInfo::where('user_id' , auth()->user()->id)->get()->first();
                 $user->wallet_amount = $user->wallet_amount + $transaction->amount;
                 $user->save();
+                $noOfTransaction = Transaction::where(['user_id'=>auth()->user()->id,'payment_done' => 1])->get();
+                if($noOfTransaction->count() == 1){
+                    //adding 50% amount on first transaction of users  this is for refer and earn
+                    $users = UserInfo::where('refferal_code',$user->ref_by)->get()->first();
+                    $users->wallet_amount = $users->wallet_amount + ($transaction->amount * 50) / 100;
+                    $users->save();
+                }
+
                 return response()->json([
                     'status' => true,
                     'msg' => 'Payment Success'
@@ -130,6 +139,7 @@ class PaymentController extends Controller
             $newTransaction->reciept_id = $reciept_id;
             $newTransaction->amount = 149;
             $newTransaction->description = "For Membership";
+            $newTransaction->description = "Withdraw";
             $newTransaction->payment_id = $order['id'];
             $newTransaction->save();
 
