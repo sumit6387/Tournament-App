@@ -10,7 +10,7 @@ use App\Http\Controllers\ShowController;
 Route::group(['prefix' => 'v1','middleware' => 'CheckVersion'],function(){
     Route::post('/register',[LoginController::class , 'register']);
     Route::post('/login',[LoginController::class , 'login']);
-    Route::post('/resendotp' , [LoginController::class , 'resendotp']);
+    
     Route::post('/verifyotp',[LoginController::class , 'verifyOtp']);
     Route::group(['middleware' => 'auth:sanctum','api'], function(){
         Route::get('/user', [UserController::class , 'user']);
@@ -22,6 +22,9 @@ Route::group(['prefix' => 'v1','middleware' => 'CheckVersion'],function(){
         Route::post('/updatePassword' , [UserController::class , 'updatePassword']);
         Route::get('/claimPrize',[UserController::class , 'claimPrize']);
         Route::post('/changePassword' , [UserController::class , 'changePassword']);
+        Route::post('/forgetPasswordProcess',[UserController::class , 'forgetPassword']);
+        Route::post('/forgetPassword' , [LoginController::class , 'resendotp']);
+        Route::post('/cancelMatch' , [UserController::class , 'cancelMatch']);  
         
         // payment route for join tournament
         Route::post('/payment-request' , [PaymentController::class , 'createPaymentOrder']);
@@ -39,6 +42,8 @@ Route::group(['prefix' => 'v1','middleware' => 'CheckVersion'],function(){
         Route::get('/allTransactions' , [ShowController::class , 'allTransactions']);
         Route::get('/allPoint' , [ShowController::class , 'allPoint']);
         Route::get('/referAndEarn' , [ShowController::class , 'referAndEarn']);
+        Route::get('/ourTournament' , [ShowController::class , 'ourTournament']);
+        Route::post('/tournamentDetail' , [ShowController::class , 'tournamentDetail']);
     });
     Route::fallback(function(){
         return response()->json([

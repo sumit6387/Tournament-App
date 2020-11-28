@@ -11,7 +11,7 @@ use App\Models\Transaction;
 class ShowController extends Controller
 {
     public function showTournaments(){
-        $adminTournament = Tournament::where(['created_by'=>'Admin','tournament_type' => 'public','completed'=> 0])->get();
+        $adminTournament = Tournament::orderby('tournament_start_at' , 'asc')->orderby('id' , 'desc')->where(['created_by'=>'Admin','tournament_type' => 'public','completed'=> 0])->get();
         if($adminTournament){
             $tour = true;
         }else{
@@ -104,4 +104,35 @@ class ShowController extends Controller
             'first_payment' => $user_payment->count()
         ]);
     }
+    public function ourTournament(){
+        $data = Tournament::where(['created_by' => 'User','id' => auth()->user()->id])->get();
+        if($data){
+            return response()->json([
+                'status' => true,
+                'data' => $data
+            ]);
+        }else{
+            return response()->json([
+                'status' => true,
+                'data' => 'You did not created a tournament'
+            ]);
+        } 
+    }
+
+    public function tournamentDetail(Request $req){
+        $data = Tournament::where(['tournament_id' => $req->tournament_id , 'created_by' => 'User'])->get()->first();
+        if($data){
+            return response()->json([
+                'status' => true,
+                'data' => $data
+            ]);
+        }else{
+            return response()->json([
+                'status' => false,
+                'data' => 'Something Went Wrong'
+            ]);
+        }
+    }
+
+
 }

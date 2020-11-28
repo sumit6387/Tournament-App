@@ -24,7 +24,6 @@ class CreateUsersTable extends Migration
             $table->string('membership')->default('0');
             $table->string('Ex_date_membership')->nullable();
             $table->string('reset_password_verify')->nullable();
-            $table->rememberToken();
             $table->timestamps();
         });
     }

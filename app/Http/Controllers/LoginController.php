@@ -17,25 +17,39 @@ class LoginController extends Controller
 {
     public function resendOtp(Request $request){
         try{
-            $sendsms = new AllFunction();
-            $otp = $sendsms->sendSms($request->mobile_no);
-            $data = User::where('mobile_no',$request->mobile_no)
-                    ->get()
-                    ->first();
-            $data->verification_code = $otp;
-            $data1 = $data->save();
-            if($data1 == 1){
-                return response()->json([
-                    'status' => true,
-                    'otp' => $otp,
-                    'msg' => 'OTP resend successfully'
-                ]);
+            $valid = Validator::make($request->all(),[
+                'mobile_no' => 'required'
+            ]);
+            if($valid->passes()){
+            $data = User::where('mobile_no',$request->mobile_no)->get()->first();
+            if($data){
+                $sendsms = new AllFunction();
+                $otp = $sendsms->sendSms($request->mobile_no);
+                $data->verification_code = $otp;
+                $data->save();
+                if($otp){
+                    return response()->json([
+                        'status' => true,
+                        'msg' => 'OTP send successfully'
+                    ]);
+                }else{
+                    return response()->json([
+                        'status' => false,
+                        'msg' => 'Something Went Wrong! try again'
+                    ]);
+                }
             }else{
                 return response()->json([
-                    'status' => false , 
-                    'msg' => $validator->errors()->all()
+                    'status' => false,
+                    'msg' => 'Enter Registered Number'
                 ]);
             }
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => $valid->errors()->all()
+            ]);
+        }
         }catch(Exception $e){
             return response()->json([
                 'status' => false,
@@ -120,7 +134,7 @@ class LoginController extends Controller
     }
 
     public function verifyOtp(Request $request){
-        $validator = Validator::make($request->all(),['mobile_no'=>'required','otp'=>'required']);
+        $validator = Validator::make($request->all(),['mobile_no'=>'required','otp'=>'required|numeric']);
         if($validator->passes()){
         try{
             $user = User::where('mobile_no',$request->mobile_no)

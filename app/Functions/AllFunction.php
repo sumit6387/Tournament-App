@@ -10,7 +10,7 @@
     class AllFunction{
         public function sendSms($number){
             $curl = curl_init();
-                $num = rand(0000,9999);
+                $num = rand(1111,9999);
                 curl_setopt_array($curl, array(
                     CURLOPT_URL => "https://www.fast2sms.com/dev/bulk?authorization=RSaTvUIdq4hYsyBmKPCAXJQx3ONteorj2Lu9bM6nlVF7G10ZHfkeiYorX5FvEwL3K2WZxAdUChmc9DyI&sender_id=FSTSMS&message=".urlencode('This is your OTP for Tournament App '.$num)."&language=english&route=p&numbers=".urlencode($number),
                     CURLOPT_RETURNTRANSFER => true,
@@ -65,6 +65,8 @@
                 $new_tournament->entry_fee = $data['entry_fee'];
                 $new_tournament->type = $data['type'];
                 $new_tournament->map = $data['map'];
+                $new_tournament->map = $data['tournament_name'];
+                $new_tournament->map = $data['img'];
                 $new_tournament->max_user_participated = $data['max_user_participated'];
                 $new_tournament->game_type = $data['game_type'];
                 $new_tournament->tournament_type = $data['tournament_type'];

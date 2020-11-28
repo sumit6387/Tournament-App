@@ -301,4 +301,88 @@ class UserController extends Controller
             }
     }
 
+    public function forgetPassword(Request $request){
+        $valid = Validator::make($request->all(),[
+            'mobile_no' => 'required',
+            'otp' => 'required|numeric|min:4',
+            'password' => 'required'
+        ]);
+        if($valid->passes()){
+          try{
+            $data = User::where('mobile_no',$request->mobile_no)->get()->first();
+            if($data){
+                if($data->verification_code == $request->otp){
+                    $data->password = Hash::make($request->password);
+                    $data->save();
+                    return response()->json([
+                        'status' => true,
+                        'msg' => 'Password Updated'
+                    ]);
+                }else{
+                    return response()->json([
+                        'status' => false,
+                        'msg' => 'Enter Valid OTP'
+                    ]);
+                }
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Something Went Wrong'
+                ]);
+            }
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Something Went Wrong'
+            ]);
+        }
+    }else{
+            return response()->json([
+                'status' => false,
+                'msg' => $valid->errors()->all()
+            ]);
+        }
+    }
+
+    public function cancelMatch(Request $request){
+        $valid = Validator::make($request->all(),['tournament_id' => 'required']);
+        if($valid->passes()){
+          try{
+            $data = Tournament::where(['created_by' => 'User' , 'tournament_id' => $request->tournament_id , 'id' => auth()->user()->id])->get()->first();
+            if($data){
+                $users = explode(',',$data->joined_user);
+                foreach ($users as $key => $value) {
+                    $user = UserInfo::where('user_id' , $value)->get()->first();
+                    $user->wallet_amount = $user->wallet_amount + $data->entry_fee;
+                    $user->save();
+                }
+                $data->cancel = 1;
+                $data->save();
+                return response()->json([
+                    'status' => true,
+                    'msg' => 'Match is canceled'
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Something Went Wrong'
+                ]);
+            }
+        }catch(Exception $e){
+            Tournament::rollback();
+            UserInfo::rollback();
+            return response()->json([
+                'status' => false,
+                'msg' => 'something went wrong'
+            ]);
+        }
+    }else{
+            return response()->json([
+                'status' => false,
+                'msg' => 'something went wrong'
+            ]);
+        }
+    }
+
+
 }
