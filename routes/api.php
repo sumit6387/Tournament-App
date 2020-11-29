@@ -18,7 +18,7 @@ Route::group(['prefix' => 'v1','middleware' => 'CheckVersion'],function(){
         Route::post('/apply_ref_code',[UserController::class,'applyRefCode'])
         ->middleware('CheckRefCode');  
         Route::post('/joinTournament' , [UserController::class , 'joinTournament']);
-        Route::post('/addTournament' , [UserController::class , 'createUserTournament']);
+        Route::post('/addTournament' , [UserController::class , 'createUserTournament'])->middleware('CheckTournament');
         Route::post('/updatePassword' , [UserController::class , 'updatePassword']);
         Route::get('/claimPrize',[UserController::class , 'claimPrize']);
         Route::post('/changePassword' , [UserController::class , 'changePassword']);

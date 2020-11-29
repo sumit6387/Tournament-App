@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'CheckRefCode' => \App\Http\Middleware\CheckRefCode::class,
         'CheckVersion' => \App\Http\Middleware\CheckVersion::class,
         'CheckAdmin' => \App\Http\Middleware\CheckAdmin::class,
+        'CheckTournament' =>\App\Http\Middleware\CheckTournament::class,
     ];
 }

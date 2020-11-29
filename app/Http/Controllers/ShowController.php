@@ -11,7 +11,7 @@ use App\Models\Transaction;
 class ShowController extends Controller
 {
     public function showTournaments(){
-        $adminTournament = Tournament::orderby('tournament_start_at' , 'asc')->orderby('id' , 'desc')->where(['created_by'=>'Admin','tournament_type' => 'public','completed'=> 0])->get();
+        $adminTournament = Tournament::orderby('tournament_start_date' , 'asc')->orderby('id' , 'desc')->where(['created_by'=>'Admin','tournament_type' => 'public','completed'=> 0])->get();
         if($adminTournament){
             $tour = true;
         }else{

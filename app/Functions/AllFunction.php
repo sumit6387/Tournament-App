@@ -66,11 +66,11 @@
                 $new_tournament->type = $data['type'];
                 $new_tournament->map = $data['map'];
                 $new_tournament->map = $data['tournament_name'];
-                $new_tournament->map = $data['img'];
+                $new_tournament->img = $data['img'];
                 $new_tournament->max_user_participated = $data['max_user_participated'];
                 $new_tournament->game_type = $data['game_type'];
                 $new_tournament->tournament_type = $data['tournament_type'];
-                $new_tournament->tournament_type = $data['tournament_type'];
+                $new_tournament->tournament_name = $data['tournament_name'];
                 $email = User::where('email' , auth()->user()->email)->get()->first();
                 if($email){
                     $created_by = 'User';
@@ -81,7 +81,8 @@
                     $created_by = 'Admin';
                 }
                 $new_tournament->created_by = $created_by;
-                $new_tournament->tournament_start_at = $data['tournament_start_at'];
+                $new_tournament->tournament_start_date = $data['tournament_start_date'];
+                $new_tournament->tournament_start_time = $data['tournament_start_time'];
                 $new_tournament->save();
                 return true;
             }catch(Exception $e){

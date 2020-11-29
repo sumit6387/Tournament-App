@@ -131,7 +131,8 @@ class MainController extends Controller
             'max_user_participated' => 'required',
             'game_type' => 'required',
             'tournament_type' => 'required',
-            'tournament_start_at' => 'required'
+            'tournament_start_date' => 'required',
+            'tournament_start_time' => 'required'
         ]);
         if($valid->passes()){
             try{

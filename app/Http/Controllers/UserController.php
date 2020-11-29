@@ -18,11 +18,8 @@ class UserController extends Controller
     public function store(Request $request){
         $user_info = UserInfo::where('user_id' , auth()->user()->id)->get()->first();
         $user = User::where('id' , auth()->user()->id)->get()->first();
-        if($request->file('image')){
-            $filename = Str::random(15).".jpg";
-            $path = $request->file('image')->move(public_path('/images/user image'),$filename);
-            $url = url('/images/user image/'.$filename);
-            $user_info->profile_image = $url;
+        if($request->image){
+            $user_info->profile_image = $request->image;
         }
 
         if($request->name){
@@ -133,16 +130,19 @@ class UserController extends Controller
 
     public function createUserTournament(Request $request){
         $valid = Validator::make($request->all(),[
-            'prize_pool' => 'required',
-            'winning' => 'required',
-            'per_kill' => 'required',
-            'entry_fee' => 'required',
+            'prize_pool' => 'required|numeric',
+            'winning' => 'required|numeric',
+            'per_kill' => 'required|numeric',
+            'entry_fee' => 'required|numeric',
             'type' => 'required',
+            'tournament_name' => 'required',
             'map' => 'required',
+            'img' => 'required',
             'max_user_participated' => 'required',
             'game_type' => 'required',
             'tournament_type' => 'required',
-            'tournament_start_at' => 'required'
+            'tournament_start_date' => 'required',
+            'tournament_start_time' => 'required'
         ]);
         if($valid->passes()){
             try{
