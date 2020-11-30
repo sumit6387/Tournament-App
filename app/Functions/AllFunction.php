@@ -115,6 +115,26 @@
             $transaction->save();
            $users->save();
         }
+
+        public function referCode($id,$ref_code){
+            $ref = UserInfo::where('refferal_code',$ref_code)->get()->first();
+            $valid = UserInfo::where('user_id',$id)->get()->first();
+            if($ref){
+                if($valid->refferal_code != $ref_code){
+                    if($valid->ref_by == null){
+                        return $ref_code;
+                    }else{
+                        return null;
+                    }
+                }else{
+                    return null;
+                }
+            }else{
+                return null;
+            }
+            
+            
+        }
 }
             
 

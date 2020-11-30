@@ -59,9 +59,16 @@ class LoginController extends Controller
     }
 
     public function register(Request $request){
-        $validator = Validator::make($request->all(),['name'=>'required','mobile_no'=>'required','email'=>'required','password'=>'required']);
+        $validator = Validator::make($request->all(),['name'=>'required','mobile_no'=>'required','email'=>'required','password'=>'required','gender'=>'required']);
         if($validator->passes()){
                 try{
+                    $already_exist = User::where('mobile_no',$request->mobile_no)->get()->first();
+                    if($already_exist){
+                        return response()->json([
+                            'status' => false,
+                            'msg' => 'You already registered'
+                        ]);
+                    }
                     $new_user = new User();
                     $sendsms = new AllFunction();
                     $new_user->name = $request->name;
@@ -80,7 +87,17 @@ class LoginController extends Controller
                             $user_info->profile_image = $image;
                             $user_info->gender = $request->gender;
                             $user_info->save();
+                            $code = $sendsms->referCode($new_user->id,$request->ref_code);
+                            $user = UserInfo::where('user_id',$new_user->id)->get()->first();
+                            if($user){
+                                if($code == $request->ref_code){
+                                    $user->ref_by = $code;
+                                    $user->wallet_amount = 5;
+                                    $user->save();
+                                }
+                            }
                             return response()->json(array('status'=>true,'msg'=>'user registered successfully','otp'=>$new_user->verification_code));
+                            
                         }else{
                             return response()->json([
 
@@ -191,4 +208,5 @@ class LoginController extends Controller
     //     }
         
     // }
+
 }

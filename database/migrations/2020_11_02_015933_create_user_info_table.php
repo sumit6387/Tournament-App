@@ -21,7 +21,7 @@ class CreateUserInfoTable extends Migration
             $table->string('state')->nullable();
             $table->string('country')->nullable();
             $table->string('refferal_code'); 
-            $table->string('notification_token'); 
+            $table->string('notification_token')->nullable(); 
             $table->string('ref_by')->nullable();
             $table->string('first_time_payment')->default('0');
             $table->string('withdrawal_amount')->default('0');
