@@ -10,8 +10,8 @@ use App\Http\Controllers\ShowController;
 Route::group(['prefix' => 'v1','middleware' => 'CheckVersion'],function(){
     Route::post('/register',[LoginController::class , 'register']);
     Route::post('/login',[LoginController::class , 'login']);
-    Route::get('/check',[LoginController::class , 'check']);
     Route::post('/verifyotp',[LoginController::class , 'verifyOtp']);
+    
     Route::group(['middleware' => 'auth:sanctum','api'], function(){
         Route::get('/user', [UserController::class , 'user']);
         Route::post('/updatedata',[UserController::class , 'store']);

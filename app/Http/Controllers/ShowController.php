@@ -11,23 +11,31 @@ use App\Models\Transaction;
 class ShowController extends Controller
 {
     public function showTournaments(){
-        $adminTournament = Tournament::orderby('tournament_start_date' , 'asc')->orderby('id' , 'desc')->where(['created_by'=>'Admin','tournament_type' => 'public','completed'=> 0])->get();
+        $adminTournament = Tournament::orderby('tournament_start_date' , 'asc')->orderby('tournament_start_time','asc')->orderby('tournament_id' , 'desc')->where(['created_by'=>'Admin','tournament_type' => 'public','completed'=> 0,'cancel'=>0])->get();
         if($adminTournament){
             $tour = true;
         }else{
             $adminTournament = "Nothing";
         }
-        $userTournament = Tournament::where(['created_by'=>'User','tournament_type' => 'public','completed'=> 0])->get();
+        $membersTournaments = Tournament::select(['tournaments.*','users.membership as membership'])->orderby('tournaments.tournament_id' , 'desc')->orderby('tournament_start_time','asc')->where(['tournaments.created_by'=>'User','tournaments.tournament_type' => 'public','tournaments.completed'=> 0,'tournaments.cancel'=>0,'users.membership' => 1])->join('users','tournaments.id','=','users.id')->get();
+        if($membersTournaments){
+            $member = true;
+        }else{
+            $membersTournaments = "Nothing";
+        }
+
+        $userTournament = Tournament::select(['tournaments.*','users.membership as membership'])->orderby('tournaments.tournament_id' , 'desc')->orderby('tournament_start_time','asc')->where(['tournaments.created_by'=>'User','tournaments.tournament_type' => 'public','tournaments.completed'=> 0,'tournaments.cancel'=>0,'users.membership' => 0])->join('users','tournaments.id','=','users.id')->get();
         if($userTournament){
             $userTour = true;
         }else{
             $userTournament = 'Nothing';
         }
-        if($tour || $userTour){
+        if($tour || $userTour || $member){
             return response()->json([
                 'status' => true,
                 'AdminTournament' => $adminTournament,
-                'userData' => $userTournament
+                'userData' => $userTournament,
+                'membersTournaments'=> $membersTournaments
                 ]);
         }else{
             return response()->json([
