@@ -15,7 +15,7 @@ use Exception;
 
 class LoginController extends Controller
 {
-    public function resendOtp(Request $request){
+    public function forgetOtp(Request $request){
         try{
             $valid = Validator::make($request->all(),[
                 'mobile_no' => 'required'
@@ -25,7 +25,7 @@ class LoginController extends Controller
             if($data){
                 $sendsms = new AllFunction();
                 $otp = $sendsms->sendSms($request->mobile_no);
-                $data->verification_code = $otp;
+                $data->reset_password_verify = $otp;
                 $data->save();
                 if($otp){
                     return response()->json([
@@ -194,6 +194,49 @@ class LoginController extends Controller
                 'status' => false,
                 'msg' => $validator->errors()->all()
             ]);
+        }
+    }
+
+    public function resendOtp(Request $request){
+        try{
+            $valid = Validator::make($request->all(),[
+                'mobile_no' => 'required'
+            ]);
+            if($valid->passes()){
+            $data = User::where('mobile_no',$request->mobile_no)->get()->first();
+            if($data){
+                $sendsms = new AllFunction();
+                $otp = $sendsms->sendSms($request->mobile_no);
+                $data->verification_code = $otp;
+                $data->save();
+                if($otp){
+                    return response()->json([
+                        'status' => true,
+                        'msg' => 'OTP send successfully'
+                    ]);
+                }else{
+                    return response()->json([
+                        'status' => false,
+                        'msg' => 'Something Went Wrong! try again'
+                    ]);
+                }
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Enter Registered Number'
+                ]);
+            }
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => $valid->errors()->all()
+            ]);
+        }
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Something went wrong'
+             ]);
         }
     }
 

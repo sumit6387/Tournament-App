@@ -11,6 +11,7 @@ Route::group(['prefix' => 'v1','middleware' => 'CheckVersion'],function(){
     Route::post('/register',[LoginController::class , 'register']); //mobile_no,name, email,password,gender,ref_code
     Route::post('/login',[LoginController::class , 'login']); //mobile_no , password
     Route::post('/verifyotp',[LoginController::class , 'verifyOtp']); // mobile_no , otp
+    Route::post('/resendOtp' , [LoginController::class , 'resendOtp']); // mobile_no
     
     Route::group(['middleware' => 'auth:sanctum','api'], function(){
         Route::post('/updatedata',[UserController::class , 'store']); //name , image,email,state,country,mobike_no,gender
@@ -22,7 +23,7 @@ Route::group(['prefix' => 'v1','middleware' => 'CheckVersion'],function(){
         Route::get('/claimPrize',[UserController::class , 'claimPrize']);
         Route::post('/changePassword' , [UserController::class , 'changePassword']); // current_password,new_password , confirm_password
         Route::post('/forgetPasswordProcess',[UserController::class , 'forgetPassword']); //mobile_no,otp,password
-        Route::post('/forgetPassword' , [LoginController::class , 'resendotp']); //mobile_no
+        Route::post('/forgetPassword' , [LoginController::class , 'forgetOtp']); //mobile_no
         Route::post('/cancelMatch' , [UserController::class , 'cancelMatch']);   //tournament_id
         
         // payment route for join tournament

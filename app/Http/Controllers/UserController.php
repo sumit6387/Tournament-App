@@ -312,7 +312,7 @@ class UserController extends Controller
           try{
             $data = User::where('mobile_no',$request->mobile_no)->get()->first();
             if($data){
-                if($data->verification_code == $request->otp){
+                if($data->reset_password_verify == $request->otp){
                     $data->password = Hash::make($request->password);
                     $data->save();
                     return response()->json([
@@ -370,8 +370,6 @@ class UserController extends Controller
                 ]);
             }
         }catch(Exception $e){
-            Tournament::rollback();
-            UserInfo::rollback();
             return response()->json([
                 'status' => false,
                 'msg' => 'something went wrong'
@@ -384,6 +382,4 @@ class UserController extends Controller
             ]);
         }
     }
-
-
 }
