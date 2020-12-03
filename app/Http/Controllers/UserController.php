@@ -188,6 +188,7 @@ class UserController extends Controller
             }
             $tournament = Tournament::where(['tournament_id' => $request->tournament_id , 'created_by' => 'User','id'=>auth()->user()->id])->update(['user_id' => $request->user_id,'password' => $request->password]);
             if($tournament){
+                $tournament = Tournament::where(['tournament_id' => $request->tournament_id , 'created_by' => 'User','id'=>auth()->user()->id])->get()->first();
                 return response()->json([
                     'status' => true,
                     'msg' => 'UserId And Password Added'

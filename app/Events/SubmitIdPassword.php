@@ -23,11 +23,12 @@ class SubmitIdPassword implements ShouldBroadcast
     public $id;
     public $password;
     public $users;
-    public function __construct($id,$password,$users)
+    public $tournament_id;
+    public function __construct($id,$password,$tournament_id)
     {
         $this->id = $id;
         $this->password = $password;
-        $this->users = $users;
+        $this->tournament_id =$tournament_id;
     }
 
     /**
@@ -37,7 +38,7 @@ class SubmitIdPassword implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('id-password');
+        return new PrivateChannel('id-password.'.$this->tournament_id);
     }
 
     public function broadcastAs(){
