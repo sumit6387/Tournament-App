@@ -17,7 +17,7 @@ class CreateNotificationsTable extends Migration
             $table->id();
             $table->string('user_id');
             $table->string('title');
-            $table->string('description');
+            $table->string('message');
             $table->string('icon');
             $table->timestamps();
         });

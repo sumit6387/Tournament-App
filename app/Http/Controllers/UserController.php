@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\UserInfo;
 use App\Models\Tournament;
 use App\Models\Transaction;
-use Validator;
 use App\Functions\AllFunction;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Validator;
 
 class UserController extends Controller
 {
@@ -18,8 +18,11 @@ class UserController extends Controller
     public function store(Request $request){
         $user_info = UserInfo::where('user_id' , auth()->user()->id)->get()->first();
         $user = User::where('id' , auth()->user()->id)->get()->first();
-        if($request->image){
-            $user_info->profile_image = $request->image;
+        if($request->file('image')){
+            $filename = Str::random(15).".jpg";
+            $path = $request->file('image')->move(public_path('/images/user image'),$filename);
+            $url = url('/images/user image/'.$filename);
+            $user_info->profile_image =$url;
         }
 
         if($request->name){
@@ -382,4 +385,5 @@ class UserController extends Controller
             ]);
         }
     }
+
 }

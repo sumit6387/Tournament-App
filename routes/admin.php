@@ -21,6 +21,7 @@ Route::group(['middleware' => 'auth:sanctum' , 'api'] , function(){
         Route::post('/addTournament' , [MainController::class , 'addTournament']);
         Route::post('/updateIdPassword' , [MainController::class , 'updateIdPassword']);
         Route::post('/UpdateTournamentComplete' , [MainController::class ,'UpdateTournamentComplete']);
+        Route::post('/sendnotification' , [MainController::class , 'sendnotification']);
     });
 });
 

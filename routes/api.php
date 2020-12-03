@@ -9,10 +9,10 @@ use App\Http\Controllers\ShowController;
 
 Route::group(['prefix' => 'v1','middleware' => 'CheckVersion'],function(){
     Route::post('/register',[LoginController::class , 'register']); //mobile_no,name, email,password,gender,ref_code
-    Route::post('/login',[LoginController::class , 'login']); //mobile_no , password
+    Route::post('/login',[LoginController::class , 'login']); //mobile_no , password,notification_token
     Route::post('/verifyotp',[LoginController::class , 'verifyOtp']); // mobile_no , otp
     Route::post('/resendOtp' , [LoginController::class , 'resendOtp']); // mobile_no
-    
+    Route::get('/check' , [LoginController::class , 'check']);
     Route::group(['middleware' => 'auth:sanctum','api'], function(){
         Route::post('/updatedata',[UserController::class , 'store']); //name , image,email,state,country,mobike_no,gender
         Route::post('/apply_ref_code',[UserController::class,'applyRefCode'])
@@ -44,6 +44,7 @@ Route::group(['prefix' => 'v1','middleware' => 'CheckVersion'],function(){
         Route::get('/referAndEarn' , [ShowController::class , 'referAndEarn']);
         Route::get('/ourTournament' , [ShowController::class , 'ourTournament']);
         Route::post('/tournamentDetail' , [ShowController::class , 'tournamentDetail']); //tournament_id
+        Route::get('/user' , [ShowController::class , 'user']);
     });
     Route::fallback(function(){
         return response()->json([

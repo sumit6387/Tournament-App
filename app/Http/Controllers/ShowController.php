@@ -143,4 +143,12 @@ class ShowController extends Controller
     }
 
 
+    public function user(){
+        $data = User::select(['users.*','user_info.gender','user_info.profile_image','user_info.state','user_info.country','user_info.refferal_code','user_info.ref_by','user_info.withdrawal_amount','user_info.wallet_amount','user_info.ptr_reward'])->where('users.id' , auth()->user()->id)->join('user_info','users.id','=','user_info.user_id')->get()->toArray();
+        return response()->json([
+            'status' => true,
+            'data' => $data
+        ]);
+    }
+
 }

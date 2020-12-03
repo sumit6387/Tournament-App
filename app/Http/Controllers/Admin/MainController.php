@@ -229,5 +229,28 @@ class MainController extends Controller
         }
     }
 
+    public function sendnotification(Request $request){
+        $valid = Validator::make($request->all() , ['title' => 'required' , 'msg' => 'required' , 'icon'=> 'required' ,'id' => 'required']);
+        if($valid->passes()){
+            $notification = new AllFunction();
+            $status = $notification->sendNotification($request->all());
+            if($status){
+                return response()->json([
+                    'status' => true,
+                    'msg' => 'Notification send successfully'
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Something Went Wrong'
+                ]);
+            }
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => $valid->errors()->all()
+            ]);
+        }
+    }
 
 }

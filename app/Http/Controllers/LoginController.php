@@ -125,6 +125,9 @@ class LoginController extends Controller
             $data = User::where('mobile_no',$req->mobile_no)->get()->first();
             if (Hash::check($req->password, $data->password)) {
                     $token = $data->createToken('my-app-token')->plainTextToken;
+                    $user = UserInfo::where('user_id' , $data->id)->get()->first();
+                    $user->notification_token = $req->notification_token;
+                    $user->save();
                 return response()->json([
                     'status' => true,
                     'msg' => 'Login Successfully',
