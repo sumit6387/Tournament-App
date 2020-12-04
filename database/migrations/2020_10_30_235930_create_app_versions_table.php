@@ -17,6 +17,7 @@ class CreateAppVersionsTable extends Migration
             $table->id();
             $table->string('version'); //0.0.1 , 0.0.2
             $table->string('short_version');  //v1,v2,v3
+            $table->string('app_link');  //v1,v2,v3
             $table->timestamps();
         });
     }

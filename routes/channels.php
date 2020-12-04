@@ -24,4 +24,5 @@ Broadcast::channel('id-password.{id}', function ($user, $id) {
             return true;
         }
     }
+    return false;
 });

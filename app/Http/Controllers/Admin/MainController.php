@@ -47,12 +47,13 @@ class MainController extends Controller
     }
 
     public function addVersion(Request $request){
-        $valid = Validator::make($request->all(), ['version' => 'required' , 'short_version' => 'required']);
+        $valid = Validator::make($request->all(), ['version' => 'required' , 'short_version' => 'required','app_link'=> 'required']);
         if($valid->passes()){
             try{
                 $version = new AppVersion();
                 $version->version = $request->version;
                 $version->short_version = $request->short_version;
+                $version->app_link = $request->app_link;
                 $version->save();
                 return response()->json([
                     'status' => true,

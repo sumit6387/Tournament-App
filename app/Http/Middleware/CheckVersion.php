@@ -24,7 +24,8 @@ class CheckVersion
         if($currentprefix->short_version != $pref[1]){
             return response()->json([
                 'status' => false,
-                'msg' => 'You are using old version'
+                'msg' => 'You are using old version',
+                'app_link' => $currentprefix->app_link
             ]);
         }
         return $next($request);
