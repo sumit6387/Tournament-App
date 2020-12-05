@@ -15,6 +15,7 @@ class CreateTournamentsTable extends Migration
     {
         Schema::create('tournaments', function (Blueprint $table) {
             $table->id('tournament_id');
+            $table->string('tour_id')->unique();
             $table->string('prize_pool');
             $table->string('winning'); // chicken dinner 
             $table->string('per_kill');

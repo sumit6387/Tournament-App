@@ -60,8 +60,22 @@
         }
         public function registerTournament($data){
             try{
+                $tour_no = Tournament::get()->count();
+                $tour_no = $tour_no+1;
+                if($tour_no < 10){
+                    $tour_id = '0000'.$tour_no;
+                }else if($tour_no < 100){
+                    $tour_id = '000'.$tour_no;
+                }else if($tour_no < 1000){
+                    $tour_id = '00'.$tour_no;
+                }else if($tour_no < 10000){
+                    $tour_id = '0'.$tour_no;
+                }else{
+                    $tour_id = $tour_no;
+                }
                 $new_tournament = new Tournament();
                 $new_tournament->prize_pool = $data['prize_pool'];
+                $new_tournament->tour_id = $tour_id;
                 $new_tournament->winning = $data['winning'];
                 $new_tournament->per_kill = $data['per_kill'];
                 $new_tournament->entry_fee = $data['entry_fee'];
