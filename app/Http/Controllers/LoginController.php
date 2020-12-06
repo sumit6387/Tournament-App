@@ -7,7 +7,6 @@ use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\UserInfo;
 use App\Functions\AllFunction;
-use App\Models\AppVersion;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Validator;
@@ -87,7 +86,6 @@ class LoginController extends Controller
                             $user_info->refferal_code = $referal;
                             $user_info->profile_image = $image;
                             $user_info->gender = $request->gender;
-                            $user_info->user_current_version = AppVersion::orderby('id','desc')->get()->first()->short_version;
                             $user_info->save();
                             $code = $sendsms->referCode($new_user->id,$request->ref_code);
                             $user = UserInfo::where('user_id',$new_user->id)->get()->first();
@@ -98,7 +96,7 @@ class LoginController extends Controller
                                     $user->save();
                                 }
                             }
-                            return response()->json(array('status'=>true,'msg'=>'user registered successfully','otp'=>$new_user->verification_code));
+                            return response()->json(array('status'=>true,'msg'=>'user registered successfully'));
                             
                         }else{
                             return response()->json([
@@ -245,7 +243,7 @@ class LoginController extends Controller
         }
     }
 
-    // public function check(){
+    // public function check(Request $req){
     //     $arr = '[{"name" : "sumit" ,"class" : "BTECH CSE" , "roll" : 50},{"name" : "sumit" ,"class" : "BTECH CSE" , "roll" : 50},{"name" : "sumit" ,"class" : "BTECH CSE" , "roll" : 50}]';
     //     $arr1 =json_decode($arr);
     //     foreach ($arr1 as $key => $value) {
@@ -254,7 +252,8 @@ class LoginController extends Controller
     //         echo $value->name;
     //         echo "<br>";
     //     }
-        
-    // }
+//     $arr = explode('/',$req->fullurl());
+//     return $arr[4];
+// }
 
 }

@@ -18,15 +18,16 @@ class CheckVersion
      */
     public function handle(Request $request, Closure $next)
     {
-        $s = $request->route()->getPrefix();
+        $s = $request->fullurl();
         $pref = explode('/',$s);
 
-        $currentprefix = UserInfo::where('user_id',auth()->user()->id)->get()->first();
-        if($currentprefix->user_current_version != $pref[1]){
+        $currentprefix = AppVersion::orderby('id','desc')->get()->first();
+        if($currentprefix->short_version != $pref[4]){
             return response()->json([
                 'status' => false,
+                'update' => false,
                 'msg' => 'You are using old version',
-                'app_link' => AppVersion::orderby('id','desc')->get()->first()->app_link
+                'app_link' => $currentprefix->app_link
             ]);
         }
         return $next($request);

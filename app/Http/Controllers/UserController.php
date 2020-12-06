@@ -387,14 +387,6 @@ class UserController extends Controller
         }
     }
 
-    public function updateVersion(Request $request){
-        $version = UserInfo::where('user_id',auth()->user()->id)->get()->first();
-        $currentVersion = AppVersion::orderby('id','desc')->get()->first()->short_version;
-        $version->user_current_version = $currentVersion;
-        $version->save();
-        return response()->json([
-            'status' => true
-        ]);
-    }
+    
 
 }
