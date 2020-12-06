@@ -7,7 +7,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ShowController;
 
-Route::group(['prefix' => 'v1','middleware' => 'CheckVersion'],function(){
+Route::post('/updateVersion' ,[UserController::class , 'updateVersion'])->middleware('auth:sanctum'); // updating the version in userinfo table 
+Route::group(['prefix' => 'v2','middleware' => 'CheckVersion'],function(){
     Route::post('/register',[LoginController::class , 'register']); //mobile_no,name, email,password,gender,ref_code
     Route::post('/login',[LoginController::class , 'login']); //mobile_no , password,notification_token
     Route::post('/verifyotp',[LoginController::class , 'verifyOtp']); // mobile_no , otp
@@ -26,6 +27,7 @@ Route::group(['prefix' => 'v1','middleware' => 'CheckVersion'],function(){
         Route::post('/forgetPassword' , [LoginController::class , 'forgetOtp']); //mobile_no
         Route::post('/cancelMatch' , [UserController::class , 'cancelMatch']);   //tournament_id
         
+
         // payment route for join tournament
         Route::post('/payment-request' , [PaymentController::class , 'createPaymentOrder']); //amount
         Route::post('/payment-complete', [PaymentController::class , 'paymentComplete']); //razorpay_payment_id,razorpay_order_id,razorpay_signature
@@ -36,7 +38,7 @@ Route::group(['prefix' => 'v1','middleware' => 'CheckVersion'],function(){
         Route::post('/payment-complete-membership', [PaymentController::class , 'paymentCompleteMembership']);//razorpay_payment_id,razorpay_order_id,razorpay_signature
 
         // show data route
-        Route::get('/showtournament' , [ShowController::class , 'showTournaments']);
+        Route::get('/showtournament/{game}/{type}' , [ShowController::class , 'showTournaments']);
         Route::get('/pointTableUser' , [ShowController::class , 'pointTableUser']);
         Route::get('/mywallet' , [ShowController::class , 'myWallet']);
         Route::get('/allTransactions' , [ShowController::class , 'allTransactions']);

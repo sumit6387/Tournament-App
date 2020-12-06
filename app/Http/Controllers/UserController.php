@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\UserInfo;
 use App\Models\Tournament;
 use App\Models\Transaction;
+use App\Models\AppVersion;
 use App\Functions\AllFunction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -384,6 +385,16 @@ class UserController extends Controller
                 'msg' => 'something went wrong'
             ]);
         }
+    }
+
+    public function updateVersion(Request $request){
+        $version = UserInfo::where('user_id',auth()->user()->id)->get()->first();
+        $currentVersion = AppVersion::orderby('id','desc')->get()->first()->short_version;
+        $version->user_current_version = $currentVersion;
+        $version->save();
+        return response()->json([
+            'status' => true
+        ]);
     }
 
 }

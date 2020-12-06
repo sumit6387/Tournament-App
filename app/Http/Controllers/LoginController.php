@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\UserInfo;
 use App\Functions\AllFunction;
+use App\Models\AppVersion;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Validator;
@@ -86,6 +87,7 @@ class LoginController extends Controller
                             $user_info->refferal_code = $referal;
                             $user_info->profile_image = $image;
                             $user_info->gender = $request->gender;
+                            $user_info->user_current_version = AppVersion::orderby('id','desc')->get()->first()->short_version;
                             $user_info->save();
                             $code = $sendsms->referCode($new_user->id,$request->ref_code);
                             $user = UserInfo::where('user_id',$new_user->id)->get()->first();
