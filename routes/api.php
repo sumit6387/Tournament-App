@@ -29,7 +29,7 @@ Route::group(['prefix' => '{version}','middleware' => 'CheckVersion'],function()
         Route::post('/cancelMatch' , [UserController::class , 'cancelMatch']);   //tournament_id
         
 
-        // payment route for join tournament
+        // payment route for to add balance
         Route::post('/payment-request' , [PaymentController::class , 'createPaymentOrder']); //amount
         Route::post('/payment-complete', [PaymentController::class , 'paymentComplete']); //razorpay_payment_id,razorpay_order_id,razorpay_signature
 
