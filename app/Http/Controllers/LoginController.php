@@ -136,7 +136,7 @@ class LoginController extends Controller
             }else{
                 return response()->json([
                     'status' => false,
-                    'msg' => 'Credential are wrong',
+                    'msg' => 'Mobile no or password is wrong',
                     ]);
                 }
         }catch(Exception $e){
