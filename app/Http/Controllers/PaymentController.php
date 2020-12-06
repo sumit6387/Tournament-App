@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Razorpay\Api\Api;
 use App\Models\Transaction;
+use App\Models\UserInfo;
 use Validator;
 use Exception;
 use App\Models\UserInfo;
@@ -82,6 +83,7 @@ class PaymentController extends Controller
                 $transaction->save();
                 $user = UserInfo::where('user_id' , auth()->user()->id)->get()->first();
                 $user->wallet_amount = $user->wallet_amount + $transaction->amount;
+                $user->ptr_reward = $user->ptr_reward + 1;
                 $user->save();
                 $noOfTransaction = Transaction::where(['user_id'=>auth()->user()->id,'payment_done' => 1])->get();
                 if($noOfTransaction->count() == 1 && $user->ref_by != null){
