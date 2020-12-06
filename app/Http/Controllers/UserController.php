@@ -116,7 +116,7 @@ class UserController extends Controller
             $transaction->amount = $tournament->entry_fee;
             $transaction->description = 'For join the '.$tournament->game_type.' Tournament';
             $transaction->payment_id = Str::random(10);
-            $transaction->action = 'Withdraw';
+            $transaction->action = 'D';
             $transaction->payment_done = 1;
             $transaction->save();
 
@@ -253,7 +253,7 @@ class UserController extends Controller
                 $transaction->amount = $amount;
                 $transaction->description = 'For Claim The Prize';
                 $transaction->payment_id = Str::random(10);
-                $transaction->action = 'Credit';
+                $transaction->action = 'C';
                 $transaction->payment_done = 1;
                 $transaction->save();
                 return response()->json([

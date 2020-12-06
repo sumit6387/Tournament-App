@@ -126,7 +126,7 @@
             $transaction->description = 'For Tournament Reward';
            }
             $transaction->payment_id = Str::random(10);
-            $transaction->action = 'Credit';
+            $transaction->action = 'C';
             $transaction->payment_done = 1;
             $transaction->save();
            $users->save();

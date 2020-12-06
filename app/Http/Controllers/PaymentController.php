@@ -10,7 +10,6 @@ use App\Models\Transaction;
 use App\Models\UserInfo;
 use Validator;
 use Exception;
-use App\Models\UserInfo;
 
 class PaymentController extends Controller
 {
@@ -40,7 +39,7 @@ class PaymentController extends Controller
                 $newTransaction->reciept_id = $reciept_id;
                 $newTransaction->amount = $request->amount;
                 $newTransaction->description = "Adding Amount";
-                $newTransaction->action = "Add Money";
+                $newTransaction->action = "C";
                 $newTransaction->payment_id = $order['id'];
                 $newTransaction->save();
 
@@ -142,7 +141,7 @@ class PaymentController extends Controller
             $newTransaction->reciept_id = $reciept_id;
             $newTransaction->amount = 149;
             $newTransaction->description = "For Membership";
-            $newTransaction->description = "Withdraw";
+            $newTransaction->action = "D";
             $newTransaction->payment_id = $order['id'];
             $newTransaction->save();
 
