@@ -9,6 +9,7 @@ use Razorpay\Api\Api;
 use App\Models\Transaction;
 use Validator;
 use Exception;
+use App\Models\UserInfo;
 
 class PaymentController extends Controller
 {
@@ -83,7 +84,7 @@ class PaymentController extends Controller
                 $user->wallet_amount = $user->wallet_amount + $transaction->amount;
                 $user->save();
                 $noOfTransaction = Transaction::where(['user_id'=>auth()->user()->id,'payment_done' => 1])->get();
-                if($noOfTransaction->count() == 1){
+                if($noOfTransaction->count() == 1 && $user->ref_by != null){
                     //adding 50% amount on first transaction of users  this is for refer and earn
                     $users = UserInfo::where('refferal_code',$user->ref_by)->get()->first();
                     $users->wallet_amount = $users->wallet_amount + ($transaction->amount * 50) / 100;
@@ -112,7 +113,7 @@ class PaymentController extends Controller
     private function verifySignature($razorpay_payment_id, $razorpay_order_id,$signature){
        try{
         $api = new Api($this->razorpayId, $this->razorpayKey);
-        $attributes  = array('razorpay_signature'  => $signature,  'razorpay_payment_id'  => $razorpay_payment_id ,  'order_id' => $razorpay_order_id);
+        $attributes  = array('razorpay_signature'  => $signature,  'razorpay_payment_id'  => $razorpay_payment_id ,  'razorpay_order_id' => $razorpay_order_id);
         $order  = $api->utility->verifyPaymentSignature($attributes);
         return true;
       }catch(Exception $e){
