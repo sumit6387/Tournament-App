@@ -48,7 +48,7 @@ class ShowController extends Controller
     }
 
     public function pointTableUser(){
-        $users = User::select(['users.name','user_info.ptr_reward as ptr_reward'])->orderBy('ptr_reward','desc')->join('user_info','users.id','=','user_info.user_id')->take(20)->get();
+        $users = User::select(['user_info.profile_image','users.name','user_info.ptr_reward as ptr_reward'])->orderBy('ptr_reward','desc')->join('user_info','users.id','=','user_info.user_id')->take(20)->get();
         if($users){
             return response()->json([
                 'status' =>true,
