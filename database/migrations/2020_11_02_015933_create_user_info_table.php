@@ -24,9 +24,9 @@ class CreateUserInfoTable extends Migration
             $table->string('notification_token')->nullable(); 
             $table->string('ref_by')->nullable();
             $table->string('first_time_payment')->default('0');
-            $table->string('withdrawal_amount')->default('0');
-            $table->string('wallet_amount')->default('0');
-            $table->string('ptr_reward')->default('0');
+            $table->integer('withdrawal_amount')->default(0);
+            $table->integer('wallet_amount')->default(0);
+            $table->integer('ptr_reward')->default(0);
             $table->timestamps();
         });
     }

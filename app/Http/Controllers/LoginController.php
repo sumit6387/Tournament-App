@@ -87,15 +87,19 @@ class LoginController extends Controller
                             $user_info->profile_image = $image;
                             $user_info->gender = $request->gender;
                             $user_info->save();
-                            $code = $sendsms->referCode($new_user->id,$request->ref_code);
-                            $user = UserInfo::where('user_id',$new_user->id)->get()->first();
-                            if($user){
-                                if($code == $request->ref_code){
-                                    $user->ref_by = $code;
-                                    $user->wallet_amount = 5;
-                                    $user->save();
+                            if($request->ref_code){
+                                $code = $sendsms->referCode($new_user->id,$request->ref_code);
+                                $user = UserInfo::where('user_id',$new_user->id)->get()->first();
+                                if($user){
+                                    if($code == $request->ref_code){
+                                        $user->ref_by = $code;
+                                        $user->wallet_amount = 5;
+                                        $user->save();
+                                    }
                                 }
                             }
+
+                            
                             return response()->json(array('status'=>true,'msg'=>'user registered successfully'));
                             
                         }else{
@@ -122,7 +126,8 @@ class LoginController extends Controller
         $validator = Validator::make($req->all(),['mobile_no'=>'required','password'=>'required']);
         if($validator->passes()){
           try{
-            $data = User::where('mobile_no',$req->mobile_no)->get()->first();
+            $data = User::where(['mobile_no'=>$req->mobile_no , 'verified' => 1])->get()->first();
+            if($data){
             if (Hash::check($req->password, $data->password)) {
                     $token = $data->createToken('my-app-token')->plainTextToken;
                     $user = UserInfo::where('user_id' , $data->id)->get()->first();
@@ -139,6 +144,14 @@ class LoginController extends Controller
                     'msg' => 'Mobile no or password is wrong',
                     ]);
                 }
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'msg'=> 'You are not verified',
+                    'mobile_no' => $req->mobile_no,
+                    'verified' => false
+                ]);
+            }
         }catch(Exception $e){
             return response()->json([
                 'status' => false,
