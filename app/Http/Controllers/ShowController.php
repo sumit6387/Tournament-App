@@ -74,7 +74,7 @@ class ShowController extends Controller
     }
 
     public function allTransactions(){
-        $transaction = Transaction::select('transactions.amount','transactions.description','transactions.action','transactions.created_at')->where(['user_id'=>auth()->user()->id , 'completed' => 1])->get();
+        $transaction = Transaction::select('transactions.amount','transactions.description','transactions.action','transactions.created_at')->where(['user_id'=>auth()->user()->id , 'payment_done' => 1])->get();
         if($transaction){
             return response()->json([
                 'status' => true,
