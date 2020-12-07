@@ -86,7 +86,7 @@ class PaymentController extends Controller
                 $user->first_time_payment = 1;
                 $user->ptr_reward = $user->ptr_reward + 1;
                 $user->save();
-                $noOfTransaction = Transaction::where(['user_id'=>auth()->user()->id])->get();
+                $noOfTransaction = Transaction::where(['user_id'=>auth()->user()->id])->where('razorpay_id','!=',null)->get();
                 if($noOfTransaction->count() == 0 && $user->ref_by != null){
                     //adding 50% amount on first transaction of users  this is for refer and earn
                     $users = UserInfo::where('refferal_code',$user->ref_by)->get()->first();

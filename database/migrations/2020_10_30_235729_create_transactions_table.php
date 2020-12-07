@@ -17,7 +17,7 @@ class CreateTransactionsTable extends Migration
             $table->id();
             $table->string('user_id');
             $table->string('reciept_id');
-            $table->string('amount');
+            $table->integer('amount');
             $table->string('description')->nullable();
             $table->string('payment_id'); //this is order id of requesting payment
             $table->string('action'); //action field is for like debit credit  

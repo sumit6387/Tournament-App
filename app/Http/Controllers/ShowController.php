@@ -78,7 +78,7 @@ class ShowController extends Controller
         if($transaction){
             return response()->json([
                 'status' => true,
-                'data' => $transaction
+                'data' => $transaction->paginate(15)
             ]);
         }else{
             return response()->json([
