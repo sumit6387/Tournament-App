@@ -75,8 +75,8 @@ class PaymentController extends Controller
         ]);
 
         if($valid->passes()){
-            $completeStatus = true;
-            // $this->verifySignature($request->razorpay_payment_id,$request->razorpay_order_id,$request->razorpay_signature)
+            $completeStatus = $this->verifySignature($request->razorpay_payment_id,$request->razorpay_order_id,$request->razorpay_signature);
+         
             if($completeStatus){
                 $transaction = Transaction::where('payment_id' , $request->razorpay_order_id)->get()->first();
                 $transaction->payment_done  = 1;
