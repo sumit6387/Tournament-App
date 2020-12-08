@@ -73,11 +73,11 @@ class ShowController extends Controller
     }
 
     public function allTransactions(){
-        $transaction = Transaction::select('transactions.amount','transactions.description','transactions.action','transactions.created_at')->orderby('id','desc')->where(['user_id'=>auth()->user()->id , 'payment_done' => 1])->paginate(15);
-        if($transaction){
+        $transaction = Transaction::select('transactions.amount','transactions.description','transactions.action','transactions.created_at')->orderby('id','desc')->where(['user_id'=>auth()->user()->id , 'payment_done' => 1]);
+        if($transaction->get()->count()){
             return response()->json([
                 'status' => true,
-                'data' => $transaction
+                'data' => $transaction->paginate(10)
             ]);
         }else{
             return response()->json([

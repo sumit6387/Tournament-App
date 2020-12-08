@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Support\Str;
 use App\Models\Withdraw;
 use App\Models\UserInfo;
+use App\Functions\AllFunction;
 
 class WithdrawController extends Controller
 {
@@ -31,12 +32,20 @@ class WithdrawController extends Controller
                         $withdraw->transaction_id = $transaction_id;
                         $withdraw->amount = $userinfo->withdrawal_amount;
                         if($withdraw->save()){
-                            $userinfo->withdrawal_amount = 0;
-                            $userinfo->save();
-                            return response()->json([
-                                'status' => true,
-                                'msg' => 'Your Payment Transfer Within 24 Hours In Your Acount'
-                            ]);
+                            $transaction = new AllFunction();
+                            if($transaction->transaction($transaction_id,$userinfo->withdrawal_amount,'Withdraw Amount')){
+                                $userinfo->withdrawal_amount = 0;
+                                $userinfo->save();
+                                return response()->json([
+                                    'status' => true,
+                                    'msg' => 'Your Payment Transfer Within 24 Hours In Your Acount'
+                                ]);
+                            }else{
+                                return response()->json([
+                                    'status' => false,
+                                    'msg' => 'something went wrong'
+                                ]);
+                            }
                         }
 
                 }else{
@@ -62,12 +71,20 @@ class WithdrawController extends Controller
                         $withdraw->transaction_id = $transaction_id;
                         $withdraw->amount = $userinfo->withdrawal_amount;
                         if($withdraw->save()){
-                            $userinfo->withdrawal_amount = 0;
-                            $userinfo->save();
-                            return response()->json([
-                                'status' => true,
-                                'msg' => 'Your Payment Transfer Within 24 Hours In Your Acount'
-                            ]);
+                            $transaction = new AllFunction();
+                            if($transaction->transaction($transaction_id,$userinfo->withdrawal_amount,'Withdraw Amount')){
+                                $userinfo->withdrawal_amount = 0;
+                                $userinfo->save();
+                                return response()->json([
+                                    'status' => true,
+                                    'msg' => 'Your Payment Transfer Within 24 Hours In Your Acount'
+                                ]);
+                            }else{
+                                return response()->json([
+                                    'status' => false,
+                                    'msg' => 'something went wrong'
+                                ]);
+                            }
                         }
                 }else{
                     return response()->json([
@@ -76,7 +93,7 @@ class WithdrawController extends Controller
                     ]);
                 }
             }else if(strtoupper($request->mode) == 'BANK'){
-                $valid = Validator::make($request->all(),['acount_no'=>'required|numeric','ifsc_code'=>'required','mode'=>'required']);
+                $valid = Validator::make($request->all(),['acount_no'=>'required|numeric','ifsc_code'=>'required','mode'=>'required','bank' => 'required']);
                 if($valid->passes()){
                         $userinfo = UserInfo::where('user_id',auth()->user()->id)->get()->first();
                         if($userinfo->withdrawal_amount < 50){
@@ -89,15 +106,30 @@ class WithdrawController extends Controller
                         $withdraw->user_id = auth()->user()->id;
                         $withdraw->acount_no = $request->acount_no;
                         $withdraw->mode = $request->mode;
+                        $withdraw->name = $request->name;
+                        $withdraw->bank_name = $request->bank;
                         $withdraw->ifsc_code = $request->ifsc_code;
                         $withdraw->transaction_id = $transaction_id;
                         $withdraw->amount = $userinfo->withdrawal_amount;
                         if($withdraw->save()){
-                            $userinfo->withdrawal_amount = 0;
-                            $userinfo->save();
+                            $transaction = new AllFunction();
+                            if($transaction->transaction($transaction_id,$userinfo->withdrawal_amount,'Withdraw Amount')){
+                                $userinfo->withdrawal_amount = 0;
+                                $userinfo->save();
+                                return response()->json([
+                                    'status' => true,
+                                    'msg' => 'Your Payment Transfer Within 24 Hours In Your Acount'
+                                ]);
+                            }else{
+                                return response()->json([
+                                    'status' => false,
+                                    'msg' => 'something went wrong'
+                                ]);
+                            }
+                        }else{
                             return response()->json([
-                                'status' => true,
-                                'msg' => 'Your Payment Transfer Within 24 Hours In Your Acount'
+                                'status' => false,
+                                'msg' => 'something went wrong'
                             ]);
                         }
                 }else{
@@ -106,6 +138,7 @@ class WithdrawController extends Controller
                         'msg' => $valid->errors()->all()
                     ]);
                 }
+
             }
         }catch(Exception $e){
             return response()->json([

@@ -6,8 +6,10 @@
     use App\Models\UserInfo;
     use App\Models\Admin;
     use App\Models\Notification;
+    use App\Models\Transaction;
     use Exception;
     use Illuminate\Support\Facades\Http;
+    use Illuminate\Support\Str;
 
     class AllFunction{
         public function sendSms($number){
@@ -176,6 +178,26 @@
                     return false;
                 }
             
+        }
+
+        public function transaction($rec_id,$amount,$desc){
+           try{
+            $trans = new Transaction();
+            $trans->user_id = auth()->user()->id;
+            $trans->reciept_id = $rec_id;
+            $trans->amount = $amount;
+            $trans->payment_id = Str::random(12);
+            $trans->description = $desc;
+            $trans->action = 'W';
+            $trans->payment_done = 1;
+            if($trans->save()){
+                return true;
+            }else{
+                return false;
+            }
+          }catch(Exception $e){
+             return false;
+          }
         }
 }
             
