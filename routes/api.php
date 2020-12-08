@@ -52,7 +52,8 @@ Route::group(['prefix' => '{version}','middleware' => 'CheckVersion'],function()
         Route::get('/ourTournament' , [ShowController::class , 'ourTournament']);
         Route::post('/tournamentDetail' , [ShowController::class , 'tournamentDetail']); //tournament_id
         Route::get('/user' , [ShowController::class , 'user']);
-        Route::post('/check' , [LoginController::class , 'check']);
+        Route::post('/search',[ShowController::class, 'search']);
+        // Route::post('/check' , [LoginController::class , 'check']);
     });
     Route::fallback(function(){
         return response()->json([

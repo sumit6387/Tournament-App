@@ -151,5 +151,18 @@ class ShowController extends Controller
             'data' => $data
         ]);
     }
-
+        public function search(Request $req){
+            $data = Tournament::where(['created_by'=> 'User','tour_id'=>$req->id])->get();
+            if($data->count()){
+                return response()->json([
+                    'status'=> true,
+                    'data' => $data
+                ]);
+            }else{
+                return response()->json([
+                    'status'=> false,
+                    'data' => 'Enter Valid ID'
+                ]);
+            }
+        }
 }
