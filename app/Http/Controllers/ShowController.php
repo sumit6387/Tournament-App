@@ -10,16 +10,15 @@ use App\Models\Transaction;
 
 class ShowController extends Controller
 {
-    public function showTournaments($game , $type){
+    public function showTournaments($v ,$game, $type){
         $game = strtoupper($game);
-        $type = strtolower($type);
         $adminTournament = Tournament::orderby('tournament_start_date' , 'asc')->orderby('tournament_start_time','asc')->orderby('tournament_id' , 'desc')->where(['created_by'=>'Admin','tournament_type' => 'public','completed'=> 0,'cancel'=>0,'game_type' => $game , 'type' => $type])->get();
         if($adminTournament){
             $tour = true;
         }else{
             $adminTournament = "Nothing";
         }
-        $membersTournaments = Tournament::select(['tournaments.*','users.membership as membership'])->orderby('tournaments.tournament_id' , 'desc')->orderby('tournament_start_time','asc')->where(['tournaments.created_by'=>'User','tournaments.tournament_type' => 'public','tournaments.completed'=> 0,'tournaments.game_type' => $game , 'tournaments.type' => $type,'tournaments.cancel'=>0,'users.membership' => 1])->join('users','tournaments.id','=','users.id')->get();
+        $membersTournaments = Tournament::select(['tournaments.*','users.membership as membership'])->orderby('tournaments.tournament_start_date','asc')->orderby('tournaments.tournament_start_time','asc')->orderby('tournaments.tournament_id' , 'desc')->where(['tournaments.created_by'=>'User','tournaments.tournament_type' => 'public','tournaments.completed'=> 0,'tournaments.game_type' => $game , 'tournaments.type' => $type,'tournaments.cancel'=>0,'users.membership' => 1])->join('users','tournaments.id','=','users.id')->get();
         if($membersTournaments){
             $member = true;
         }else{
@@ -74,11 +73,11 @@ class ShowController extends Controller
     }
 
     public function allTransactions(){
-        $transaction = Transaction::select('transactions.amount','transactions.description','transactions.action','transactions.created_at')->where(['user_id'=>auth()->user()->id , 'payment_done' => 1])->get();
+        $transaction = Transaction::select('transactions.amount','transactions.description','transactions.action','transactions.created_at')->orderby('id','desc')->where(['user_id'=>auth()->user()->id , 'payment_done' => 1])->paginate(15);
         if($transaction){
             return response()->json([
                 'status' => true,
-                'data' => $transaction->paginate(15)
+                'data' => $transaction
             ]);
         }else{
             return response()->json([

@@ -6,6 +6,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ShowController;
+use App\Http\Controllers\WithdrawController;
 
 
 Route::group(['prefix' => '{version}','middleware' => 'CheckVersion'],function(){
@@ -37,6 +38,9 @@ Route::group(['prefix' => '{version}','middleware' => 'CheckVersion'],function()
         // payment route for membership
         Route::post('/payment-request-membership' , [PaymentController::class , 'createMembershipOrder']);
         Route::post('/payment-complete-membership', [PaymentController::class , 'paymentCompleteMembership']);//razorpay_payment_id,razorpay_order_id,razorpay_signature
+
+        // withdraw amount
+        Route::post('/withdraw',[WithdrawController::class , 'withdraw']); //mode , upi_id,paytm_no,acount_no,ifsc_code
 
         // show data route
         Route::get('/showtournament/{game}/{type}' , [ShowController::class , 'showTournaments']);
