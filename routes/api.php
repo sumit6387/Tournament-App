@@ -28,6 +28,7 @@ Route::group(['prefix' => '{version}','middleware' => 'CheckVersion'],function()
         Route::post('/forgetPasswordProcess',[UserController::class , 'forgetPassword']); //mobile_no,otp,password
         Route::post('/forgetPassword' , [LoginController::class , 'forgetOtp']); //mobile_no
         Route::post('/cancelMatch' , [UserController::class , 'cancelMatch']);   //tournament_id
+        Route::post('/UpdateTournamentComplete' , [UserController::class , 'UpdateTournamentComplete']);//tournament_id , results this is json
         
 
         // payment route for to add balance
@@ -53,6 +54,9 @@ Route::group(['prefix' => '{version}','middleware' => 'CheckVersion'],function()
         Route::post('/tournamentDetail' , [ShowController::class , 'tournamentDetail']); //tournament_id
         Route::get('/user' , [ShowController::class , 'user']);
         Route::post('/search',[ShowController::class, 'search']);
+        Route::get('/numberOfNotification' , [ShowController::class , 'numberOfNotification']);
+        Route::get('/notifications' , [ShowController::class , 'notification']);
+        Route::get('/updateSeen' , [ShowController::class , 'updateSeen']);
         // Route::post('/check' , [LoginController::class , 'check']);
     });
     Route::fallback(function(){

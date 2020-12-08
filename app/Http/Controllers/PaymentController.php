@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Razorpay\Api\Api;
 use App\Models\Transaction;
 use App\Models\UserInfo;
+use App\Functions\AllFunction;
 use Validator;
 use Exception;
 
@@ -86,15 +87,28 @@ class PaymentController extends Controller
                 $user->first_time_payment = 1;
                 $user->ptr_reward = $user->ptr_reward + 1;
                 $user->save();
+                $notifi = new AllFunction();
+                $notifi->sendNotification(array('id' => auth()->user()->id ,'title' => 'Money Added' , 'message' => $transaction->amount.'is added to your account','icon'=> 'money'));
                 $noOfTransaction = Transaction::where(['user_id'=>auth()->user()->id])->where('razorpay_id','!=',null)->get();
                 if($noOfTransaction->count() == 0 && $user->ref_by != null){
                     //adding 50% amount on first transaction of users  this is for refer and earn
                     $users = UserInfo::where('refferal_code',$user->ref_by)->get()->first();
                     $users->wallet_amount = $users->wallet_amount + ($transaction->amount * 50) / 100;
+                    $notifi->sendNotification(array('id' => $users->user_id ,'title' => 'Reffering Added' , 'message' => 'Your '.($transaction->amount * 50 / 100).' money of reffering in your account','icon'=> 'money'));
+                    $newTransaction = new Transaction();
+                    $newTransaction->user_id = $users->user_id;
+                    $newTransaction->reciept_id = Str::random(12);
+                    $newTransaction->amount = $transaction->amount * 50;
+                    $newTransaction->description = "Referal Friend Added Money You Get 50% of your friends added money first time";
+                    $newTransaction->action = "C";
+                    $newTransaction->payment_done = 1;
+                    $newTransaction->payment_id = Str::random(20);
+                    $newTransaction->save();
                     $users->save();
                     $user_info = UserInfo::where('user_id' , auth()->user()->id)->get()->first();
                     $user_info->first_time_payment = 1;
                     $user_info->save();
+
                 }
 
                 return response()->json([

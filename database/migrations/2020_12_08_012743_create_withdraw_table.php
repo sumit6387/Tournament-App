@@ -16,7 +16,7 @@ class CreateWithdrawTable extends Migration
         Schema::create('withdraw', function (Blueprint $table) {
             $table->id();
             $table->string('user_id');
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->string('transaction_id')->unique();
             $table->string('ifsc_code')->nullable();
             $table->string('bank_name')->nullable();

@@ -7,6 +7,7 @@ use App\Models\Tournament;
 use App\Models\User;
 use App\Models\UserInfo;
 use App\Models\Transaction;
+use App\Models\Notification;
 
 class ShowController extends Controller
 {
@@ -145,7 +146,7 @@ class ShowController extends Controller
 
 
     public function user(){
-        $data = User::select(['users.*','user_info.gender','user_info.profile_image','user_info.state','user_info.country','user_info.refferal_code','user_info.ref_by','user_info.withdrawal_amount','user_info.wallet_amount','user_info.ptr_reward'])->where('users.id' , auth()->user()->id)->join('user_info','users.id','=','user_info.user_id')->get()->toArray();
+        $data = User::select(['users.*','user_info.gender','user_info.profile_image','user_info.state','user_info.country','user_info.refferal_code','user_info.ref_by','user_info.withdrawal_amount','user_info.wallet_amount','user_info.ptr_reward'])->where('users.id' , auth()->user()->id)->join('user_info','users.id','=','user_info.user_id')->get();
         return response()->json([
             'status' => true,
             'data' => $data
@@ -162,6 +163,49 @@ class ShowController extends Controller
                 return response()->json([
                     'status'=> false,
                     'data' => 'Enter Valid ID'
+                ]);
+            }
+        }
+
+        public function numberOfNotification(){
+            $no_of_notification = Notification::where(['user_id' => auth()->user()->id , 'seen' => 0])->get()->count();
+            if($no_of_notification){
+                return response()->json([
+                    'status' => true,
+                    'data' => $no_of_notification
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'data' => 0
+                ]);
+            }
+        }
+
+        public function notification(){
+            $notifications  = Notification::where('user_id',auth()->user()->id);
+            if($notifications->get()->count()){
+                return response()->json([
+                    'status'=> true,
+                    'data' => $notifications->paginate(10)
+                ]);
+            }else{
+                return response()->json([
+                    'status'=> false,
+                    'data' => 'You have no notification'
+                ]);
+            }
+        }
+
+        public function updateSeen(){
+            $notifi = Notification::where('user_id',auth()->user()->id)->update(['seen' => 1]);
+            if($notifi){
+                return response()->json([
+                    'status' => true
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false
                 ]);
             }
         }

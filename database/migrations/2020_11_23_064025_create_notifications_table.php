@@ -19,6 +19,7 @@ class CreateNotificationsTable extends Migration
             $table->string('title');
             $table->string('message');
             $table->string('icon');
+            $table->boolean('seen')->default(0);
             $table->timestamps();
         });
     }

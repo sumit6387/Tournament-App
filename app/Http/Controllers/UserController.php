@@ -193,6 +193,11 @@ class UserController extends Controller
             $tournament = Tournament::where(['tournament_id' => $request->tournament_id , 'created_by' => 'User','id'=>auth()->user()->id])->update(['user_id' => $request->user_id,'password' => $request->password]);
             if($tournament){
                 $tournament = Tournament::where(['tournament_id' => $request->tournament_id , 'created_by' => 'User','id'=>auth()->user()->id])->get()->first();
+                $notifi = new AllFunction();
+                $arr = explode(',',$tournament->joined_user);
+                for ($i=0; $i < sizeof($arr); $i++) { 
+                    $notifi->sendNotification(array('id' => $arr[$i] ,'title' => 'Come on join' , 'message' => 'RoomId And Password Updated of the tournament go and start match','icon'=> 'gamepad'));
+                }
                 return response()->json([
                     'status' => true,
                     'msg' => 'UserId And Password Added'
@@ -210,6 +215,46 @@ class UserController extends Controller
             ]);
         }
     }else{
+            return response()->json([
+                'status' => false,
+                'msg' => $valid->errors()->all()
+            ]);
+        }
+    }
+
+    public function UpdateTournamentComplete(Request $req){
+        $valid = Validator::make($req->all(),['tournament_id'=> 'required' , 'results' => 'required']);
+        if($valid->passes()){
+            $result = new Result();
+            $result->tournament_id = $req->tournament_id;
+            $result->results = $req->results;
+            $winner = json_decode($req->results);
+            $prize  = new AllFunction();
+            foreach ($winner as $key => $value) {
+                //prize distribution 
+                $prize->prizeDistribution($value->user_id,$value->kill,$value->winner,$req->tournament_id);
+                if($value->winner == 1){
+                    $result->winner_id = $value->user_id;
+                    $users = UserInfo::where('user_id',$value->user_id)->get()->first();
+                    $users->ptr_reward = $users->ptr_reward+10;
+                    $users->save();
+                }
+            }
+            $result->save();
+            $data = Tournament::where('tournament_id',$req->tournament_id)->update(['completed' => 1]);
+            if($data){
+                return response()->json([
+                    'status' => true,
+                    'msg' => 'status updated'
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Something Went Wrong'
+                ]);
+            }
+        
+        }else{
             return response()->json([
                 'status' => false,
                 'msg' => $valid->errors()->all()
@@ -386,7 +431,5 @@ class UserController extends Controller
             ]);
         }
     }
-
     
-
 }
