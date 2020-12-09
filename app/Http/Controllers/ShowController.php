@@ -36,8 +36,8 @@ class ShowController extends Controller
             return response()->json([
                 'status' => true,
                 'AdminTournament' => $adminTournament,
+                'membersTournaments'=> $membersTournaments,
                 'userData' => $userTournament,
-                'membersTournaments'=> $membersTournaments
                 ]);
         }else{
             return response()->json([
