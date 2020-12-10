@@ -20,7 +20,7 @@ class ShowController extends Controller
             $tour = true;
             foreach ($adminTournament as $key => $value) {
                 array_push($data,$value);
-                $data[$key]->joined_user = explode(',',$data[$key]->joined_user);
+                $data[$key]->joined_user = sizeof(explode(',',$data[$key]->joined_user));
             }
 
         }else{
@@ -31,7 +31,7 @@ class ShowController extends Controller
             $member = true;
             foreach ($membersTournaments as $key => $value) {
                 array_push($data,$value);
-                $data[$key]->joined_user = explode(',',$data[$key]->joined_user);
+                $data[$key]->joined_user = sizeof(explode(',',$data[$key]->joined_user));
             }
         }else{
             $membersTournaments = "Nothing";
@@ -42,7 +42,7 @@ class ShowController extends Controller
             $userTour = true;
             foreach ($userTournament as $key => $value) {
                 array_push($data,$value);
-                $data[$key]->joined_user = explode(',',$data[$key]->joined_user);
+                $data[$key]->joined_user = sizeof(explode(',',$data[$key]->joined_user));
             }
 
         }else{
@@ -130,7 +130,10 @@ class ShowController extends Controller
     }
     public function ourTournament(){
         $data = Tournament::orderby('id','desc')->where(['created_by' => 'User','id' => auth()->user()->id,'completed' => 0 , 'cancel' => 0])->get();
-        if($data){
+        if($data->count() > 0){
+            foreach ($data as $key => $value) {
+                $value->joined_user = sizeof(explode(',',$value->joined_user));
+            }
             return response()->json([
                 'status' => true,
                 'data' => $data
@@ -146,6 +149,7 @@ class ShowController extends Controller
     public function tournamentDetail(Request $req){
         $data = Tournament::where(['tournament_id' => $req->tournament_id , 'created_by' => 'User'])->get()->first();
         if($data){
+            $data->joined_user = sizeof(explode(',',$data->joined_user));
             return response()->json([
                 'status' => true,
                 'data' => $data

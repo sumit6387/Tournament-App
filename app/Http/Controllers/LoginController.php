@@ -265,6 +265,7 @@ class LoginController extends Controller
         foreach ($arr1 as $key => $value) {
             array_push($data,$value);
             $data[$key]->name = "Rahul";
+            $data[$key]->sec = "B";
         }
         $b = '{
             "name": "sumit"
