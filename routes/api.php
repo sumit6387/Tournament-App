@@ -20,7 +20,7 @@ Route::group(['prefix' => '{version}','middleware' => 'CheckVersion'],function()
         Route::post('/updatedata',[UserController::class , 'store']); //name , image,email,state,country,mobike_no,gender
         Route::post('/joinTournament' , [UserController::class , 'joinTournament']); //tournament_id
         Route::post('/addTournament' , [UserController::class , 'createUserTournament'])->middleware('CheckTournament'); //prize_pool,winning,per_kill,entry_feeentry_fee,type,map,tournament_name,img,max_user_participated,game_type,tournament_type,tournament_name,tournament_start_date,tournament_start_time
-        Route::post('/startmatch' , [UserController::class , 'updatePassword']); //tournament_id,user_id,password    in this route we update games id and password realtime
+        Route::post('/startmatch' , [UserController::class , 'updatePassword']); //tournament_id,room_id,password    in this route we update games id and password realtime
         Route::get('/claimPrize',[UserController::class , 'claimPrize']);
         Route::post('/changePassword' , [UserController::class , 'changePassword']); // current_password,new_password , confirm_password
         Route::post('/forgetPasswordProcess',[UserController::class , 'forgetPassword']); //mobile_no,otp,password
