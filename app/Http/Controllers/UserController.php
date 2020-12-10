@@ -7,6 +7,7 @@ use App\Models\UserInfo;
 use App\Models\Tournament;
 use App\Models\Transaction;
 use App\Models\AppVersion;
+use App\Models\UserName;
 use App\Functions\AllFunction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -60,13 +61,15 @@ class UserController extends Controller
 
 
     public function joinTournament(Request $request){
+        $valid = Validator::make($request->all(),['pubg_username' => 'required' ,'pubg_userid' =>'required']);
+        if($valid->passes()){
         try{
             $tournament = Tournament::where('tournament_id',$request->tournament_id)->get()->first();
             $arr = explode(',',$tournament->joined_user);
             if(sizeof($arr) == $tournament->max_user_participated){
                 return response()->json([
                     'status' => false,
-                    'msg' => 'Max Limit exceeded'
+                    'msg' => 'Max Limit exceeded. Join Another Tournament'
                 ]);
             }
             $user = UserInfo::where('user_id',auth()->user()->id)->get()->first();
@@ -103,6 +106,23 @@ class UserController extends Controller
             $transaction->action = 'D';
             $transaction->payment_done = 1;
             $transaction->save();
+            $username = new UserName();
+            $username->user_id = auth()->user()->id;
+            $username->tournament_id = $request->tournament_id;
+            $username->pubg_username = $request->pubg_username;
+            $username->pubg_user_id = $request->pubg_userID;
+            $username->save();
+            $history = new History();
+            $history->user_id = auth()->user()->id;
+            $history->tournament_id = $request->tournament_id;
+            $history->game = $tournament->game_type;
+            if($tournament->tournament_start_at == date('y-m-d')){
+                $history->status = 'Live';
+            }else{
+                $history->status = 'Past';
+            }
+            $history->save();
+
 
             return response()->json([
                 'status' => true,
@@ -114,7 +134,14 @@ class UserController extends Controller
                 'msg' => 'Something Went Wrong'
             ]);
         }
+    }else{
+        return response()->json([
+            'status' => false,
+            'msg' => $valid->errors()->all()
+        ]);
     }
+}
+    
 
     public function createUserTournament(Request $request){
         $valid = Validator::make($request->all(),[
@@ -124,7 +151,7 @@ class UserController extends Controller
             'entry_fee' => 'required|numeric',
             'type' => 'required',
             'tournament_name' => 'required',
-            'map' => 'required',
+            'maps' => 'required',
             'img' => 'required',
             'max_user_participated' => 'required',
             'game_type' => 'required',
@@ -385,10 +412,12 @@ class UserController extends Controller
             $data = Tournament::where(['created_by' => 'User' , 'tournament_id' => $request->tournament_id , 'id' => auth()->user()->id])->get()->first();
             if($data){
                 $users = explode(',',$data->joined_user);
-                foreach ($users as $key => $value) {
-                    $user = UserInfo::where('user_id' , $value)->get()->first();
-                    $user->wallet_amount = $user->wallet_amount + $data->entry_fee;
-                    $user->save();
+                if(sizeof($users)){
+                    foreach ($users as $key => $value) {
+                        $user = UserInfo::where('user_id' , $value)->get()->first();
+                        $user->wallet_amount = $user->wallet_amount + $data->entry_fee;
+                        $user->save();
+                    }
                 }
                 $data->cancel = 1;
                 $data->save();
@@ -415,5 +444,6 @@ class UserController extends Controller
             ]);
         }
     }
+
     
 }

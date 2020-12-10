@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Tournament;
 use App\Models\User;
 use App\Models\UserInfo;
+use App\Models\UserName;
 use App\Models\Transaction;
 use App\Models\Notification;
 
@@ -13,15 +14,25 @@ class ShowController extends Controller
 {
     public function showTournaments($v ,$game, $type){
         $game = strtoupper($game);
+        $data = array();
         $adminTournament = Tournament::orderby('created_at' , 'asc')->where(['created_by'=>'Admin','tournament_type' => 'public','completed'=> 0,'cancel'=>0,'game_type' => $game , 'type' => $type])->get();
         if($adminTournament){
             $tour = true;
+            foreach ($adminTournament as $key => $value) {
+                array_push($data,$value);
+                $data[$key]->joined_user = explode(',',$data[$key]->joined_user);
+            }
+
         }else{
             $adminTournament = "Nothing";
         }
         $membersTournaments = Tournament::select(['tournaments.*','users.membership as membership'])->orderby('tournaments.created_at' , 'asc')->where(['tournaments.created_by'=>'User','tournaments.tournament_type' => 'public','tournaments.completed'=> 0,'tournaments.game_type' => $game , 'tournaments.type' => $type,'tournaments.cancel'=>0,'users.membership' => 1])->join('users','tournaments.id','=','users.id')->get();
         if($membersTournaments){
             $member = true;
+            foreach ($membersTournaments as $key => $value) {
+                array_push($data,$value);
+                $data[$key]->joined_user = explode(',',$data[$key]->joined_user);
+            }
         }else{
             $membersTournaments = "Nothing";
         }
@@ -29,15 +40,18 @@ class ShowController extends Controller
         $userTournament = Tournament::select(['tournaments.*','users.membership as membership'])->orderby('tournaments.created_at' , 'asc')->where(['tournaments.created_by'=>'User','tournaments.tournament_type' => 'public','tournaments.completed'=> 0,'tournaments.cancel'=>0,'tournaments.game_type'=>$game,'tournaments.type'=>$type,'users.membership' => 0])->join('users','tournaments.id','=','users.id')->get();
         if($userTournament){
             $userTour = true;
+            foreach ($userTournament as $key => $value) {
+                array_push($data,$value);
+                $data[$key]->joined_user = explode(',',$data[$key]->joined_user);
+            }
+
         }else{
             $userTournament = 'Nothing';
         }
         if($tour || $userTour || $member){
             return response()->json([
                 'status' => true,
-                'data' => $adminTournament,
-                'membersTournaments'=> $membersTournaments,
-                'userData' => $userTournament,
+                'data' => $data
                 ]);
         }else{
             return response()->json([
@@ -208,5 +222,27 @@ class ShowController extends Controller
                     'status' => false
                 ]);
             }
+        }
+
+        public function showUsername($id){
+            $data = Tournament::where('tournament_id',$id)->get()->first();
+            $arr = explode(',',$data->joined_user);
+            $usernames = array();
+            if(sizeof($arr)){
+            for ($i=0; $i < sizeof($arr); $i++) { 
+                $username = UserName::select(['usernames.pubg_username','usernames.pubg_user_id'])->where(['user_id' => $arr[$i] , 'tournament_id' => $id])->get()->first();
+                array_push($usernames,$username);
+            }
+            return response()->json([
+                'status' => true,
+                'data'=> $usernames
+            ]);
+
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => 'No User Participated'
+            ]);
+        }
         }
 }

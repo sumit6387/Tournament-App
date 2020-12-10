@@ -128,7 +128,7 @@ class MainController extends Controller
             'per_kill' => 'required',
             'entry_fee' => 'required',
             'type' => 'required',
-            'map' => 'required',
+            'maps' => 'required',
             'max_user_participated' => 'required',
             'game_type' => 'required',
             'tournament_type' => 'required',

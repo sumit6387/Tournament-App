@@ -23,7 +23,7 @@ class CreateTournamentsTable extends Migration
             $table->string('tournament_name');
             $table->string('img');
             $table->string('type'); //solo , squad,Duo
-            $table->string('map');
+            $table->string('maps');
             $table->string('joined_user'); // how many user joined tournament
             $table->string('max_user_participated'); //max user participate in the tournaments
             $table->string('game_type'); //Faug,Pubg

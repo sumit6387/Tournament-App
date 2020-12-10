@@ -82,8 +82,8 @@
                 $new_tournament->per_kill = $data['per_kill'];
                 $new_tournament->entry_fee = $data['entry_fee'];
                 $new_tournament->type = $data['type'];
-                $new_tournament->map = $data['map'];
-                $new_tournament->map = $data['tournament_name'];
+                $new_tournament->maps = $data['maps'];
+                $new_tournament->tournament_name = $data['tournament_name'];
                 $new_tournament->img = $data['img'];
                 $new_tournament->max_user_participated = $data['max_user_participated'];
                 $new_tournament->game_type = $data['game_type'];
