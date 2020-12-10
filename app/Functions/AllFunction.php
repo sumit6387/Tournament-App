@@ -158,7 +158,7 @@
             $user = UserInfo::where('user_id' , $data['id'])->get()->first();
             $resp = Http::withHeaders([
                 'Content-Type' => 'application/json',
-                'Authorization'=>'AAAA6lNbeY8:APA91bEVvPfXHiOg8w40IoJ4WS-mBlPmtuv9sCGIeszjEY2Q6clbu91PHgL5MEng7JdCVAFcUAbS4EyyCVKHA6bFT2GpRN8V4H_qi2Lm_ytoPseWbnw17RvvA8hfNbEyj0xTTl8nXvOy'
+                'Authorization'=>'key=AAAA6lNbeY8:APA91bEVvPfXHiOg8w40IoJ4WS-mBlPmtuv9sCGIeszjEY2Q6clbu91PHgL5MEng7JdCVAFcUAbS4EyyCVKHA6bFT2GpRN8V4H_qi2Lm_ytoPseWbnw17RvvA8hfNbEyj0xTTl8nXvOy'
                 ])->post('https://fcm.googleapis.com/fcm/send',[
                       'data' => [
                         'title' => $data['title'],
@@ -170,7 +170,7 @@
                     $notification =new Notification();
                     $notification->user_id = $data['id'];
                     $notification->title = $data['title'];
-                    $notification->message = $data['message'];
+                    $notification->message = $data['msg'];
                     $notification->icon = $data['icon'];
                     $notification->save();
                     return true;

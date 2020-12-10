@@ -180,7 +180,7 @@ class UserController extends Controller
                 $notifi = new AllFunction();
                 $arr = explode(',',$tournament->joined_user);
                 for ($i=0; $i < sizeof($arr); $i++) { 
-                    $notifi->sendNotification(array('id' => $arr[$i] ,'title' => 'Come on join' , 'message' => 'RoomId And Password Updated of the tournament go and start match','icon'=> 'gamepad'));
+                    $notifi->sendNotification(array('id' => $arr[$i] ,'title' => 'Come on join' , 'msg' => 'RoomId And Password Updated of the tournament go and start match','icon'=> 'gamepad'));
                 }
                 return response()->json([
                     'status' => true,

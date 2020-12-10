@@ -51,7 +51,7 @@ Route::group(['prefix' => '{version}','middleware' => 'CheckVersion'],function()
         Route::get('/ourTournament' , [ShowController::class , 'ourTournament']);
         Route::post('/tournamentDetail' , [ShowController::class , 'tournamentDetail']); //tournament_id
         Route::get('/user' , [ShowController::class , 'user']);
-        Route::post('/search',[ShowController::class, 'search']);
+        Route::post('/search',[ShowController::class, 'search']);//id
         Route::get('/numberOfNotification' , [ShowController::class , 'numberOfNotification']);
         Route::get('/notifications' , [ShowController::class , 'notification']);
         Route::get('/updateSeen' , [ShowController::class , 'updateSeen']);
