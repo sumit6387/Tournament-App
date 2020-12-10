@@ -18,8 +18,6 @@ Route::group(['prefix' => '{version}','middleware' => 'CheckVersion'],function()
     
     Route::group(['middleware' => 'auth:sanctum','api'], function(){
         Route::post('/updatedata',[UserController::class , 'store']); //name , image,email,state,country,mobike_no,gender
-        Route::post('/apply_ref_code',[UserController::class,'applyRefCode'])
-        ->middleware('CheckRefCode');  //ref_code
         Route::post('/joinTournament' , [UserController::class , 'joinTournament']); //tournament_id
         Route::post('/addTournament' , [UserController::class , 'createUserTournament'])->middleware('CheckTournament'); //prize_pool,winning,per_kill,entry_feeentry_fee,type,map,tournament_name,img,max_user_participated,game_type,tournament_type,tournament_name,tournament_start_date,tournament_start_time
         Route::post('/startmatch' , [UserController::class , 'updatePassword']); //tournament_id,user_id,password    in this route we update games id and password realtime
@@ -57,7 +55,7 @@ Route::group(['prefix' => '{version}','middleware' => 'CheckVersion'],function()
         Route::get('/numberOfNotification' , [ShowController::class , 'numberOfNotification']);
         Route::get('/notifications' , [ShowController::class , 'notification']);
         Route::get('/updateSeen' , [ShowController::class , 'updateSeen']);
-        // Route::post('/check' , [LoginController::class , 'check']);
+        Route::post('/check' , [LoginController::class , 'check']);
     });
     Route::fallback(function(){
         return response()->json([

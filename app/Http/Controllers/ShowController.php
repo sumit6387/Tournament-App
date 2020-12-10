@@ -13,20 +13,20 @@ class ShowController extends Controller
 {
     public function showTournaments($v ,$game, $type){
         $game = strtoupper($game);
-        $adminTournament = Tournament::orderby('tournament_start_date' , 'asc')->orderby('tournament_start_time','asc')->orderby('tournament_id' , 'desc')->where(['created_by'=>'Admin','tournament_type' => 'public','completed'=> 0,'cancel'=>0,'game_type' => $game , 'type' => $type])->get();
+        $adminTournament = Tournament::orderby('created_at' , 'asc')->where(['created_by'=>'Admin','tournament_type' => 'public','completed'=> 0,'cancel'=>0,'game_type' => $game , 'type' => $type])->get();
         if($adminTournament){
             $tour = true;
         }else{
             $adminTournament = "Nothing";
         }
-        $membersTournaments = Tournament::select(['tournaments.*','users.membership as membership'])->orderby('tournaments.tournament_start_date','asc')->orderby('tournaments.tournament_start_time','asc')->orderby('tournaments.tournament_id' , 'desc')->where(['tournaments.created_by'=>'User','tournaments.tournament_type' => 'public','tournaments.completed'=> 0,'tournaments.game_type' => $game , 'tournaments.type' => $type,'tournaments.cancel'=>0,'users.membership' => 1])->join('users','tournaments.id','=','users.id')->get();
+        $membersTournaments = Tournament::select(['tournaments.*','users.membership as membership'])->orderby('tournaments.created_at' , 'asc')->where(['tournaments.created_by'=>'User','tournaments.tournament_type' => 'public','tournaments.completed'=> 0,'tournaments.game_type' => $game , 'tournaments.type' => $type,'tournaments.cancel'=>0,'users.membership' => 1])->join('users','tournaments.id','=','users.id')->get();
         if($membersTournaments){
             $member = true;
         }else{
             $membersTournaments = "Nothing";
         }
 
-        $userTournament = Tournament::select(['tournaments.*','users.membership as membership'])->orderby('tournaments.tournament_id' , 'desc')->orderby('tournament_start_time','asc')->where(['tournaments.created_by'=>'User','tournaments.tournament_type' => 'public','tournaments.completed'=> 0,'tournaments.cancel'=>0,'tournaments.game_type'=>$game,'tournaments.type'=>$type,'users.membership' => 0])->join('users','tournaments.id','=','users.id')->get();
+        $userTournament = Tournament::select(['tournaments.*','users.membership as membership'])->orderby('tournaments.created_at' , 'asc')->where(['tournaments.created_by'=>'User','tournaments.tournament_type' => 'public','tournaments.completed'=> 0,'tournaments.cancel'=>0,'tournaments.game_type'=>$game,'tournaments.type'=>$type,'users.membership' => 0])->join('users','tournaments.id','=','users.id')->get();
         if($userTournament){
             $userTour = true;
         }else{

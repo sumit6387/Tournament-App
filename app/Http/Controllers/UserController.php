@@ -58,33 +58,17 @@ class UserController extends Controller
         ]);
     }
 
-    public function applyRefCode(Request $req){
-        $user = UserInfo::where('user_id',auth()->user()->id)->get()->first();
-        if($user){
-            $user->ref_by = $req->ref_code;
-            if($user->update()){
-                return response()->json([
-                    'status' =>true,
-                    'msg' => 'Reffer Code Apply'
-                ]);
-            }else{
-                return response()->json([
-                    'status' =>false,
-                    'msg' => 'Some Problem Occur'
-                ]);
-            }
-        }else{
-            return response()->json([
-                'status' =>false,
-                'msg' => 'Some Problem Occur'
-            ]);
-        }
-        
-    }
 
     public function joinTournament(Request $request){
         try{
             $tournament = Tournament::where('tournament_id',$request->tournament_id)->get()->first();
+            $arr = explode(',',$tournament->joined_user);
+            if(sizeof($arr) == $tournament->max_user_participated){
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Max Limit exceeded'
+                ]);
+            }
             $user = UserInfo::where('user_id',auth()->user()->id)->get()->first();
             if($user->wallet_amount < $tournament->entry_fee){
                 return response()->json([
@@ -178,7 +162,7 @@ class UserController extends Controller
     }
 
     public function updatePassword(Request $request){
-        $valid = Validator::make($request->all(),['tournament_id' => 'required','user_id' => 'required' , 'password' => 'required']);
+        $valid = Validator::make($request->all(),['tournament_id' => 'required','room_id' => 'required' , 'password' => 'required']);
         if($valid->passes()){
           try{
             $tournament1 = Tournament::where(['tournament_id' => $request->tournament_id , 'created_by' => 'User','id'=>auth()->user()->id])->get()->first();
@@ -190,7 +174,7 @@ class UserController extends Controller
                     'msg' => 'Minimum 50% user required for start the tournament'
                 ]);
             }
-            $tournament = Tournament::where(['tournament_id' => $request->tournament_id , 'created_by' => 'User','id'=>auth()->user()->id])->update(['user_id' => $request->user_id,'password' => $request->password]);
+            $tournament = Tournament::where(['tournament_id' => $request->tournament_id , 'created_by' => 'User','id'=>auth()->user()->id])->update(['room_id' => $request->room_id,'password' => $request->password]);
             if($tournament){
                 $tournament = Tournament::where(['tournament_id' => $request->tournament_id , 'created_by' => 'User','id'=>auth()->user()->id])->get()->first();
                 $notifi = new AllFunction();

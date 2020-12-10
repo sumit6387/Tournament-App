@@ -32,7 +32,7 @@ class CreateTournamentsTable extends Migration
             $table->string('tournament_type'); //public/private
             $table->string('created_by'); //user or admin
             $table->string('id')->nullable(); //if tournament created by user then its user_id
-            $table->string('user_id')->nullable(); //In particuller games login id
+            $table->string('room_id')->nullable(); //In particuller games login id
             $table->string('password')->nullable(); //In particuller games password
             $table->string('tournament_start_date'); //starting date of tournament
             $table->string('tournament_start_time'); //starting time of tournament

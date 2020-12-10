@@ -167,7 +167,7 @@ class MainController extends Controller
     public function updateIdPassword(Request $request){
         $valid = Validator::make($request->all(),['tournament_id' => 'required','user_id' => 'required' , 'password' => 'required']);
         if($valid->passes()){
-            $tournament = Tournament::where('tournament_id' , $request->tournament_id)->update(['user_id' => $request->user_id,'password' => $request->password]);
+            $tournament = Tournament::where('tournament_id' , $request->tournament_id)->update(['room_id' => $request->user_id,'password' => $request->password]);
             if($tournament){
                 $user = Tournament::where('tournament_id',$request->tournament_id)->get()->first()->joined_user;
                 event(new SubmitIdPassword($request->user_id,$request->password,$user));
