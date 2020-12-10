@@ -224,13 +224,35 @@ class ShowController extends Controller
             }
         }
 
-        public function showUsername($id){
+        public function showUsername($v,$id){
             $data = Tournament::where('tournament_id',$id)->get()->first();
             $arr = explode(',',$data->joined_user);
             $usernames = array();
-            if(sizeof($arr)){
+            if(sizeof($arr) > 0){
             for ($i=0; $i < sizeof($arr); $i++) { 
-                $username = UserName::select(['usernames.pubg_username','usernames.pubg_user_id'])->where(['user_id' => $arr[$i] , 'tournament_id' => $id])->get()->first();
+                $username = UserName::select(['usernames.pubg_username','usernames.pubg_user_id','user_info.profile_image as img'])->where(['usernames.user_id' => $arr[$i] , 'usernames.tournament_id' => $id])->join('user_info','usernames.user_id','=','user_info.user_id')->get()->first();
+                array_push($usernames,$username);
+            }
+            return response()->json([
+                'status' => true,
+                'data'=> $usernames
+            ]);
+
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => 'No User Participated'
+            ]);
+        }
+        }
+
+        public function showUsernameForCreator($v,$id){
+            $data = Tournament::where('tournament_id',$id)->get()->first();
+            $arr = explode(',',$data->joined_user);
+            $usernames = array();
+            if(sizeof($arr) > 0){
+            for ($i=0; $i < sizeof($arr); $i++) { 
+                $username = UserName::select(['usernames.pubg_username','usernames.pubg_user_id','usernames.user_id','user_info.profile_image as img'])->where(['usernames.user_id' => $arr[$i] , 'usernames.tournament_id' => $id])->join('user_info','usernames.user_id','=','user_info.user_id')->get()->first();
                 array_push($usernames,$username);
             }
             return response()->json([

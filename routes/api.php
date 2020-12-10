@@ -57,6 +57,7 @@ Route::group(['prefix' => '{version}','middleware' => 'CheckVersion'],function()
         Route::get('/updateSeen' , [ShowController::class , 'updateSeen']);
         Route::get('/usernames/{id}' , [ShowController::class , 'showUsername']); //tournament_id
         Route::get('/history/{game}/{time}',[ShowController::class , 'history']);//game,time
+        Route::get('/usernamesForCreator/{id}' , [ShowController::class , 'showUsernameForCreator']); //tournament_id
         Route::post('/check' , [LoginController::class , 'check']);
     });
     Route::fallback(function(){
