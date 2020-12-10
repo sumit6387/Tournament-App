@@ -11,7 +11,7 @@ use App\Models\UserInfo;
 use App\Functions\AllFunction;
 use Validator;
 use Exception;
-
+use App\Models\User;
 class PaymentController extends Controller
 {
     private $razorpayId = "rzp_test_c1rvyv7xbgstcZ";
@@ -151,14 +151,14 @@ class PaymentController extends Controller
             $reciept_id = Str::random(20);
             $order = $api->order->create(array(
                 'receipt' => $reciept_id,
-                'amount' => 149 * 100,
+                'amount' => 199 * 100,
                 'currency' => 'INR'
                 )
             );
             $newTransaction = new Transaction();
             $newTransaction->user_id = auth()->user()->id;
             $newTransaction->reciept_id = $reciept_id;
-            $newTransaction->amount = 149;
+            $newTransaction->amount = 199;
             $newTransaction->description = "For Membership";
             $newTransaction->action = "D";
             $newTransaction->payment_id = $order['id'];
@@ -168,7 +168,7 @@ class PaymentController extends Controller
                 'status' => true,
                 'razorpayID' => $this->razorpayId,
                 'orderID' => $order['id'],
-                'amount' => 149 *100,
+                'amount' => 199 *100,
                 'userID' => auth()->user()->id,
                 'email' => auth()->user()->email,
                 'contact' => auth()->user()->mobile_no,
@@ -197,7 +197,7 @@ class PaymentController extends Controller
                 $user = User::where('id' , auth()->user()->id)->get()->first();
                 $user->membership = 1;
                 $d2 = explode('T',strval(date('c', strtotime('30 days'))));
-                $user->Ex_date_membership = $d[0];
+                $user->Ex_date_membership = $d2[0];
                 $user->save();
                 return response()->json([
                     'status' => true,
