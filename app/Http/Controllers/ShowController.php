@@ -129,7 +129,7 @@ class ShowController extends Controller
         ]);
     }
     public function ourTournament(){
-        $data = Tournament::where(['created_by' => 'User','id' => auth()->user()->id])->get();
+        $data = Tournament::orderby('id','desc')->where(['created_by' => 'User','id' => auth()->user()->id,'completed' => 0 , 'cancel' => 0])->get();
         if($data){
             return response()->json([
                 'status' => true,
@@ -244,5 +244,21 @@ class ShowController extends Controller
                 'msg' => 'No User Participated'
             ]);
         }
+        }
+
+        public function history($v,$game , $time){
+            $game = strtoupper($game);
+            $data = Tournament::select(['tournaments.*','history.*'])->orderby('tournaments.tournament_id' , 'desc')->where(['history.status'=>$time,'history.game'=>$game])->join('history','tournaments.tournament_id','=','history.tournament_id');
+            if($data->get()->count()){
+                return response()->json([
+                    'status' => true,
+                    'data' => $data->paginate(10)
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'data' => 'You have no history'
+                ]);
+            }
         }
 }

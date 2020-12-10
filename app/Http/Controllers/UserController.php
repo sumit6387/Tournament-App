@@ -8,6 +8,7 @@ use App\Models\Tournament;
 use App\Models\Transaction;
 use App\Models\AppVersion;
 use App\Models\UserName;
+use App\Models\History;
 use App\Functions\AllFunction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -110,16 +111,16 @@ class UserController extends Controller
             $username->user_id = auth()->user()->id;
             $username->tournament_id = $request->tournament_id;
             $username->pubg_username = $request->pubg_username;
-            $username->pubg_user_id = $request->pubg_userID;
+            $username->pubg_user_id = $request->pubg_userid;
             $username->save();
             $history = new History();
             $history->user_id = auth()->user()->id;
             $history->tournament_id = $request->tournament_id;
             $history->game = $tournament->game_type;
             if($tournament->tournament_start_at == date('y-m-d')){
-                $history->status = 'Live';
+                $history->status = 'live';
             }else{
-                $history->status = 'Past';
+                $history->status = 'past';
             }
             $history->save();
 
@@ -417,6 +418,8 @@ class UserController extends Controller
                         $user = UserInfo::where('user_id' , $value)->get()->first();
                         $user->wallet_amount = $user->wallet_amount + $data->entry_fee;
                         $user->save();
+                        $notification = new AllFunction();
+                        $notification->sendNotification(array('id' => $value , 'title' => 'Match Canceled' ,'msg' => $data->tournament_name." canceled by Organizor",'icon'=> 'gamepad'));
                     }
                 }
                 $data->cancel = 1;
