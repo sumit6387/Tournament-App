@@ -140,7 +140,7 @@ class ShowController extends Controller
             ]);
         }else{
             return response()->json([
-                'status' => true,
+                'status' => false,
                 'data' => 'You did not created a tournament'
             ]);
         } 
