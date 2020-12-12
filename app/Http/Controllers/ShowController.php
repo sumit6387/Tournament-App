@@ -171,7 +171,7 @@ class ShowController extends Controller
         ]);
     }
         public function search(Request $req){
-            $data = Tournament::where(['created_by'=> 'User','tour_id'=>$req->id])->get();
+            $data = Tournament::select('tournament_id')->where(['created_by'=> 'User','tour_id'=>$req->id,'completed'=>0,'cancel'=>0])->get();
             if($data->count()){
                 return response()->json([
                     'status'=> true,
