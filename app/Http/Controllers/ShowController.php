@@ -180,7 +180,7 @@ class ShowController extends Controller
             }else{
                 return response()->json([
                     'status'=> false,
-                    'data' => 'Enter Valid ID'
+                    'data' => 'There is no private tournament with this Id'
                 ]);
             }
         }
