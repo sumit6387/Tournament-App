@@ -55,7 +55,7 @@
                $status =  Mail::send('emails.verificationEmail', $data, function($message) use ($to_name, $to_email) {
                     $message->to($to_email, $to_name)
                     ->subject('Email Verification of Tournament App');
-                    $message->from('groceryshop6387@gmail.com','Tournament App');
+                    $message->from('funtoos456@gmail.com','Tournament App');
                 });
                 return $code;
                        

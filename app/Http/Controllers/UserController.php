@@ -253,19 +253,20 @@ class UserController extends Controller
                 }
             }
             $result->save();
-            $data = Tournament::where('tournament_id',$req->tournament_id)->update(['completed' => 1]);
-            if($data){
-                return response()->json([
-                    'status' => true,
-                    'msg' => 'status updated'
-                ]);
-            }else{
-                return response()->json([
-                    'status' => false,
-                    'msg' => 'Something Went Wrong'
-                ]);
-            }
-        
+            $data = Tournament::where('tournament_id',$req->tournament_id)->get()->first();
+            $data->completed= 1;
+            $data->save();
+            $user = UserInfo::where('user_id' , $data->id)->get()->first();
+            $no_of_user  = sizeof(explode(',',$data->joined_user));
+            $total_collection = $data->entry_fee *$no_of_user;
+            $user_get = $total_collection - $data->prize_pool;
+            $add_amount_to_user = ($user_get * 5)/100;
+            $user->withdrawal_amount = $user->withdrawal_amount + $add_amount_to_user;
+            $user->save();
+            return response()->json([
+                'status' => true,
+                'msg' => 'status updated'
+            ]);
         }else{
             return response()->json([
                 'status' => false,

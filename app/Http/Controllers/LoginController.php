@@ -258,21 +258,21 @@ class LoginController extends Controller
         }
     }
 
-    public function check(Request $req){
-        $arr = '[{"name" : "sumit" ,"class" : "BTECH CSE" , "roll" : 50},{"name" : "sumit" ,"class" : "BTECH CSE" , "roll" : 50},{"name" : "sumit" ,"class" : "BTECH CSE" , "roll" : 50}]';
-        $arr1 =json_decode($arr);
-        $data = array();
-        foreach ($arr1 as $key => $value) {
-            array_push($data,$value);
-            $data[$key]->name = "Rahul";
-            $data[$key]->sec = "B";
-        }
-        $b = '{
-            "name": "sumit"
-        }';
-        $a = json_decode($b);
-        array_push($data,$a);
-        return $data;
+    // public function check(Request $req){
+    //     $arr = '[{"name" : "sumit" ,"class" : "BTECH CSE" , "roll" : 50},{"name" : "sumit" ,"class" : "BTECH CSE" , "roll" : 50},{"name" : "sumit" ,"class" : "BTECH CSE" , "roll" : 50}]';
+    //     $arr1 =json_decode($arr);
+    //     $data = array();
+    //     foreach ($arr1 as $key => $value) {
+    //         array_push($data,$value);
+    //         $data[$key]->name = "Rahul";
+    //         $data[$key]->sec = "B";
+    //     }
+    //     $b = '{
+    //         "name": "sumit"
+    //     }';
+    //     $a = json_decode($b);
+    //     array_push($data,$a);
+    //     return $data;
 
     //     foreach ($arr1 as $key => $value) {
     //         print_r($value);
@@ -282,6 +282,6 @@ class LoginController extends Controller
     //     }
 //     $arr = explode('/',$req->fullurl());
 //     return $arr[4];
-}
+// }
 
 }

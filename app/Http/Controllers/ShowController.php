@@ -15,34 +15,40 @@ class ShowController extends Controller
     public function showTournaments($v ,$game, $type){
         $game = strtoupper($game);
         $data = array();
-        $adminTournament = Tournament::orderby('created_at' , 'asc')->where(['created_by'=>'Admin','tournament_type' => 'public','completed'=> 0,'cancel'=>0,'game_type' => $game , 'type' => $type])->get();
-        if($adminTournament){
+        $adminTournament = Tournament::orderby('created_at' , 'asc')->where(['created_by'=>'Admin','tournament_type' => 'public','completed'=> 0,'cancel'=>0,'game_type' => $game , 'type' => $type]);
+        if($adminTournament->get()){
             $tour = true;
-            foreach ($adminTournament as $key => $value) {
-                array_push($data,$value);
-                $data[$key]->joined_user = sizeof(explode(',',$data[$key]->joined_user));
+            foreach ($adminTournament->get() as $key => $value) {
+                if(sizeof(explode(',',$value->joined_user)) < $value->max_user_participated){
+                    array_push($data,$value);
+                    $data[$key]->joined_user = sizeof(explode(',',$data[$key]->joined_user));
+                }
             }
 
         }else{
             $adminTournament = "Nothing";
         }
-        $membersTournaments = Tournament::select(['tournaments.*','users.membership as membership'])->orderby('tournaments.created_at' , 'asc')->where(['tournaments.created_by'=>'User','tournaments.tournament_type' => 'public','tournaments.completed'=> 0,'tournaments.game_type' => $game , 'tournaments.type' => $type,'tournaments.cancel'=>0,'users.membership' => 1])->join('users','tournaments.id','=','users.id')->get();
-        if($membersTournaments){
+        $membersTournaments = Tournament::select(['tournaments.*','users.membership as membership'])->orderby('tournaments.created_at' , 'asc')->where(['tournaments.created_by'=>'User','tournaments.tournament_type' => 'public','tournaments.completed'=> 0,'tournaments.game_type' => $game , 'tournaments.type' => $type,'tournaments.cancel'=>0,'users.membership' => 1])->join('users','tournaments.id','=','users.id');
+        if($membersTournaments->get()){
             $member = true;
-            foreach ($membersTournaments as $key => $value) {
-                array_push($data,$value);
-                $data[$key]->joined_user = sizeof(explode(',',$data[$key]->joined_user));
+            foreach ($membersTournaments->get() as $key => $value) {
+                if(sizeof(explode(',',$value->joined_user)) < $value->max_user_participated){
+                    array_push($data,$value);
+                    $data[$key]->joined_user = sizeof(explode(',',$data[$key]->joined_user));
+                }
             }
         }else{
             $membersTournaments = "Nothing";
         }
 
-        $userTournament = Tournament::select(['tournaments.*','users.membership as membership'])->orderby('tournaments.created_at' , 'asc')->where(['tournaments.created_by'=>'User','tournaments.tournament_type' => 'public','tournaments.completed'=> 0,'tournaments.cancel'=>0,'tournaments.game_type'=>$game,'tournaments.type'=>$type,'users.membership' => 0])->join('users','tournaments.id','=','users.id')->get();
-        if($userTournament){
+        $userTournament = Tournament::select(['tournaments.*','users.membership as membership'])->orderby('tournaments.created_at' , 'asc')->where(['tournaments.created_by'=>'User','tournaments.tournament_type' => 'public','tournaments.completed'=> 0,'tournaments.cancel'=>0,'tournaments.game_type'=>$game,'tournaments.type'=>$type,'users.membership' => 0])->join('users','tournaments.id','=','users.id');
+        if($userTournament->get()){
             $userTour = true;
-            foreach ($userTournament as $key => $value) {
-                array_push($data,$value);
-                $data[$key]->joined_user = sizeof(explode(',',$data[$key]->joined_user));
+            foreach ($userTournament->get() as $key => $value) {
+                if(sizeof(explode(',',$value->joined_user)) < $value->max_user_participated){
+                    array_push($data,$value);
+                    $data[$key]->joined_user = sizeof(explode(',',$data[$key]->joined_user));
+                }
             }
 
         }else{

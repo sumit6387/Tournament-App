@@ -54,6 +54,7 @@ class AdminController extends Controller
         if($valid->passes()){
           try{
             $admin = Admin::where('email', $request->email)->where('secret_key', $request->secret_key)->get()->first();
+            if($admin){
             if(Hash::check($request->password, $admin->password)){
                 $token = $admin->createToken('my-app-token')->plainTextToken;
                 $email = new AllFunction();
@@ -61,8 +62,8 @@ class AdminController extends Controller
                 $admin->email_verification_code = $code;
                 if($admin->update()){
                     return response()->json([
-                        'status' => true,
-                        'token' => $token
+                        "status" => true,
+                        "token" => $token
                     ]);
                 }else{
                     return response()->json([
@@ -70,12 +71,19 @@ class AdminController extends Controller
                         'msg' => 'Some Problem Occur'
                     ]);
                 }
+            
             }else{
                 return response()->json([
                     'status' => false,
                     'msg' => 'Incorrect Password'
                 ]);
             }
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => 'Email or Secret Code is wrong'
+            ]);
+        }
         }catch(Exception $e){
             return response()->json([
                 'status' => false,

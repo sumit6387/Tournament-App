@@ -68,5 +68,6 @@ class Kernel extends HttpKernel
         'CheckVersion' => \App\Http\Middleware\CheckVersion::class,
         'CheckAdmin' => \App\Http\Middleware\CheckAdmin::class,
         'CheckTournament' =>\App\Http\Middleware\CheckTournament::class,
+        'Cors' =>  \App\Http\Middleware\Cors::class
     ];
 }
