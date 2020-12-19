@@ -15,6 +15,7 @@ class WithdrawController extends Controller
     public function withdraw(Request $request){
         try{
             $transaction_id = Str::random(30);
+            // withdraw amount through UPI 
             if(strtoupper($request->mode) == 'UPI'){
                 $valid = Validator::make($request->all(),['upi_id'=>'required','mode'=>'required']);
                 if($valid->passes()){
@@ -33,6 +34,7 @@ class WithdrawController extends Controller
                         $withdraw->amount = $userinfo->withdrawal_amount;
                         if($withdraw->save()){
                             $transaction = new AllFunction();
+                            // save transaction for history
                             if($transaction->transaction($transaction_id,$userinfo->withdrawal_amount,'Withdraw Amount')){
                                 $userinfo->withdrawal_amount = 0;
                                 $userinfo->save();
@@ -54,6 +56,7 @@ class WithdrawController extends Controller
                         'msg' => $valid->errors()->all()
                     ]);
                 }
+                // withdraw amount through PAYTM
             }else if(strtoupper($request->mode) == 'PAYTM'){
                 $valid = Validator::make($request->all(),['paytm_no'=>'required|numeric','mode'=>'required']);
                 if($valid->passes()){
@@ -72,6 +75,7 @@ class WithdrawController extends Controller
                         $withdraw->amount = $userinfo->withdrawal_amount;
                         if($withdraw->save()){
                             $transaction = new AllFunction();
+                            // save the transaction for history
                             if($transaction->transaction($transaction_id,$userinfo->withdrawal_amount,'Withdraw Amount')){
                                 $userinfo->withdrawal_amount = 0;
                                 $userinfo->save();
@@ -92,6 +96,7 @@ class WithdrawController extends Controller
                         'msg' => $valid->errors()->all()
                     ]);
                 }
+                // withdraw amount through BANK
             }else if(strtoupper($request->mode) == 'BANK'){
                 $valid = Validator::make($request->all(),['acount_no'=>'required|numeric','ifsc_code'=>'required','mode'=>'required','bank' => 'required']);
                 if($valid->passes()){
@@ -113,6 +118,7 @@ class WithdrawController extends Controller
                         $withdraw->amount = $userinfo->withdrawal_amount;
                         if($withdraw->save()){
                             $transaction = new AllFunction();
+                            // save the transaction for history
                             if($transaction->transaction($transaction_id,$userinfo->withdrawal_amount,'Withdraw Amount')){
                                 $userinfo->withdrawal_amount = 0;
                                 $userinfo->save();

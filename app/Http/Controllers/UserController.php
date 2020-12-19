@@ -19,8 +19,11 @@ class UserController extends Controller
 {
 
     public function store(Request $request){
+        // updating the profile
         $user_info = UserInfo::where('user_id' , auth()->user()->id)->get()->first();
         $user = User::where('id' , auth()->user()->id)->get()->first();
+
+        // update the image
         if($request->file('image')){
             $filename = Str::random(15).".jpg";
             $path = $request->file('image')->move(public_path('/images/user_image'),$filename);
@@ -28,26 +31,32 @@ class UserController extends Controller
             $user_info->profile_image =$url;
         }
 
+        // update the name
         if($request->name){
             $user->name = $request->name;
         }
 
+        // update the email
         if($request->email){
             $user->email = $request->email;
         }
 
+        // update the state
         if($request->state){
             $user_info->state = $request->state;
         }
 
+        // update the country
         if($request->country){
             $user_info->country = $request->country;
         }
 
+        //update the mobile no 
         if($request->mobile_no){
             $user->mobile_no = $request->mobile_no;
         }
 
+        // update the gender
         if($request->gender){
             $user_info->gender = $request->gender;
         }
@@ -65,6 +74,7 @@ class UserController extends Controller
         $valid = Validator::make($request->all(),['pubg_username' => 'required' ,'pubg_userid' =>'required']);
         if($valid->passes()){
         try{
+            // user join tournament
             $tournament = Tournament::where('tournament_id',$request->tournament_id)->get()->first();
             $arr = explode(',',$tournament->joined_user);
             if(sizeof($arr) == $tournament->max_user_participated){
@@ -162,6 +172,7 @@ class UserController extends Controller
         ]);
         if($valid->passes()){
             try{
+                // user create the tournament
                 $new = new AllFunction();
                 $data = $new->registerTournament($request->all());
                 if($data == true){
@@ -193,9 +204,11 @@ class UserController extends Controller
         $valid = Validator::make($request->all(),['tournament_id' => 'required','room_id' => 'required' , 'password' => 'required']);
         if($valid->passes()){
           try{
+            //   user update room id and password
             $tournament1 = Tournament::where(['tournament_id' => $request->tournament_id , 'created_by' => 'User','id'=>auth()->user()->id])->get()->first();
             $arr = explode(',',$tournament1->joined_user);
             $resp = count($arr);
+            // minimum 50% user required for start the tournament
             if($resp< (($tournament1->max_user_participated*50)/100)){
                 return response()->json([
                     'status' => false,
@@ -208,6 +221,7 @@ class UserController extends Controller
                 $notifi = new AllFunction();
                 $arr = explode(',',$tournament->joined_user);
                 for ($i=0; $i < sizeof($arr); $i++) { 
+                    // send the notification to user who can participate the tournament
                     $notifi->sendNotification(array('id' => $arr[$i] ,'title' => 'Come on join' , 'msg' => 'RoomId And Password Updated of the tournament go and start match','icon'=> 'gamepad'));
                 }
                 return response()->json([
@@ -237,13 +251,14 @@ class UserController extends Controller
     public function UpdateTournamentComplete(Request $req){
         $valid = Validator::make($req->all(),['tournament_id'=> 'required' , 'results' => 'required']);
         if($valid->passes()){
+            // user complete the tournament which user created
             $result = new Result();
             $result->tournament_id = $req->tournament_id;
             $result->results = $req->results;
             $winner = json_decode($req->results);
             $prize  = new AllFunction();
             foreach ($winner as $key => $value) {
-                //prize distribution 
+                //prize distribution  by user
                 $prize->prizeDistribution($value->user_id,$value->kill,$value->winner,$req->tournament_id);
                 if($value->winner == 1){
                     $result->winner_id = $value->user_id;
@@ -257,10 +272,16 @@ class UserController extends Controller
             $data->completed= 1;
             $data->save();
             $user = UserInfo::where('user_id' , $data->id)->get()->first();
+            $users = User::where('id' , $data->id)->get()->first();
             $no_of_user  = sizeof(explode(',',$data->joined_user));
             $total_collection = $data->entry_fee *$no_of_user;
             $user_get = $total_collection - $data->prize_pool;
-            $add_amount_to_user = ($user_get * 5)/100;
+            if($users->membership == 0){
+                // our comision
+                $add_amount_to_user = ($user_get * 5)/100;
+            }else{
+                $add_amount_to_user = $user_get;
+            } 
             $user->withdrawal_amount = $user->withdrawal_amount + $add_amount_to_user;
             $user->save();
             return response()->json([
@@ -278,6 +299,7 @@ class UserController extends Controller
     public function claimPrize(){
             try{
                 $user = UserInfo::where('user_id',auth()->user()->id)->get()->first();
+                // point system claim prize
                 if($user->ptr_reward < 10){
                     return response()->json([
                         'status' => false,
@@ -335,6 +357,7 @@ class UserController extends Controller
             ]);
             
             if($valid->passes()){
+                // change the password
                 $user  = User::where('id' , auth()->user()->id)->get()->first();
                 if(Hash::check($request->current_password , $user->password)){
                     if($request->new_password == $request->confirm_password){
@@ -372,6 +395,7 @@ class UserController extends Controller
         ]);
         if($valid->passes()){
           try{
+            //   verify the otp send for forget password
             $data = User::where('mobile_no',$request->mobile_no)->get()->first();
             if($data){
                 if($data->reset_password_verify == $request->otp){
@@ -411,6 +435,7 @@ class UserController extends Controller
         $valid = Validator::make($request->all(),['tournament_id' => 'required']);
         if($valid->passes()){
           try{
+            //   cancel the match 
             $data = Tournament::where(['created_by' => 'User' , 'tournament_id' => $request->tournament_id , 'id' => auth()->user()->id])->get()->first();
             if($data){
                 $users = explode(',',$data->joined_user);
@@ -420,6 +445,7 @@ class UserController extends Controller
                         $user->wallet_amount = $user->wallet_amount + $data->entry_fee;
                         $user->save();
                         $notification = new AllFunction();
+                        // send all user notification for cancelling who can participatedin tournament  the match
                         $notification->sendNotification(array('id' => $value , 'title' => 'Match Canceled' ,'msg' => $data->tournament_name." canceled by Organizor",'icon'=> 'gamepad'));
                     }
                 }

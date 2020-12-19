@@ -22,6 +22,7 @@ class MainController extends Controller
         $valid = Validator::make($request->all() , ['msg' => 'required']);
         if($valid->passes()){
             try{
+                // adding the announcement 
                 $announcement = new Announcement();
                 $announcement->msg = $request->msg;
                 $announcement->save();
@@ -49,6 +50,7 @@ class MainController extends Controller
         $valid = Validator::make($request->all(), ['version' => 'required' , 'short_version' => 'required','app_link'=> 'required']);
         if($valid->passes()){
             try{
+                // adding the version
                 $version = new AppVersion();
                 $version->version = $request->version;
                 $version->short_version = $request->short_version;
@@ -85,6 +87,7 @@ class MainController extends Controller
         ]);
         if($valid->passes()){
             try{
+                // adding the game 
                 $newgame = new Game();
                 $newgame->game_name = $request->game_name;
                 $newgame->short_name = $request->short_name;
@@ -137,6 +140,7 @@ class MainController extends Controller
         if($valid->passes()){
             try{
                 $new = new AllFunction();
+                // adding the tournament
                 $data = $new->registerTournament($request->all());
                 if($data == true){
                     return response()->json([
@@ -166,6 +170,7 @@ class MainController extends Controller
     public function updateIdPassword(Request $request){
         $valid = Validator::make($request->all(),['tournament_id' => 'required','user_id' => 'required' , 'password' => 'required']);
         if($valid->passes()){
+            // updating the room id and password
             $tournament = Tournament::where('tournament_id' , $request->tournament_id)->update(['room_id' => $request->user_id,'password' => $request->password]);
             if($tournament){
                 $user = Tournament::where('tournament_id',$request->tournament_id)->get()->first()->joined_user;
@@ -191,13 +196,14 @@ class MainController extends Controller
     public function UpdateTournamentComplete(Request $req){
         $valid = Validator::make($req->all(),['tournament_id'=> 'required' , 'results' => 'required']);
         if($valid->passes()){
+            // complete the tournament
             $result = new Result();
             $result->tournament_id = $req->tournament_id;
             $result->results = $req->results;
             $winner = json_decode($req->results);
             $prize  = new AllFunction();
             foreach ($winner as $key => $value) {
-                //prize distribution 
+                //distributing prize
                 $prize->prizeDistribution($value->user_id,$value->kill,$value->winner,$req->tournament_id);
                 if($value->winner == 1){
                     $result->winner_id = $value->user_id;
@@ -232,6 +238,7 @@ class MainController extends Controller
         $valid = Validator::make($request->all() , ['title' => 'required' , 'msg' => 'required' , 'icon'=> 'required' ,'id' => 'required']);
         if($valid->passes()){
             $notification = new AllFunction();
+            // sending the notification
             $status = $notification->sendNotification($request->all());
             if($status){
                 return response()->json([

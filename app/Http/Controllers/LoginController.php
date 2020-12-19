@@ -24,6 +24,7 @@ class LoginController extends Controller
             $data = User::where('mobile_no',$request->mobile_no)->get()->first();
             if($data){
                 $sendsms = new AllFunction();
+                // sending the sms for resend otp
                 $otp = $sendsms->sendSms($request->mobile_no);
                 $data->reset_password_verify = $otp;
                 $data->save();
@@ -75,6 +76,7 @@ class LoginController extends Controller
                     $new_user->email = $request->email;
                     $new_user->mobile_no = $request->mobile_no;
                     $new_user->password = Hash::make($request->password);
+                    // sending the sms for verification 
                     $otp = $sendsms->sendSms($request->mobile_no);
                     $new_user->verification_code = $otp;
                     if($otp){
@@ -88,6 +90,7 @@ class LoginController extends Controller
                             $user_info->gender = $request->gender;
                             $user_info->save();
                             if($request->ref_code){
+                                // checking the refer code
                                 $code = $sendsms->referCode($new_user->id,$request->ref_code);
                                 $user = UserInfo::where('user_id',$new_user->id)->get()->first();
                                 if($user){
@@ -96,6 +99,7 @@ class LoginController extends Controller
                                         $user->wallet_amount = 5;
                                         $user->save();
                                         $data = User::select(['users.name as name','user_info.user_id'])->where('userinfo.refferal_code' , $code)->join('user_info','users.id','=','user_info.user_id')->get();
+                                        // sending the notification to the user
                                         $sendsms->sendNotification(array('id' => $user_id ,'title' => 'Refer Code Used' , 'msg' => 'your friend '.$data->name.'used your refer code','icon'=> 'gamepad'));
                                     }
                                 }
@@ -224,6 +228,7 @@ class LoginController extends Controller
             $data = User::where('mobile_no',$request->mobile_no)->get()->first();
             if($data){
                 $sendsms = new AllFunction();
+                // send the sms
                 $otp = $sendsms->sendSms($request->mobile_no);
                 $data->verification_code = $otp;
                 $data->save();
