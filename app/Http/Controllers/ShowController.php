@@ -21,7 +21,11 @@ class ShowController extends Controller
             foreach ($adminTournament->get() as $key => $value) {
                 if(sizeof(explode(',',$value->joined_user)) < $value->max_user_participated){
                     array_push($data,$value);
-                    $data[$key]->joined_user = sizeof(explode(',',$data[$key]->joined_user));
+                    if($data[$key]->joined_user != null){
+                        $data[$key]->joined_user = sizeof(explode(',',$data[$key]->joined_user));
+                    }else{
+                        $data[$key]->joined_user = 0;
+                    }
                 }
             }
 
@@ -34,7 +38,11 @@ class ShowController extends Controller
             foreach ($membersTournaments->get() as $key => $value) {
                 if(sizeof(explode(',',$value->joined_user)) < $value->max_user_participated){
                     array_push($data,$value);
-                    $data[$key]->joined_user = sizeof(explode(',',$data[$key]->joined_user));
+                    if($data[$key]->joined_user != null){
+                        $data[$key]->joined_user = sizeof(explode(',',$data[$key]->joined_user));
+                    }else{
+                        $data[$key]->joined_user = 0;
+                    }
                 }
             }
         }else{
@@ -47,8 +55,12 @@ class ShowController extends Controller
             foreach ($userTournament->get() as $key => $value) {
                 if(sizeof(explode(',',$value->joined_user)) < $value->max_user_participated){
                     array_push($data,$value);
-                    $data[$key]->joined_user = sizeof(explode(',',$data[$key]->joined_user));
-                }
+                    if($data[$key]->joined_user != null){
+                        $data[$key]->joined_user = sizeof(explode(',',$data[$key]->joined_user));
+                    }else{
+                        $data[$key]->joined_user = 0;
+                    }
+                    }
             }
 
         }else{
@@ -138,7 +150,11 @@ class ShowController extends Controller
         $data = Tournament::orderby('id','desc')->where(['created_by' => 'User','id' => auth()->user()->id,'completed' => 0 , 'cancel' => 0])->get();
         if($data->count() > 0){
             foreach ($data as $key => $value) {
-                $value->joined_user = sizeof(explode(',',$value->joined_user));
+                if($value->joined_user != null){
+                    $value->joined_user = sizeof(explode(',',$value->joined_user));
+                }else{
+                    $value->joined_user = 0;
+                }
             }
             return response()->json([
                 'status' => true,
@@ -155,7 +171,11 @@ class ShowController extends Controller
     public function tournamentDetail(Request $req){
         $data = Tournament::where(['tournament_id' => $req->tournament_id , 'created_by' => 'User'])->get()->first();
         if($data){
-            $data->joined_user = sizeof(explode(',',$data->joined_user));
+            if($data->joined_user != null){
+                $data->joined_user = sizeof(explode(',',$data->joined_user));
+            }else{
+                $data->joined_user = 0;
+            }
             return response()->json([
                 'status' => true,
                 'data' => $data

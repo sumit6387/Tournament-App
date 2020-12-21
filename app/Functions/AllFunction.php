@@ -104,7 +104,7 @@
                 $new_tournament->save();
                 return true;
             }catch(Exception $e){
-                return false;
+                return $e;
             }
         }
 
