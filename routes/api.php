@@ -26,8 +26,8 @@ Route::group(['prefix' => '{version}','middleware' => 'CheckVersion'],function()
         Route::post('/forgetPasswordProcess',[UserController::class , 'forgetPassword']); //mobile_no,otp,password
         Route::post('/forgetPassword' , [LoginController::class , 'forgetOtp']); //mobile_no
         Route::post('/cancelMatch' , [UserController::class , 'cancelMatch']);   //tournament_id
-        Route::post('/UpdateTournamentComplete' , [UserController::class , 'UpdateTournamentComplete']);//tournament_id , results this is json
-        
+        Route::post('/UpdateTournamentComplete' , [UserController::class , 'UpdateTournamentComplete']);//tournament_id , results this is json{user_id: , kill:, winner:0 or 1}
+
 
         // payment route for to add balance
         Route::post('/payment-request' , [PaymentController::class , 'createPaymentOrder']); //amount
@@ -58,6 +58,7 @@ Route::group(['prefix' => '{version}','middleware' => 'CheckVersion'],function()
         Route::get('/usernames/{id}' , [ShowController::class , 'showUsername']); //tournament_id
         Route::get('/history/{game}/{time}',[ShowController::class , 'history']);//game,time
         Route::get('/usernamesForCreator/{id}' , [ShowController::class , 'showUsernameForCreator']); //tournament_id
+        //show username to organizer 
         Route::post('/check' , [LoginController::class , 'check']);
     });
     Route::fallback(function(){
