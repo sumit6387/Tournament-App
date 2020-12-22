@@ -256,7 +256,7 @@ class ShowController extends Controller
             $data = Tournament::where('tournament_id',$id)->get()->first();
             $arr = explode(',',$data->joined_user);
             $usernames = array();
-            if(sizeof($arr) > 0){
+            if($data->joined_user != null){
             for ($i=0; $i < sizeof($arr); $i++) { 
                 $username = UserName::select(['usernames.pubg_username','usernames.pubg_user_id','user_info.profile_image as img'])->where(['usernames.user_id' => $arr[$i] , 'usernames.tournament_id' => $id])->join('user_info','usernames.user_id','=','user_info.user_id')->get()->first();
                 array_push($usernames,$username);
@@ -272,30 +272,29 @@ class ShowController extends Controller
                 'msg' => 'No User Participated'
             ]);
         }
-        }
+    }
 
-        public function showUsernameForCreator($v,$id){
+    public function showUsernameForCreator($v,$id){
             $data = Tournament::where('tournament_id',$id)->get()->first();
             $arr = explode(',',$data->joined_user);
             $usernames = array();
-            if(sizeof($arr) > 0){
+            if($data->joined_user != null){
             for ($i=0; $i < sizeof($arr); $i++) { 
                 $username = UserName::select(['usernames.pubg_username','usernames.pubg_user_id','usernames.user_id','user_info.profile_image as img'])->where(['usernames.user_id' => $arr[$i] , 'usernames.tournament_id' => $id])->join('user_info','usernames.user_id','=','user_info.user_id')->get()->first();
-                $username->name = User::where('id',$arr[$i])->get()->first()->name;
-                array_push($usernames,$username);
-            }
+                    $username->name = User::where('id',$arr[$i])->get()->first()->name;
+                    array_push($usernames,$username);
+                }
             return response()->json([
                 'status' => true,
                 'data'=> $usernames
             ]);
-
         }else{
             return response()->json([
                 'status' => false,
                 'msg' => 'No User Participated'
             ]);
         }
-        }
+    }
 
         public function history($v,$game , $time){
             $game = strtoupper($game);
