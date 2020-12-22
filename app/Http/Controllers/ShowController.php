@@ -28,7 +28,6 @@ class ShowController extends Controller
                     }
                 }
             }
-
         }else{
             $adminTournament = "Nothing";
         }
@@ -62,7 +61,6 @@ class ShowController extends Controller
                     }
                 }
             }
-
         }else{
             $userTournament = 'Nothing';
         }
