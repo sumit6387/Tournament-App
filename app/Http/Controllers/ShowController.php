@@ -60,7 +60,7 @@ class ShowController extends Controller
                     }else{
                         $data[$key]->joined_user = 0;
                     }
-                    }
+                }
             }
 
         }else{

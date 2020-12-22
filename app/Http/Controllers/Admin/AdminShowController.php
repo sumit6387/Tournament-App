@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Announcement;
+use App\Models\Tournament;
 
 class AdminShowController extends Controller
 {
@@ -19,6 +20,21 @@ class AdminShowController extends Controller
             return response()->json([
                 'status' => false,
                 'data' => 'Nothing to Show'
+            ]);
+        }
+    }
+
+    public function showTournaments(){
+        $tournament = Tournament::where(['completed'=> 0 , 'created_by'=>'Admin','cancel'=> 0])->get();
+        if($tournament->count() > 0){
+            return response()->json([
+                'status' => true,
+                'data' => $tournament
+            ]);
+        }else{
+            return response()->json([
+                'status' => false,
+                'data' => 'Add Tournaments'
             ]);
         }
     }
