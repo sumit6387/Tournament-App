@@ -21,7 +21,11 @@ class ShowController extends Controller
             foreach ($adminTournament->get() as $key => $value) {
                 if(sizeof(explode(',',$value->joined_user)) < $value->max_user_participated){
                     array_push($data,$value);
-                    $data[$key]->joined_user = sizeof(explode(',',$data[$key]->joined_user));
+                    if($data[$key]->joined_user != null){
+                        $data[$key]->joined_user = sizeof(explode(',',$data[$key]->joined_user));
+                    }else{
+                        $data[$key]->joined_user = 0;
+                    }
                 }
             }
 
@@ -34,7 +38,11 @@ class ShowController extends Controller
             foreach ($membersTournaments->get() as $key => $value) {
                 if(sizeof(explode(',',$value->joined_user)) < $value->max_user_participated){
                     array_push($data,$value);
-                    $data[$key]->joined_user = sizeof(explode(',',$data[$key]->joined_user));
+                    if($data[$key]->joined_user != null){
+                        $data[$key]->joined_user = sizeof(explode(',',$data[$key]->joined_user));
+                    }else{
+                        $data[$key]->joined_user = 0;
+                    }
                 }
             }
         }else{
@@ -47,7 +55,11 @@ class ShowController extends Controller
             foreach ($userTournament->get() as $key => $value) {
                 if(sizeof(explode(',',$value->joined_user)) < $value->max_user_participated){
                     array_push($data,$value);
-                    $data[$key]->joined_user = sizeof(explode(',',$data[$key]->joined_user));
+                    if($data[$key]->joined_user != null){
+                        $data[$key]->joined_user = sizeof(explode(',',$data[$key]->joined_user));
+                    }else{
+                        $data[$key]->joined_user = 0;
+                    }
                 }
             }
 
@@ -263,6 +275,7 @@ class ShowController extends Controller
             if(sizeof($arr) > 0){
             for ($i=0; $i < sizeof($arr); $i++) { 
                 $username = UserName::select(['usernames.pubg_username','usernames.pubg_user_id','usernames.user_id','user_info.profile_image as img'])->where(['usernames.user_id' => $arr[$i] , 'usernames.tournament_id' => $id])->join('user_info','usernames.user_id','=','user_info.user_id')->get()->first();
+                $username->name = User::where('id',$arr[$i])->get()->first()->name;
                 array_push($usernames,$username);
             }
             return response()->json([

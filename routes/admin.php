@@ -13,8 +13,8 @@ Route::group(['middleware' => 'Cors'] , function(){
     Route::post('/verifyotp',[AdminController::class , 'verifyOtp']);
     Route::post('/resendotp' , [AdminController::class , 'resendOtp']);
 
-    Route::group(['middleware' => 'auth:sanctum' , 'api'] , function(){
-        Route::group(['middleware' => 'CheckAdmin'] , function(){
+    // Route::group(['middleware' => 'auth:sanctum' , 'api'] , function(){
+        // Route::group(['middleware' => 'CheckAdmin'] , function(){
             Route::get('/user',[AdminController::class , 'user']);
             Route::post('/addAnnouncement' , [MainController::class , 'addAnnouncement']);
             Route::post('/addVersion' , [MainController::class , 'addVersion']);
@@ -29,9 +29,10 @@ Route::group(['middleware' => 'Cors'] , function(){
 
             // show details to admin
             Route::get('/showAnnouncement',[AdminShowController::class , 'showAnnouncement']);
+            Route::get('/showTournaments',[AdminShowController::class , 'showTournaments']);
 
-        });
-    });
+        // });
+    // });
 
     Route::fallback(function(){
         return response()->json([
