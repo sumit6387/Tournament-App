@@ -42,7 +42,7 @@ Route::group(['prefix' => '{version}','middleware' => 'CheckVersion'],function()
         Route::post('/withdraw',[WithdrawController::class , 'withdraw']); //mode , upi_id,paytm_no,acount_no,ifsc_code,name
 
         // show data route
-        Route::get('/showtournament/{game}/{type}' , [ShowController::class , 'showTournaments']);
+        Route::get('/showtournament/{game}/{type}/{page}', [ShowController::class , 'showTournaments']);
         Route::get('/pointTableUser' , [ShowController::class , 'pointTableUser']);
         Route::get('/mywallet' , [ShowController::class , 'myWallet']);
         Route::get('/allTransactions' , [ShowController::class , 'allTransactions']);
