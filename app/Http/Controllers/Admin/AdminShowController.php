@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Announcement;
 use App\Models\Tournament;
+use App\Models\Withdraw;
+use App\Models\AppVersion;
 
 class AdminShowController extends Controller
 {
@@ -37,5 +39,28 @@ class AdminShowController extends Controller
                 'data' => 'Add Tournaments'
             ]);
         }
+    }
+
+    public function withdraw(){
+        $withdraw_record = Withdraw::where('completed',0)->get();
+        if($withdraw_record->count() > 0){
+            return response()->json([
+                'status' => true,
+                'data' => $withdraw_record
+            ]);
+        }else{
+            return response()->json([
+                'status' => false,
+                'data' => 'No Records'
+            ]);
+        }
+    }
+
+    public function versions(){
+        $versions = AppVersion::orderby('id','desc')->get();
+        return response()->json([
+            'status' => true,
+            'data' => $versions
+        ]);
     }
 }

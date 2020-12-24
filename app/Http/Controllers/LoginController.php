@@ -264,6 +264,7 @@ class LoginController extends Controller
     }
 
     // public function check(Request $req){
+
     //     $arr = '[{"name" : "sumit" ,"class" : "BTECH CSE" , "roll" : 50},{"name" : "sumit" ,"class" : "BTECH CSE" , "roll" : 50},{"name" : "sumit" ,"class" : "BTECH CSE" , "roll" : 50}]';
     //     $arr1 =json_decode($arr);
     //     $data = array();
