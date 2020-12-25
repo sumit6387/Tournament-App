@@ -9,6 +9,7 @@ use App\Models\UserInfo;
 use App\Models\UserName;
 use App\Models\Transaction;
 use App\Models\Notification;
+use Illuminate\Support\Collection;
 
 class ShowController extends Controller
 {
@@ -67,7 +68,7 @@ class ShowController extends Controller
         if($tour || $userTour || $member){
             return response()->json([
                 'status' => true,
-                'data' => $data
+                'data' => collect($data)->forPage(1,1)
                 ]);
         }else{
             return response()->json([
