@@ -439,7 +439,7 @@ class UserController extends Controller
             $data = Tournament::where(['created_by' => 'User' , 'tournament_id' => $request->tournament_id , 'id' => auth()->user()->id])->get()->first();
             if($data){
                 $users = explode(',',$data->joined_user);
-                if(sizeof($users)){
+                if($data->joined_user != null){
                     foreach ($users as $key => $value) {
                         $user = UserInfo::where('user_id' , $value)->get()->first();
                         $user->wallet_amount = $user->wallet_amount + $data->entry_fee;

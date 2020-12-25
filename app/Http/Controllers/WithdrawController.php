@@ -14,7 +14,7 @@ class WithdrawController extends Controller
 {
     public function withdraw(Request $request){
         try{
-            $transaction_id = Str::random(30);
+            $transaction_id = Str::random(9);
             // withdraw amount through UPI 
             if(strtoupper($request->mode) == 'UPI'){
                 $valid = Validator::make($request->all(),['upi_id'=>'required','mode'=>'required']);

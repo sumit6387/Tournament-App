@@ -30,6 +30,8 @@ Route::group(['middleware' => 'Cors'] , function(){
             // show details to admin
             Route::get('/showAnnouncement',[AdminShowController::class , 'showAnnouncement']);
             Route::get('/showTournaments',[AdminShowController::class , 'showTournaments']);
+            Route::get('/withdraw',[AdminShowController::class , 'withdraw']);
+            Route::get('/versions',[AdminShowController::class , 'versions']);
 
         // });
     // });

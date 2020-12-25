@@ -13,7 +13,7 @@ use Illuminate\Support\Collection;
 
 class ShowController extends Controller
 {
-    public function showTournaments($v ,$game, $type){
+    public function showTournaments($v ,$game, $type,$page){
         $game = strtoupper($game);
         $data = array();
         $adminTournament = Tournament::orderby('created_at' , 'asc')->where(['created_by'=>'Admin','tournament_type' => 'public','completed'=> 0,'cancel'=>0,'game_type' => $game , 'type' => $type]);
@@ -65,10 +65,15 @@ class ShowController extends Controller
         }else{
             $userTournament = 'Nothing';
         }
+        if($page == 1){
+            $start_data = 1;
+        }else{
+            $start_data = $page *10 + 1;
+        }
         if($tour || $userTour || $member){
             return response()->json([
                 'status' => true,
-                'data' => collect($data)->forPage(1,1)
+                'data' => collect($data)->forPage($start_data ,10)
                 ]);
         }else{
             return response()->json([
