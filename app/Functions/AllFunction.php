@@ -112,6 +112,7 @@
            $users = UserInfo::where('user_id',$id)->get()->first();
            $tournament = Tournament::where('tournament_id',$tournament_id)->get()->first();
            $amount = $users->withdrawal_amount;
+           $test = 0;
            if($winner == 1){
                $amount = $amount + $tournament->winning;
                $test = 1;

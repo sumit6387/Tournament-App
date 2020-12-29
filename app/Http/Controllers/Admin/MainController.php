@@ -199,15 +199,16 @@ class MainController extends Controller
             // complete the tournament
             $result = new Result();
             $result->tournament_id = $req->tournament_id;
-            $result->results = $req->results;
-            $winner = json_decode($req->results);
+            $result->results = json_encode($req->results);
+            $winner = $req->results;
+            
             $prize  = new AllFunction();
             foreach ($winner as $key => $value) {
                 //distributing prize
-                $prize->prizeDistribution($value->user_id,$value->kill,$value->winner,$req->tournament_id);
-                if($value->winner == 1){
-                    $result->winner_id = $value->user_id;
-                    $users = UserInfo::where('user_id',$value->user_id)->get()->first();
+                $prize->prizeDistribution($value['user_id'],$value['kill'],$value['winner'],$req->tournament_id);
+                if($value['winner'] == 1){
+                    $result->winner_id = $value['user_id'];
+                    $users = UserInfo::where('user_id',$value['user_id'])->get()->first();
                     $users->ptr_reward = $users->ptr_reward+10;
                     $users->save();
                 }
@@ -259,4 +260,94 @@ class MainController extends Controller
         }
     }
 
+    public function deleteTournament($tournament_id){
+        $tournament = Tournament::where('tournament_id',$tournament_id)->get()->first();
+        return $tournament;
+        if($tournament){
+            $users = explode(',',$tournament->joined_user);
+                if($tournament->joined_user != null){
+                    foreach ($users as $key => $value) {
+                        $user = UserInfo::where('user_id' , $value)->get()->first();
+                        $user->wallet_amount = $user->wallet_amount + $tournament->entry_fee;
+                        $user->save();
+                        $notification = new AllFunction();
+                        // send all user notification for cancelling who can participated in tournament  the match
+                        $notification->sendNotification(array('id' => $value , 'title' => 'Match Canceled' ,'msg' => $tournament->tournament_name." canceled by Organizor",'icon'=> 'gamepad'));
+                    }
+                }
+            $tournament->cancel = 1;
+            $tournament->save();
+            return response()->json([
+                'status' => true,
+                'data' => 'Tournament Canceled'
+            ]);
+        }else{
+            return response()->json([
+                'status'=> false,
+                'data'=> 'Something Went Wrong'
+            ]);
+        }
+    }
+
+    public function updateAnnouncement(Request $request){
+        $ann = Announcement::where('ann_id',$request->id)->get()->first();
+        if($ann){
+            Announcement::where('ann_id',$request->id)->update(['msg' => $request->msg]);
+            return response()->json([
+                'status' => true,
+                'msg' => 'Announcement Updated'
+            ]);
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => 'Something Went Wrong'
+            ]);
+        }
+    }
+
+    public function delete_announcement($ann_id){
+        $ann = Announcement::where('ann_id' , $ann_id)->delete();
+        if($ann){
+            return response()->json([
+                'status' => true,
+                'msg' => 'Announcement Deleted'
+            ]);
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => 'Something Went Wrong'
+            ]);
+        }
+            
+    }
+
+    public function updateVersion(Request $request){
+        $data = AppVersion::where('id' , $request->version_id)->update(['version' => $request->version , 'short_version' => $request->short_version , 'app_link' => $request->app_link]);
+        if($data){
+            return response()->json([
+                'status' => true,
+                'msg' => 'Version Updated'
+            ]);
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => 'Something Went Wrong'
+            ]);
+        }
+    }
+
+    public function delete_version($id){
+        $data = AppVersion::where('id',$id)->delete();
+        if($data){
+            return response()->json([
+                'status' => true,
+                'msg' => 'Announcement Deleted'
+            ]);
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => 'Something Went Wrong'
+            ]);
+        }
+    }
 }
