@@ -24,6 +24,8 @@ Route::group(['middleware' => 'Cors'] , function(){
             Route::post('/updateIdPassword' , [MainController::class , 'updateIdPassword']);
             Route::post('/UpdateTournamentComplete' , [MainController::class ,'UpdateTournamentComplete']);
             Route::post('/sendnotification' , [MainController::class , 'sendnotification']);
+            Route::post('/updateAnnouncement' , [MainController::class , 'updateAnnouncement']);
+            Route::post('/updateVersion' , [MainController::class , 'updateVersion']);
 
 
 
@@ -32,6 +34,15 @@ Route::group(['middleware' => 'Cors'] , function(){
             Route::get('/showTournaments',[AdminShowController::class , 'showTournaments']);
             Route::get('/withdraw',[AdminShowController::class , 'withdraw']);
             Route::get('/versions',[AdminShowController::class , 'versions']);
+            Route::get('/showTournamentsUser' , [AdminShowController::class , 'showTournamentsUser']);
+            Route::get('/complete/{id}', [AdminShowController::class , 'complete']);
+
+            Route::get('/delete_tournament/{tournament_id}',[MainController::class , 'deleteTournament']);
+            Route::get('/delete_announcement/{ann_id}' , [MainController::class , 'delete_announcement']);
+            Route::get('/index',[AdminShowController::class , 'indexData']);
+            Route::get('/editAnnouncement/{id}' , [AdminShowController::class , 'editAnnouncement']);
+            Route::get('/editVersion/{v_id}' , [AdminShowController::class , 'editVersion']);
+            Route::get('/delete_version/{id}' , [MainController::class , 'delete_version']);
 
         // });
     // });

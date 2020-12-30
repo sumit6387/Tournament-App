@@ -75,6 +75,12 @@
                 }else{
                     $tour_id = $tour_no;
                 }
+                $time = explode(':',$data['tournament_start_time']);
+                if($time[0] > 12){
+                    $times = ($time[0]-12).":".$time[1]." PM";
+                }else{
+                    $times  = $time[0].":".$time[1]." AM";
+                }
                 $new_tournament = new Tournament();
                 $new_tournament->prize_pool = $data['prize_pool'];
                 $new_tournament->tour_id = $tour_id;
@@ -101,10 +107,16 @@
                 $new_tournament->created_by = $created_by;
                 $new_tournament->tournament_start_date = $data['tournament_start_date'];
                 $new_tournament->tournament_start_time = $data['tournament_start_time'];
-                $new_tournament->save();
-                return true;
+                if($new_tournament->save()){
+                    return true;
+                }else{
+                    return false;
+                }
             }catch(Exception $e){
-                return $e;
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Opps! Something Went Wrong'
+                ]);
             }
         }
 
@@ -112,8 +124,15 @@
            $users = UserInfo::where('user_id',$id)->get()->first();
            $tournament = Tournament::where('tournament_id',$tournament_id)->get()->first();
            $amount = $users->withdrawal_amount;
-           if($winner == 1){
+           $test = 0;
+           if($winner == 1 && $tournamen->type == 'solo'){
                $amount = $amount + $tournament->winning;
+               $test = 1;
+           }else if($winner == 1 && $tournamen->type == 'duo'){
+            $amount = $amount + ($tournament->winning*50)/100;
+            $test = 1;
+           }else if($winner == 1 && $tournamen->type == 'squad'){
+               $amount = $amount + ($tournament->winning*25)/100;
                $test = 1;
            }
            $amount = $amount + ($tournament->per_kill * $kill);

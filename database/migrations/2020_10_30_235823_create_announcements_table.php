@@ -16,6 +16,7 @@ class CreateAnnouncementsTable extends Migration
         Schema::create('announcements', function (Blueprint $table) {
             $table->id('ann_id');
             $table->string('msg');
+            $table->boolean('status')->default(false);
             $table->timestamps();
         });
     }
