@@ -126,6 +126,7 @@
            $amount = $users->withdrawal_amount;
            $test = 0;
            if($winner == 1 && $tournamen->type == 'solo'){
+           
                $amount = $amount + $tournament->winning;
                $test = 1;
            }else if($winner == 1 && $tournamen->type == 'duo'){
