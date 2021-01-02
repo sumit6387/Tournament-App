@@ -144,7 +144,6 @@ class MainController extends Controller
                 $new = new AllFunction();
                 // adding the tournament
                 $data = $new->registerTournament($request->all());
-                return $data;
                 if($data == true){
                     return response()->json([
                         'status' => true,
