@@ -135,13 +135,16 @@ class MainController extends Controller
             'game_type' => 'required',
             'tournament_type' => 'required',
             'tournament_start_date' => 'required',
-            'tournament_start_time' => 'required'
+            'tournament_start_time' => 'required',
+            'tournament_name' => 'required',
+            'img' => 'required'
         ]);
         if($valid->passes()){
             try{
                 $new = new AllFunction();
                 // adding the tournament
                 $data = $new->registerTournament($request->all());
+                return $data;
                 if($data == true){
                     return response()->json([
                         'status' => true,

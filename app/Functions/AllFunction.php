@@ -10,6 +10,9 @@
     use Exception;
     use Illuminate\Support\Facades\Http;
     use Illuminate\Support\Str;
+    use Illuminate\Support\Facades\Auth;
+
+
 
     class AllFunction{
         public function sendSms($number){
@@ -75,12 +78,7 @@
                 }else{
                     $tour_id = $tour_no;
                 }
-                $time = explode(':',$data['tournament_start_time']);
-                if($time[0] > 12){
-                    $times = ($time[0]-12).":".$time[1]." PM";
-                }else{
-                    $times  = $time[0].":".$time[1]." AM";
-                }
+                
                 $new_tournament = new Tournament();
                 $new_tournament->prize_pool = $data['prize_pool'];
                 $new_tournament->tour_id = $tour_id;
@@ -95,15 +93,21 @@
                 $new_tournament->game_type = $data['game_type'];
                 $new_tournament->tournament_type = $data['tournament_type'];
                 $new_tournament->tournament_name = $data['tournament_name'];
-                $email = User::where('email' , auth()->user()->email)->get()->first();
-                if($email){
-                    $created_by = 'User';
-                    $new_tournament->id = $email->id;
+                
+                if (Auth::check()){
+                    $email = User::where('email' , auth()->user()->email)->get()->first();
+                    if($email){
+                        $created_by = 'User';
+                        $new_tournament->id = $email->id;
+                    }
+                }else{
+                    $record = Admin::where('email' , auth()->user()->email)->get()->first();
+                    if($record){
+                        $created_by = 'Admin';
+                    }
                 }
-                $record = Admin::where('email' , auth()->user()->email)->get()->first();
-                if($record){
-                    $created_by = 'Admin';
-                }
+                
+                
                 $new_tournament->created_by = $created_by;
                 $new_tournament->tournament_start_date = $data['tournament_start_date'];
                 $new_tournament->tournament_start_time = $data['tournament_start_time'];
@@ -126,7 +130,6 @@
            $amount = $users->withdrawal_amount;
            $test = 0;
            if($winner == 1 && $tournamen->type == 'solo'){
-           
                $amount = $amount + $tournament->winning;
                $test = 1;
            }else if($winner == 1 && $tournamen->type == 'duo'){

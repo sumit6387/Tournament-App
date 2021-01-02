@@ -18,8 +18,9 @@ class CreateAdminsTable extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('password');
+            $table->string('secret_key');
             $table->string('email_verification_code')->nullable();
-            $table->string('token');
+            $table->string('token')->nullable();
             $table->timestamps();
         });
     }
