@@ -137,4 +137,14 @@ class AdminShowController extends Controller
         ]);
     }
 
+    public function tournamentsHistory(){
+        $data = Tournament::where('completed',1)->orwhere('cancel',1)->get();
+        if($data->count() > 0){
+            return response()->json([
+                'status' => true,
+                'data' => $data
+            ]);
+        }
+    }
+
 }

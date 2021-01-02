@@ -106,8 +106,6 @@
                         $created_by = 'Admin';
                     }
                 }
-                
-                
                 $new_tournament->created_by = $created_by;
                 $new_tournament->tournament_start_date = $data['tournament_start_date'];
                 $new_tournament->tournament_start_time = $data['tournament_start_time'];

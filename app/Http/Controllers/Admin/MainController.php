@@ -264,7 +264,6 @@ class MainController extends Controller
 
     public function deleteTournament($tournament_id){
         $tournament = Tournament::where('tournament_id',$tournament_id)->get()->first();
-        return $tournament;
         if($tournament){
             $users = explode(',',$tournament->joined_user);
                 if($tournament->joined_user != null){
