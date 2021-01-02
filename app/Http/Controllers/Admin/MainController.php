@@ -354,8 +354,8 @@ class MainController extends Controller
     }
 
     public function solvedComplaint($id){
-        $complaint = Complaint::where('id' , $id)->get()->first();
-        if($complaint->count() > 0){
+        $complaint = Complaint::where('id' , $id)->update(['status' => 1]);
+        if($complaint){
             return response()->json([
                 'status' => true,
                 'msg' => 'Complaint solved'

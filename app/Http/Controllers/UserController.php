@@ -9,6 +9,7 @@ use App\Models\Transaction;
 use App\Models\AppVersion;
 use App\Models\UserName;
 use App\Models\History;
+use App\Models\Complaint;
 use App\Functions\AllFunction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -475,5 +476,37 @@ class UserController extends Controller
         }
     }
 
+    public function complaint(Request $request){
+        $valid = Validator::make($request->all() , [
+            'tournament_id' => 'required',
+            'msg' => 'required'
+        ]);
+
+        if($valid->passes()){
+            $newComplaint = new Complaint();
+            $newComplaint->user_id = auth()->user()->id;
+            $newComplaint->tour_id = $request->tournament_id;
+            $newComplaint->message = $request->msg;
+            if($request->img != ''){
+                $newComplaint->img = $request->img;
+            }
+            if($newComplaint->save()){
+                return response()->json([
+                    'status' => true,
+                    'data' => 'Your Complaints Saved your problem solved in 24 hours'
+                ]);
+            }else{
+                return response()->json([
+                    'status' =>false,
+                    'msg' => 'Something Went Wrong' 
+                ]);
+            }
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => $valid->errors()->all()
+            ]);
+        }
+    }
     
 }
