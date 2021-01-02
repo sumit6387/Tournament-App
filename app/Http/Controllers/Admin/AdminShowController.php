@@ -11,6 +11,7 @@ use App\Models\AppVersion;
 use App\Models\User;
 use App\Models\UserName;
 use App\Models\Transaction;
+use App\Models\Complaint;
 use Carbon\Carbon;
 
 class AdminShowController extends Controller
@@ -143,6 +144,21 @@ class AdminShowController extends Controller
             return response()->json([
                 'status' => true,
                 'data' => $data
+            ]);
+        }
+    }
+
+    public function showComplaints(){
+        $complaints = Complaint::where('status' , 0)->get();
+        if($complaints->count() > 0){
+            return response()->json([
+                'status' => true,
+                'data' => $complaints
+            ]);
+        }else{
+            return response()->json([
+                'status' => false,
+                'data' => 'No Records Found'
             ]);
         }
     }

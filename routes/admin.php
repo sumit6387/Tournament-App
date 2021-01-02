@@ -44,6 +44,8 @@ Route::group(['middleware' => 'Cors'] , function(){
             Route::get('/editVersion/{v_id}' , [AdminShowController::class , 'editVersion']);
             Route::get('/delete_version/{id}' , [MainController::class , 'delete_version']);
             Route::get('/tournamentsHistory' , [AdminShowController::class , 'tournamentsHistory']);
+            Route::get('/showComplaints' , [AdminShowController::class , 'showComplaints']);
+            Route::get('/solvedComplaint/{id}' , [MainController::class , 'solvedComplaint']);
 
     //     });
     // });

@@ -18,6 +18,7 @@ class CreateComplaintsTable extends Migration
             $table->string('user_id');
             $table->string('tour_id');
             $table->string('message');
+            $table->string('status')->default(false);
             $table->string('img')->nullable();
             $table->timestamps();
         });

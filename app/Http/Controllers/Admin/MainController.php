@@ -10,6 +10,7 @@ use App\Models\Game;
 use App\Models\Tournament;
 use App\Models\Result;
 use App\Models\UserInfo;
+use App\Models\Complaint;
 use Validator;
 use Exception;
 use Illuminate\Support\Str;
@@ -343,6 +344,21 @@ class MainController extends Controller
             return response()->json([
                 'status' => true,
                 'msg' => 'Announcement Deleted'
+            ]);
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => 'Something Went Wrong'
+            ]);
+        }
+    }
+
+    public function solvedComplaint($id){
+        $complaint = Complaint::where('id' , $id)->get()->first();
+        if($complaint->count() > 0){
+            return response()->json([
+                'status' => true,
+                'msg' => 'Complaint solved'
             ]);
         }else{
             return response()->json([

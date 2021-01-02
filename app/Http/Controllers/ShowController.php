@@ -175,8 +175,15 @@ class ShowController extends Controller
     public function tournamentDetail(Request $req){
         $data = Tournament::where(['tournament_id' => $req->tournament_id , 'created_by' => 'User'])->get()->first();
         if($data){
+            $data->join = false;
             if($data->joined_user != null){
                 $data->joined_user = sizeof(explode(',',$data->joined_user));
+                $arr = explode(',',$data->joined_user);
+                for ($i=0; $i < count($arr) ; $i++) { 
+                    if($arr[$i] == auth()->user()->id){
+                        $data->join = true;
+                    }
+                }
             }else{
                 $data->joined_user = 0;
             }
