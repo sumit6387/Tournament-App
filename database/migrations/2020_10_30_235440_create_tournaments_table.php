@@ -24,7 +24,7 @@ class CreateTournamentsTable extends Migration
             $table->string('img');
             $table->string('type'); //solo , squad,Duo
             $table->string('maps');
-            $table->string('joined_user')->default(); // how many user joined tournament
+            $table->string('joined_user')->nullable(); // how many user joined tournament
             $table->string('max_user_participated'); //max user participate in the tournaments
             $table->string('game_type'); //Faug,Pubg
             $table->boolean('completed')->default(0); //1 for completed or o for  not
