@@ -10,6 +10,7 @@ use App\Models\AppVersion;
 use App\Models\UserName;
 use App\Models\History;
 use App\Models\Complaint;
+use App\Models\Result;
 use App\Functions\AllFunction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -255,15 +256,15 @@ class UserController extends Controller
             // user complete the tournament which user created
             $result = new Result();
             $result->tournament_id = $req->tournament_id;
-            $result->results = $req->results;
-            $winner = json_decode($req->results);
+            $result->results = json_encode($req->results);
+            $winner =$req->results;
             $prize  = new AllFunction();
-            foreach ($winner as $key => $value) {
+            foreach ($winner as $value) {
                 //prize distribution  by user
-                $prize->prizeDistribution($value->user_id,$value->kill,$value->winner,$req->tournament_id);
-                if($value->winner == 1){
-                    $result->winner_id = $value->user_id;
-                    $users = UserInfo::where('user_id',$value->user_id)->get()->first();
+               $prize->prizeDistribution($value['user_id'],$value['kill'],$value['winner'],$req->tournament_id);
+               if($value['winner'] == 1){
+                    $result->winner_id = $value['user_id'];
+                    $users = UserInfo::where('user_id',$value['user_id'])->get()->first();
                     $users->ptr_reward = $users->ptr_reward+10;
                     $users->save();
                 }

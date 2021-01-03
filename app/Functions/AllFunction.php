@@ -127,13 +127,13 @@
            $tournament = Tournament::where('tournament_id',$tournament_id)->get()->first();
            $amount = $users->withdrawal_amount;
            $test = 0;
-           if($winner == 1 && $tournamen->type == 'solo'){
+           if($winner == 1 && $tournament->type == 'solo'){
                $amount = $amount + $tournament->winning;
                $test = 1;
-           }else if($winner == 1 && $tournamen->type == 'duo'){
+           }else if($winner == 1 && $tournament->type == 'duo'){
             $amount = $amount + ($tournament->winning*50)/100;
             $test = 1;
-           }else if($winner == 1 && $tournamen->type == 'squad'){
+           }else if($winner == 1 && $tournament->type == 'squad'){
                $amount = $amount + ($tournament->winning*25)/100;
                $test = 1;
            }
