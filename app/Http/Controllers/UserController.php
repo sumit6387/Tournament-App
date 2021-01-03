@@ -252,43 +252,51 @@ class UserController extends Controller
     public function UpdateTournamentComplete(Request $req){
         $valid = Validator::make($req->all(),['tournament_id'=> 'required' , 'results' => 'required']);
         if($valid->passes()){
-            // user complete the tournament which user created
-            $result = new Result();
-            $result->tournament_id = $req->tournament_id;
-            $result->results = $req->results;
-            $winner = json_decode($req->results);
-            $prize  = new AllFunction();
-            foreach ($winner as $key => $value) {
-                //prize distribution  by user
-                $prize->prizeDistribution($value->user_id,$value->kill,$value->winner,$req->tournament_id);
-                if($value->winner == 1){
-                    $result->winner_id = $value->user_id;
-                    $users = UserInfo::where('user_id',$value->user_id)->get()->first();
-                    $users->ptr_reward = $users->ptr_reward+10;
-                    $users->save();
+            $tour = Tournament::where(['tournament_id' => $req->tournament_id,'completed' => 0 , 'cancel' => 0])->get()->first();
+            if($tour){
+                // user complete the tournament which user created
+                $result = new Result();
+                $result->tournament_id = $req->tournament_id;
+                $result->results = $req->results;
+                $winner = json_decode($req->results);
+                $prize  = new AllFunction();
+                foreach ($winner as $key => $value) {
+                    //prize distribution  by user
+                    $prize->prizeDistribution($value->user_id,$value->kill,$value->winner,$req->tournament_id);
+                    if($value->winner == 1){
+                        $result->winner_id = $value->user_id;
+                        $users = UserInfo::where('user_id',$value->user_id)->get()->first();
+                        $users->ptr_reward = $users->ptr_reward+10;
+                        $users->save();
+                    }
                 }
-            }
-            $result->save();
-            $data = Tournament::where('tournament_id',$req->tournament_id)->get()->first();
-            $data->completed= 1;
-            $data->save();
-            $user = UserInfo::where('user_id' , $data->id)->get()->first();
-            $users = User::where('id' , $data->id)->get()->first();
-            $no_of_user  = sizeof(explode(',',$data->joined_user));
-            $total_collection = $data->entry_fee *$no_of_user;
-            $user_get = $total_collection - $data->prize_pool;
-            if($users->membership == 0){
-                // our comision
-                $add_amount_to_user = ($user_get * 5)/100;
+                $result->save();
+                $data = Tournament::where('tournament_id',$req->tournament_id)->get()->first();
+                $data->completed= 1;
+                $data->save();
+                $user = UserInfo::where('user_id' , $data->id)->get()->first();
+                $users = User::where('id' , $data->id)->get()->first();
+                $no_of_user  = sizeof(explode(',',$data->joined_user));
+                $total_collection = $data->entry_fee *$no_of_user;
+                $user_get = $total_collection - $data->prize_pool;
+                if($users->membership == 0){
+                    // our comision
+                    $add_amount_to_user = ($user_get * 5)/100;
+                }else{
+                    $add_amount_to_user = $user_get;
+                } 
+                $user->withdrawal_amount = $user->withdrawal_amount + $add_amount_to_user;
+                $user->save();
+                return response()->json([
+                    'status' => true,
+                    'msg' => 'status updated'
+                ]);
             }else{
-                $add_amount_to_user = $user_get;
-            } 
-            $user->withdrawal_amount = $user->withdrawal_amount + $add_amount_to_user;
-            $user->save();
-            return response()->json([
-                'status' => true,
-                'msg' => 'status updated'
-            ]);
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'This Tournament already Completed or Canceled'
+                ]);
+            }
         }else{
             return response()->json([
                 'status' => false,
