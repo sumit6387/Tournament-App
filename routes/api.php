@@ -50,6 +50,8 @@ Route::group(['prefix' => '{version}','middleware' => 'CheckVersion'],function()
         Route::get('/referAndEarn' , [ShowController::class , 'referAndEarn']);
         Route::get('/ourTournament' , [ShowController::class , 'ourTournament']);
         Route::post('/tournamentDetail' , [ShowController::class , 'tournamentDetail']); //tournament_id
+        Route::post('/complaint' , [UserController::class , 'complaint']); // tournament_id , msg , img if importent then get
+
         Route::get('/user' , [ShowController::class , 'user']);
         Route::post('/search',[ShowController::class, 'search']);//id
         Route::get('/numberOfNotification' , [ShowController::class , 'numberOfNotification']);
