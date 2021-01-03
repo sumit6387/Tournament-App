@@ -483,22 +483,30 @@ class UserController extends Controller
         ]);
 
         if($valid->passes()){
-            $newComplaint = new Complaint();
-            $newComplaint->user_id = auth()->user()->id;
-            $newComplaint->tour_id = $request->tournament_id;
-            $newComplaint->message = $request->msg;
-            if($request->img != ''){
-                $newComplaint->img = $request->img;
-            }
-            if($newComplaint->save()){
-                return response()->json([
-                    'status' => true,
-                    'data' => 'Your Complaints Saved your problem solved in 24 hours'
-                ]);
+            $tournament_exist = Touranament::where('tour_id' , $request->tournament_id)->get()->first();
+            if($tournament_exist){
+                $newComplaint = new Complaint();
+                $newComplaint->user_id = auth()->user()->id;
+                $newComplaint->tour_id = $request->tournament_id;
+                $newComplaint->message = $request->msg;
+                if($request->img != ''){
+                    $newComplaint->img = $request->img;
+                }
+                if($newComplaint->save()){
+                    return response()->json([
+                        'status' => true,
+                        'data' => 'Your Complaints Saved your problem solved in 24 hours'
+                    ]);
+                }else{
+                    return response()->json([
+                        'status' =>false,
+                        'msg' => 'Something Went Wrong' 
+                    ]);
+                }
             }else{
                 return response()->json([
-                    'status' =>false,
-                    'msg' => 'Something Went Wrong' 
+                    'status' => false,
+                    'msg' => 'Enter valid tournament id'
                 ]);
             }
         }else{
