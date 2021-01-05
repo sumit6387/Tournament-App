@@ -174,6 +174,7 @@ class UserController extends Controller
         ]);
         if($valid->passes()){
             try{
+                if($request->prize_pool <= $request->max_user_participated*$request->perkill ){
                 // user create the tournament
                 $new = new AllFunction();
                 $data = $new->registerTournament($request->all());
@@ -188,12 +189,19 @@ class UserController extends Controller
                     'msg' => 'Something went wrong'
                 ]);
             }
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => 'Enter Pr ize Pool More Because Prize Pool money is less then all money given to participent'
+            ]);
+        }
         }catch(Exception $e){
             return response()->json([
                 'status' => false,
                 'msg' => 'Something Went Wrong'
             ]);
         }
+    
     }else{
             return response()->json([
                 'status' => false,
@@ -271,7 +279,6 @@ class UserController extends Controller
                         $users->save();
                     }
                 }
-
                     $result->save();
                     $data = Tournament::where('tournament_id',$req->tournament_id)->get()->first();
                     $data->completed= 1;
