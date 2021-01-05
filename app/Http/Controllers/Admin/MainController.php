@@ -7,7 +7,10 @@ use Illuminate\Http\Request;
 use App\Models\Announcement;
 use App\Models\AppVersion;
 use App\Models\Game;
+use App\Models\User;
 use App\Models\Tournament;
+use App\Models\UserName;
+use App\Models\Transaction;
 use App\Models\Result;
 use App\Models\UserInfo;
 use App\Models\Complaint;
@@ -366,5 +369,32 @@ class MainController extends Controller
                 'msg' => 'Something Went Wrong'
             ]);
         }
+    }
+
+    public function verifyTournamentComplaint($user_id , $tour_id){
+        $userDetail = User::select(['users.name','users.mobile_no','users.membership','users.email','user_info.*'])->where('users.id',$user_id)->join('user_info','users.id','=','user_info.user_id')->get()->first();
+        $transactions = Transaction::orderby('id','desc')->where(['user_id' => $user_id , 'payment_done' => 1])->take(10)->get();
+        $tournament = Tournament::where('tour_id', $tour_id)->get()->first();
+        if($tournament->joined_user != null){
+            $tournament->joined_user = count(explode(',',$tournament->joined_user));
+        }else{
+            $tournament->joined_user = 0;
+        }
+        $username = UserName::where(['user_id' => $user_id , 'tournament_id' => $tournament->tournament_id])->get()->first();
+
+        if($userDetail || $transactions){
+            return response()->json([
+                'status' => true,
+                'user' => $userDetail,
+                'transactions' => $transactions,
+                'tournament' => $tournament,
+                'username' => $username
+            ]);
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => 'This user have No Data'
+            ]);
+        }  
     }
 }

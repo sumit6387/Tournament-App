@@ -263,7 +263,7 @@ class UserController extends Controller
                 $prize  = new AllFunction();
                 foreach ($winner as $value) {
                     //prize distribution  by user
-                $prize->prizeDistribution($value['user_id'],$value['kill'],$value['winner'],$req->tournament_id);
+                    $prize->prizeDistribution($value['user_id'],$value['kill'],$value['winner'],$req->tournament_id);
                 if($value['winner'] == 1){
                         $result->winner_id = $value['user_id'];
                         $users = UserInfo::where('user_id',$value['user_id'])->get()->first();
@@ -271,6 +271,7 @@ class UserController extends Controller
                         $users->save();
                     }
                 }
+
                     $result->save();
                     $data = Tournament::where('tournament_id',$req->tournament_id)->get()->first();
                     $data->completed= 1;

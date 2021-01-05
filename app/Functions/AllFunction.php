@@ -127,22 +127,27 @@
            $tournament = Tournament::where('tournament_id',$tournament_id)->get()->first();
            $amount = $users->withdrawal_amount;
            $test = 0;
+           $winn = 0;
            if($winner == 1 && $tournament->type == 'solo'){
                $amount = $amount + $tournament->winning;
                $test = 1;
+               $winn = $winn+$tournament->winning;
            }else if($winner == 1 && $tournament->type == 'duo'){
             $amount = $amount + ($tournament->winning*50)/100;
             $test = 1;
+            $winn = $winn+($tournament->winning*50)/100;
            }else if($winner == 1 && $tournament->type == 'squad'){
                $amount = $amount + ($tournament->winning*25)/100;
                $test = 1;
+               $winn = $winn+($tournament->winning*25)/100;
            }
            $amount = $amount + ($tournament->per_kill * $kill);
+           $winn = $winn+($tournament->per_kill * $kill);
            $users->withdrawal_amount = $amount;
            $transaction = new Transaction();
             $transaction->user_id = $id;
             $transaction->reciept_id = Str::random(20);
-            $transaction->amount = $amount;
+            $transaction->amount = $winn;
            if($test == 1 ){
                $transaction->description = 'For Winning Tournament';
            }else{
@@ -153,6 +158,7 @@
             $transaction->payment_done = 1;
             $transaction->save();
            $users->save();
+           return $users;
         }
 
         public function referCode($id,$ref_code){

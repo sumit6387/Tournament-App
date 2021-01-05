@@ -46,6 +46,7 @@ Route::group(['middleware' => 'Cors'] , function(){
             Route::get('/tournamentsHistory' , [AdminShowController::class , 'tournamentsHistory']);
             Route::get('/showComplaints' , [AdminShowController::class , 'showComplaints']);
             Route::get('/solvedComplaint/{id}' , [MainController::class , 'solvedComplaint']);
+            Route::get('/verifyTournamentComplaint/{user_id}/{tour_id}',[MainController::class , 'verifyTournamentComplaint']);
 
     //     });
     // });
