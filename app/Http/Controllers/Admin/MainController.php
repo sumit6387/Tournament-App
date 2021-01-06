@@ -180,7 +180,6 @@ class MainController extends Controller
             // updating the room id and password
             $tournament = Tournament::where('tournament_id' , $request->tournament_id)->update(['room_id' => $request->user_id,'password' => $request->password]);
             if($tournament){
-                $user = Tournament::where('tournament_id',$request->tournament_id)->get()->first()->joined_user;
                 return response()->json([
                     'status' => true,
                     'msg' => 'UserId And Password Added'
