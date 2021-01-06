@@ -153,4 +153,32 @@ class WithdrawController extends Controller
             ]);
         }
     }
+
+
+    public function withdrawDone($id){
+        $withdraw = Withdraw::where('id',$id)->get()->first();
+        if($withdraw){
+            $withdraw->completed = 1;
+            $withdraw->save();
+            $notifi = new AllFunction();
+            $data = $notifi->sendNotification(['id' => $withdraw->user_id , 'title'=> 'Transfer Amount' , 'msg' => 'Your Amount '.$withdraw->amount.' Withdraw To your account'  , 'icon' => 'money']);
+            if($data){
+                return response()->json([
+                    'status' => true,
+                    'msg' => 'Payment Done'
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Oops Something Went Wrong'
+                ]);
+            }
+            
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => 'Oops! SOmething Went Wrong'
+            ]);
+        }
+    }
 }

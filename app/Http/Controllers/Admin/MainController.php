@@ -362,10 +362,20 @@ class MainController extends Controller
     public function solvedComplaint($id){
         $complaint = Complaint::where('id' , $id)->update(['status' => 1]);
         if($complaint){
-            return response()->json([
-                'status' => true,
-                'msg' => 'Complaint solved'
-            ]);
+            $notifi = new AllFunction();
+            $data =  $notifi->sendNotification(['id' => $complaint->user_id , 'title' => 'Problem Solved' , 'msg' => 'Your Complain is Solved Now' , 'icon' => 'Flight-jet']);
+            if($data){
+                return response()->json([
+                    'status' => true,
+                    'msg' => 'Complaint solved'
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Oops! Something Went Wrong'
+                ]);
+            }
+            
         }else{
             return response()->json([
                 'status' => false,

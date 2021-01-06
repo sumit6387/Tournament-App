@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\MainController;
 use App\Http\Controllers\Admin\AdminShowController;
+use App\Http\Controllers\WithdrawController;
 
 Route::group(['middleware' => 'Cors'] , function(){
     Route::post('/login' ,[AdminController::class , 'login']);
@@ -47,6 +48,7 @@ Route::group(['middleware' => 'Cors'] , function(){
             Route::get('/showComplaints' , [AdminShowController::class , 'showComplaints']);
             Route::get('/solvedComplaint/{id}' , [MainController::class , 'solvedComplaint']);
             Route::get('/verifyTournamentComplaint/{user_id}/{tour_id}',[MainController::class , 'verifyTournamentComplaint']);
+            Route::get('/withdrawDone/{id}',[WithdrawController::class , 'withdrawDone']);
 
     //     });
     // });
