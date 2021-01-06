@@ -313,7 +313,7 @@ class ShowController extends Controller
 
         public function history($v,$game , $type){
             $game = strtoupper($game);
-            $data = Tournament::select(['tournaments.tournament_name','tournaments.entry_fee','tournaments.prize_pool','tournaments.tournament_id','tournaments.joined_user','tournaments.per_kill','tournaments.img','tournaments.tournament_start_time','history.*'])->orderby('tournaments.tournament_id' , 'desc')->where(['history.status'=>$type,'history.game'=>$game])->join('history','tournaments.tournament_id','=','history.tournament_id');
+            $data = Tournament::select(['tournaments.tournament_name','tournaments.max_user_participated','tournaments.maps','tournaments.entry_fee','tournaments.prize_pool','tournaments.tournament_id','tournaments.joined_user','tournaments.per_kill','tournaments.img','tournaments.tournament_start_time','history.*'])->orderby('tournaments.tournament_id' , 'desc')->where(['history.status'=>$type,'history.game'=>$game])->join('history','tournaments.tournament_id','=','history.tournament_id');
 
             if($data->get()->count()){
                 return response()->json([
