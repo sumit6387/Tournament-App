@@ -149,7 +149,7 @@ class AdminShowController extends Controller
     }
 
     public function showComplaints(){
-        $complaints = Complaint::select(['complaints.*' , 'users.name'])->join('users','complaints.user_id','=','users.id')->get();
+        $complaints = Complaint::select(['complaints.*' , 'users.name'])->where('complaints.status',0)->join('users','complaints.user_id','=','users.id')->get();
         if($complaints->count() > 0){
             return response()->json([
                 'status' => true,

@@ -14,6 +14,7 @@ use App\Models\Transaction;
 use App\Models\Result;
 use App\Models\UserInfo;
 use App\Models\Complaint;
+use App\Models\History;
 use Validator;
 use Exception;
 use Illuminate\Support\Str;
@@ -220,6 +221,7 @@ class MainController extends Controller
                 }
             }
             $result->save();
+            History::where('tournament_id',$req->tournament_id)->update(['status' => 'past']);
             $data = Tournament::where('tournament_id',$req->tournament_id)->update(['completed' => 1]);
             if($data){
                 return response()->json([
@@ -280,12 +282,13 @@ class MainController extends Controller
                         $notification->sendNotification(array('id' => $value , 'title' => 'Match Canceled' ,'msg' => $tournament->tournament_name." canceled by Organizor",'icon'=> 'gamepad'));
                     }
                 }
-            $tournament->cancel = 1;
-            $tournament->save();
-            return response()->json([
-                'status' => true,
-                'data' => 'Tournament Canceled'
-            ]);
+                History::where('tournament_id',$tournament_id)->update(['status' => 'past']);
+                $tournament->cancel = 1;
+                $tournament->save();
+                return response()->json([
+                    'status' => true,
+                    'data' => 'Tournament Canceled'
+                ]);
         }else{
             return response()->json([
                 'status'=> false,

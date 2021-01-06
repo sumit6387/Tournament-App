@@ -296,6 +296,7 @@ class UserController extends Controller
                     } 
                     $user->withdrawal_amount = $user->withdrawal_amount + $add_amount_to_user;
                     $user->save();
+                    History::where('tournament_id',$req->tournament_id)->update(['status' => 'past']);
                     return response()->json([
                         'status' => true,
                         'msg' => 'status updated'
@@ -469,6 +470,7 @@ class UserController extends Controller
                 }
                 $data->cancel = 1;
                 $data->save();
+                History::where('tournament_id',$request->tournament_id)->update(['status' => 'past']);
                 return response()->json([
                     'status' => true,
                     'msg' => 'Match is canceled'
