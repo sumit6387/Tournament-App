@@ -157,8 +157,17 @@
             $transaction->action = 'C';
             $transaction->payment_done = 1;
             $transaction->save();
-           $users->save();
-           return $users;
+            $users->save();
+            if($kill > 0){
+                $data = $this->sendNotification(['id' => $id , 'title' => 'Tournament Prize' , 'msg' => 'You participated in match.so You won the '.$winn.' rs.' , 'icon' => 'money']);
+                if($data){
+                    return true;
+                }else{
+                    return false;
+                }
+            }else{
+                return true;
+            }
         }
 
         public function referCode($id,$ref_code){

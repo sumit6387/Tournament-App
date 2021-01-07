@@ -239,7 +239,7 @@ class ShowController extends Controller
         }
 
         public function notification(){
-            $notifications  = Notification::where('user_id',auth()->user()->id);
+            $notifications  = Notification::orderby('id','desc')->where('user_id',auth()->user()->id);
             if($notifications->get()->count()){
                 return response()->json([
                     'status'=> true,

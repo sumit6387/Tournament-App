@@ -268,12 +268,12 @@ class UserController extends Controller
                 foreach ($winner as $value) {
                     //prize distribution  by user
                     $prize->prizeDistribution($value['user_id'],$value['kill'],$value['winner'],$req->tournament_id);
-                if($value['winner'] == 1){
-                        $result->winner_id = $value['user_id'];
-                        $users = UserInfo::where('user_id',$value['user_id'])->get()->first();
-                        $users->ptr_reward = $users->ptr_reward+10;
-                        $users->save();
-                    }
+                    if($value['winner'] == 1){
+                            $result->winner_id = $value['user_id'];
+                            $users = UserInfo::where('user_id',$value['user_id'])->get()->first();
+                            $users->ptr_reward = $users->ptr_reward+10;
+                            $users->save();
+                        }
                 }
                     $result->save();
                     $data = Tournament::where('tournament_id',$req->tournament_id)->get()->first();
@@ -292,6 +292,7 @@ class UserController extends Controller
                     } 
                     $user->withdrawal_amount = $user->withdrawal_amount + $add_amount_to_user;
                     $user->save();
+                    History::where('tournament_id',$req->tournament_id)->update(['status' => 'past']);
                     return response()->json([
                         'status' => true,
                         'msg' => 'status updated'
@@ -465,6 +466,7 @@ class UserController extends Controller
                 }
                 $data->cancel = 1;
                 $data->save();
+                History::where('tournament_id',$request->tournament_id)->update(['status' => 'past']);
                 return response()->json([
                     'status' => true,
                     'msg' => 'Match is canceled'
