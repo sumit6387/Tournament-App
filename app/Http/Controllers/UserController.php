@@ -129,11 +129,7 @@ class UserController extends Controller
             $history->user_id = auth()->user()->id;
             $history->tournament_id = $request->tournament_id;
             $history->game = $tournament->game_type;
-            if($tournament->tournament_start_at == date('y-m-d')){
-                $history->status = 'live';
-            }else{
-                $history->status = 'past';
-            }
+            $history->status = 'live';
             $history->save();
 
 
@@ -174,7 +170,7 @@ class UserController extends Controller
         ]);
         if($valid->passes()){
             try{
-                if($request->prize_pool <= $request->max_user_participated*$request->perkill ){
+                if($request->prize_pool >= $request->max_user_participated*$request->perkill ){
                 // user create the tournament
                 $new = new AllFunction();
                 $data = $new->registerTournament($request->all());
@@ -192,7 +188,7 @@ class UserController extends Controller
         }else{
             return response()->json([
                 'status' => false,
-                'msg' => 'Enter Pr ize Pool More Because Prize Pool money is less then all money given to participent'
+                'msg' => 'Enter Prize Pool More Because Prize Pool money is less then all money given to participent'
             ]);
         }
         }catch(Exception $e){
