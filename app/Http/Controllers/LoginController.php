@@ -117,10 +117,9 @@ class LoginController extends Controller
                         }
                     }else{
                         return array('status'=>false,'msg'=>'Some Problem Occured');
-                    }
-                    
+                    }  
                 }catch(Exception $e){
-                    return array('status'=>false,'msg'=>'Entered Email Or Mobile No alredy registered.');
+                    return array('status'=>false,'msg'=>'Something Went Wrong.');
                 }
             }else{
                 return array('status'=>false,'msg'=>'Some Problem Occured');
