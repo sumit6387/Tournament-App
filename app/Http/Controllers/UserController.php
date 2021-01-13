@@ -29,7 +29,7 @@ class UserController extends Controller
         if($request->file('image')){
             $filename = Str::random(15).".jpg";
             $path = $request->file('image')->move(public_path('/images/user_image'),$filename);
-            $url = url('/images/user_image/'.$filename);
+            $url = url('public/images/user_image/'.$filename);
             $user_info->profile_image =$url;
         }
 

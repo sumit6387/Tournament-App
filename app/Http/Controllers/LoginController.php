@@ -62,7 +62,7 @@ class LoginController extends Controller
     public function register(Request $request){
         $validator = Validator::make($request->all(),['name'=>'required','mobile_no'=>'required','email'=>'required','password'=>'required','gender'=>'required']);
         if($validator->passes()){
-                try{
+                // try{
                     $already_exist = User::where('mobile_no',$request->mobile_no)->get()->first();
                     if($already_exist){
                         return response()->json([
@@ -119,9 +119,9 @@ class LoginController extends Controller
                         return array('status'=>false,'msg'=>'Some Problem Occured');
                     }
                     
-                }catch(Exception $e){
-                    return array('status'=>false,'msg'=>'Entered Email Or Mobile No alredy registered.');
-                }
+                // }catch(Exception $e){
+                //     return array('status'=>false,'msg'=>'Entered Email Or Mobile No alredy registered.');
+                // }
             }else{
                 return array('status'=>false,'msg'=>'Some Problem Occured');
             }
@@ -132,30 +132,38 @@ class LoginController extends Controller
         $validator = Validator::make($req->all(),['mobile_no'=>'required','password'=>'required']);
         if($validator->passes()){
           try{
-            $data = User::where(['mobile_no'=>$req->mobile_no , 'verified' => 1])->get()->first();
+            $data = User::where(['mobile_no'=>$req->mobile_no])->get()->first();
             if($data){
-            if (Hash::check($req->password, $data->password)) {
-                    $token = $data->createToken('my-app-token')->plainTextToken;
-                    $user = UserInfo::where('user_id' , $data->id)->get()->first();
-                    $user->notification_token = $req->notification_token;
-                    $user->save();
-                return response()->json([
-                    'status' => true,
-                    'msg' => 'Login Successfully',
-                    'token' => $token
-            ]);
-            }else{
-                return response()->json([
-                    'status' => false,
-                    'msg' => 'Mobile no or password is wrong',
+              $data1 = User::where(['mobile_no'=> $req->mobile_no  , 'verified' => 1])->get()->first();
+              if($data1){
+                if (Hash::check($req->password, $data->password)) {
+                        $token = $data->createToken('my-app-token')->plainTextToken;
+                        $user = UserInfo::where('user_id' , $data->id)->get()->first();
+                        $user->notification_token = $req->notification_token;
+                        $user->save();
+                        return response()->json([
+                            'status' => true,
+                            'msg' => 'Login Successfully',
+                            'token' => $token
+                        ]);
+                    }else{
+                        return response()->json([
+                            'status' => false,
+                            'msg' => 'Password Is Wrong',
+                        ]);
+                    }
+                }else{
+                    return response()->json([
+                        'status' => false,
+                        'msg'=> 'You Are Not Verified',
+                        'mobile_no' => $req->mobile_no,
+                        'verified' => false
                     ]);
                 }
             }else{
                 return response()->json([
                     'status' => false,
-                    'msg'=> 'You are not verified',
-                    'mobile_no' => $req->mobile_no,
-                    'verified' => false
+                    'msg'=> 'Mobile Number Is Wrong'
                 ]);
             }
         }catch(Exception $e){

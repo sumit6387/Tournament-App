@@ -38,13 +38,15 @@ class ShowController extends Controller
             foreach ($membersTournaments->get() as $key => $value) {
                 if(sizeof(explode(',',$value->joined_user)) < $value->max_user_participated){
                     array_push($data,$value);
+                    $key = count($data)-1;
                     if($data[$key]->joined_user != null){
-                        $data[$key]->joined_user = sizeof(explode(',',$data[$key]->joined_user));
+                        $data[$key]->joined_user = count(explode(',',$data[$key]->joined_user));
                     }else{
                         $data[$key]->joined_user = 0;
                     }
                 }
-            }
+                $data[$key]->created_by = User::where('id',$data[$key]->id)->get()->first()->name;
+            } 
         }else{
             $membersTournaments = "Nothing";
         }
@@ -55,12 +57,14 @@ class ShowController extends Controller
             foreach ($userTournament->get() as $key => $value) {
                 if(sizeof(explode(',',$value->joined_user)) < $value->max_user_participated){
                     array_push($data,$value);
+                    $key = count($data)-1;
                     if($data[$key]->joined_user != null){
                         $data[$key]->joined_user = sizeof(explode(',',$data[$key]->joined_user));
                     }else{
                         $data[$key]->joined_user = 0;
                     }
                 }
+                $data[$key]->created_by = User::where('id',$data[$key]->id)->get()->first()->name;
             }
         }else{
             $userTournament = 'Nothing';
@@ -173,9 +177,8 @@ class ShowController extends Controller
     }
 
     public function tournamentDetail(Request $req){
-        $data = Tournament::where(['tournament_id' => $req->tournament_id , 'created_by' => 'User'])->get()->first();
+        $data = Tournament::where(['tournament_id' => $req->tournament_id])->get()->first();
         if($data){
-            
             if($data->joined_user != null){
                 $arr = explode(',',$data->joined_user);
                 $data->joined_user = sizeof(explode(',',$data->joined_user));
@@ -313,7 +316,7 @@ class ShowController extends Controller
 
         public function history($v,$game , $type){
             $game = strtoupper($game);
-            $data = Tournament::select(['tournaments.tournament_name','tournaments.max_user_participated','tournaments.maps','tournaments.entry_fee','tournaments.prize_pool','tournaments.tournament_id','tournaments.joined_user','tournaments.per_kill','tournaments.img','tournaments.tournament_start_time','history.*'])->orderby('tournaments.tournament_id' , 'desc')->where(['history.status'=>$type,'history.game'=>$game])->join('history','tournaments.tournament_id','=','history.tournament_id');
+            $data = Tournament::select(['tournaments.tournament_name','tournaments.max_user_participated','tournaments.maps','tournaments.entry_fee','tournaments.prize_pool','tournaments.tournament_id','tournaments.joined_user','tournaments.per_kill','tournaments.img','tournaments.tournament_start_time','history.*'])->orderby('tournaments.tournament_id' , 'desc')->where(['history.status'=>$type,'history.game'=>$game,'history.user_id' => auth()->user()->id])->join('history','tournaments.tournament_id','=','history.tournament_id');
 
             if($data->get()->count()){
                 return response()->json([

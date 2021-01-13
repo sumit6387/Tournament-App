@@ -101,10 +101,7 @@
                         $new_tournament->id = $email->id;
                     }
                 }else{
-                    $record = Admin::where('email' , auth()->user()->email)->get()->first();
-                    if($record){
                         $created_by = 'Admin';
-                    }
                 }
                 $new_tournament->created_by = $created_by;
                 $new_tournament->tournament_start_date = $data['tournament_start_date'];
