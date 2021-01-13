@@ -101,10 +101,7 @@
                         $new_tournament->id = $email->id;
                     }
                 }else{
-                    $record = Admin::where('email' , auth()->user()->email)->get()->first();
-                    if($record){
                         $created_by = 'Admin';
-                    }
                 }
                 $new_tournament->created_by = $created_by;
                 $new_tournament->tournament_start_date = $data['tournament_start_date'];
@@ -133,9 +130,9 @@
                $test = 1;
                $winn = $winn+$tournament->winning;
            }else if($winner == 1 && $tournament->type == 'duo'){
-            $amount = $amount + ($tournament->winning*50)/100;
-            $test = 1;
-            $winn = $winn+($tournament->winning*50)/100;
+                $amount = $amount + ($tournament->winning*50)/100;
+                $test = 1;
+                $winn = $winn+($tournament->winning*50)/100;
            }else if($winner == 1 && $tournament->type == 'squad'){
                $amount = $amount + ($tournament->winning*25)/100;
                $test = 1;

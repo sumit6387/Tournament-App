@@ -146,6 +146,7 @@ class MainController extends Controller
         ]);
         if($valid->passes()){
             try{
+                
                 $new = new AllFunction();
                 // adding the tournament
                 $data = $new->registerTournament($request->all());

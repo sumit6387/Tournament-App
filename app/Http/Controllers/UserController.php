@@ -29,7 +29,7 @@ class UserController extends Controller
         if($request->file('image')){
             $filename = Str::random(15).".jpg";
             $path = $request->file('image')->move(public_path('/images/user_image'),$filename);
-            $url = url('/images/user_image/'.$filename);
+            $url = url('public/images/user_image/'.$filename);
             $user_info->profile_image =$url;
         }
 
@@ -277,7 +277,7 @@ class UserController extends Controller
                 }
                     $result->save();
                     $data = Tournament::where('tournament_id',$req->tournament_id)->get()->first();
-                    $data->completed= 1;
+                    $data->completed = 1;
                     $data->save();
                     $user = UserInfo::where('user_id' , $data->id)->get()->first();
                     $users = User::where('id' , $data->id)->get()->first();
