@@ -264,7 +264,41 @@ class UserController extends Controller
                 $result->tournament_id = $req->tournament_id;
                 $result->results = json_encode($req->results);
                 $winner =$req->results;
-                $prize  = new AllFunction();
+                $prize  = new AllFunction();// for check winner if solo then one if duo then 2 and squad then 4
+                $winner1 = 0;
+                foreach ($winner as $value) {
+                    if($value['winner'] == 1){
+                           $winner1 = $winner1+1;
+                        }
+                }
+                
+                if($$tournament->type == "solo"){
+                    if($winner1 > 1){
+                        return response()->json([
+                            "status" => false,
+                            "msg" => "You make the more then 1 winner in solo tournament"
+                            ]);
+                    }
+                }
+                
+                if($$tournament->type == "duo"){
+                    if($winner1 > 2){
+                        return response()->json([
+                            "status" => false,
+                            "msg" => "You make the more then 2 winner in duo tournament"
+                            ]);
+                    }
+                }
+                
+                if($$tournament->type == "squad"){
+                    if($winner1 > 4){
+                        return response()->json([
+                            "status" => false,
+                            "msg" => "You make the more then 4 winner in squad tournament"
+                            ]);
+                    }
+                }
+
                 foreach ($winner as $value) {
                     //prize distribution  by user
                     $prize->prizeDistribution($value['user_id'],$value['kill'],$value['winner'],$req->tournament_id);
