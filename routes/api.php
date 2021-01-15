@@ -27,6 +27,7 @@ Route::group(['prefix' => '{version}','middleware' => 'CheckVersion'],function()
         Route::post('/forgetPassword' , [LoginController::class , 'forgetOtp']); //mobile_no
         Route::post('/cancelMatch' , [UserController::class , 'cancelMatch']);   //tournament_id
         Route::post('/UpdateTournamentComplete' , [UserController::class , 'UpdateTournamentComplete']);//tournament_id , results this is json{user_id: , kill:, winner:0 or 1}
+        Route::post('/addFeedback' , [UserController::class , 'addFeedback']); //title,description
 
 
         // payment route for to add balance

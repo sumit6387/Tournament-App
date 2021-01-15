@@ -11,6 +11,7 @@ use App\Models\UserName;
 use App\Models\History;
 use App\Models\Complaint;
 use App\Models\Result;
+use App\Models\Feedback;
 use App\Functions\AllFunction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -325,6 +326,17 @@ class UserController extends Controller
                         $add_amount_to_user = $user_get;
                     } 
                     $user->withdrawal_amount = $user->withdrawal_amount + $add_amount_to_user;
+                    // for transaction history for user who created Tournament
+                    $trans = new Transaction();
+                    $trans->user_id = $data->id;
+                    $trans->reciept_id = Str::random(10);
+                    $trans->amount = $add_amount_to_user;
+                    $trans->payment_id = Str::random(12);
+                    $trans->description = "For Completed Organised Tournament";
+                    $trans->action = 'C';
+                    $trans->payment_done = 1;
+                    $trans->save();
+
                     $user->save();
                     History::where('tournament_id',$req->tournament_id)->update(['status' => 'past']);
                     return response()->json([
@@ -564,6 +576,35 @@ class UserController extends Controller
                 'msg' => $valid->errors()->all()
             ]);
         }
+    }
+
+    public function addFeedback(Request $request){
+        $valid = Validator::make($request->all() , ["title" => "required" , "description" => "required"]);
+        if($valid->passes()){
+            $username = User::where('id',auth()->user()->id)->get()->first()->name;
+            $feedback = new Feedback();
+            $feedback->user_id = auth()->user()->id;
+            $feedback->user_name = $username;
+            $feedback->title = $request->title;
+            $feedback->description = $request->description;
+            if($feedback->save()){
+                return response()->json([
+                    'status' => true,
+                    'msg' => "Feedback Submitted"
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'msg' => "Something Went Wrong"
+                ]);
+            }
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => $valid->errors()->all()
+            ]);
+        }
+        
     }
     
 }

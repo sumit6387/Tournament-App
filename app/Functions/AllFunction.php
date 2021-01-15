@@ -141,19 +141,21 @@
            $amount = $amount + ($tournament->per_kill * $kill);
            $winn = $winn+($tournament->per_kill * $kill);
            $users->withdrawal_amount = $amount;
-           $transaction = new Transaction();
-            $transaction->user_id = $id;
-            $transaction->reciept_id = Str::random(20);
-            $transaction->amount = $winn;
-           if($test == 1 ){
-               $transaction->description = 'For Winning Tournament';
-           }else{
-            $transaction->description = 'For Tournament Reward';
-           }
-            $transaction->payment_id = Str::random(10);
-            $transaction->action = 'C';
-            $transaction->payment_done = 1;
-            $transaction->save();
+             if($kill > 0){
+                    $transaction = new Transaction();
+                    $transaction->user_id = $id;
+                    $transaction->reciept_id = Str::random(20);
+                    $transaction->amount = $winn;
+                if($test == 1 ){
+                    $transaction->description = 'For Winning Tournament';
+                }else{
+                    $transaction->description = 'For Tournament Reward';
+                }
+                    $transaction->payment_id = Str::random(10);
+                    $transaction->action = 'C';
+                    $transaction->payment_done = 1;
+                    $transaction->save();
+             }
             $users->save();
             if($kill > 0){
                 $data = $this->sendNotification(['id' => $id , 'title' => 'Tournament Prize' , 'msg' => 'You participated in match.so You won the '.$winn.' rs.' , 'icon' => 'money']);
