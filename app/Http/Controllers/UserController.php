@@ -273,7 +273,7 @@ class UserController extends Controller
                         }
                 }
                 
-                if($$tournament->type == "solo"){
+                if($tournament->type == "solo"){
                     if($winner1 > 1){
                         return response()->json([
                             "status" => false,
@@ -282,7 +282,7 @@ class UserController extends Controller
                     }
                 }
                 
-                if($$tournament->type == "duo"){
+                if($tournament->type == "duo"){
                     if($winner1 > 2){
                         return response()->json([
                             "status" => false,
@@ -291,7 +291,7 @@ class UserController extends Controller
                     }
                 }
                 
-                if($$tournament->type == "squad"){
+                if($tournament->type == "squad"){
                     if($winner1 > 4){
                         return response()->json([
                             "status" => false,
