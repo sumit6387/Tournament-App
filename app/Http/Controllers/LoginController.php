@@ -104,8 +104,6 @@ class LoginController extends Controller
                                     }
                                 }
                             }
-
-                            
                             return response()->json(array('status'=>true,'msg'=>'user registered successfully'));
                             
                         }else{
@@ -121,6 +119,9 @@ class LoginController extends Controller
                     
                 // }catch(Exception $e){
                 //     return array('status'=>false,'msg'=>'Entered Email Or Mobile No alredy registered.');
+                    // }  
+                // }catch(Exception $e){
+                //     return array('status'=>false,'msg'=>'Something Went Wrong.');
                 // }
             }else{
                 return array('status'=>false,'msg'=>'Some Problem Occured');
@@ -155,7 +156,7 @@ class LoginController extends Controller
                 }else{
                     return response()->json([
                         'status' => false,
-                        'msg'=> 'You Are Not Verified',
+                        'msg'=> 'Mobile Number Is Wrong',
                         'mobile_no' => $req->mobile_no,
                         'verified' => false
                     ]);
@@ -163,7 +164,9 @@ class LoginController extends Controller
             }else{
                 return response()->json([
                     'status' => false,
-                    'msg'=> 'Mobile Number Is Wrong'
+                    'msg'=> 'Mobile Number Is Wrong',
+                    'mobile_no' => $req->mobile_no,
+                    'verified' => false
                 ]);
             }
         }catch(Exception $e){

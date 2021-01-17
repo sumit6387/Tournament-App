@@ -11,6 +11,7 @@ use App\Models\UserName;
 use App\Models\History;
 use App\Models\Complaint;
 use App\Models\Result;
+use App\Models\Feedback;
 use App\Functions\AllFunction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -264,7 +265,41 @@ class UserController extends Controller
                 $result->tournament_id = $req->tournament_id;
                 $result->results = json_encode($req->results);
                 $winner =$req->results;
-                $prize  = new AllFunction();
+                $prize  = new AllFunction();// for check winner if solo then one if duo then 2 and squad then 4
+                $winner1 = 0;
+                foreach ($winner as $value) {
+                    if($value['winner'] == 1){
+                           $winner1 = $winner1+1;
+                        }
+                }
+                
+                if($tournament->type == "solo"){
+                    if($winner1 > 1){
+                        return response()->json([
+                            "status" => false,
+                            "msg" => "You make the more then 1 winner in solo tournament"
+                            ]);
+                    }
+                }
+                
+                if($tournament->type == "duo"){
+                    if($winner1 > 2){
+                        return response()->json([
+                            "status" => false,
+                            "msg" => "You make the more then 2 winner in duo tournament"
+                            ]);
+                    }
+                }
+                
+                if($tournament->type == "squad"){
+                    if($winner1 > 4){
+                        return response()->json([
+                            "status" => false,
+                            "msg" => "You make the more then 4 winner in squad tournament"
+                            ]);
+                    }
+                }
+
                 foreach ($winner as $value) {
                     //prize distribution  by user
                     $prize->prizeDistribution($value['user_id'],$value['kill'],$value['winner'],$req->tournament_id);
@@ -277,7 +312,7 @@ class UserController extends Controller
                 }
                     $result->save();
                     $data = Tournament::where('tournament_id',$req->tournament_id)->get()->first();
-                    $data->completed= 1;
+                    $data->completed = 1;
                     $data->save();
                     $user = UserInfo::where('user_id' , $data->id)->get()->first();
                     $users = User::where('id' , $data->id)->get()->first();
@@ -291,6 +326,17 @@ class UserController extends Controller
                         $add_amount_to_user = $user_get;
                     } 
                     $user->withdrawal_amount = $user->withdrawal_amount + $add_amount_to_user;
+                    // for transaction history for user who created Tournament
+                    $trans = new Transaction();
+                    $trans->user_id = $data->id;
+                    $trans->reciept_id = Str::random(10);
+                    $trans->amount = $add_amount_to_user;
+                    $trans->payment_id = Str::random(12);
+                    $trans->description = "For Completed Organised Tournament";
+                    $trans->action = 'C';
+                    $trans->payment_done = 1;
+                    $trans->save();
+                    
                     $user->save();
                     History::where('tournament_id',$req->tournament_id)->update(['status' => 'past']);
                     return response()->json([
@@ -498,7 +544,7 @@ class UserController extends Controller
         ]);
 
         if($valid->passes()){
-            $tournament_exist = Touranament::where('tour_id' , $request->tournament_id)->get()->first();
+            $tournament_exist = Tournament::where('tour_id' , $request->tournament_id)->get()->first();
             if($tournament_exist){
                 $newComplaint = new Complaint();
                 $newComplaint->user_id = auth()->user()->id;
@@ -530,6 +576,35 @@ class UserController extends Controller
                 'msg' => $valid->errors()->all()
             ]);
         }
+    }
+    
+     public function addFeedback(Request $request){
+        $valid = Validator::make($request->all() , ["title" => "required" , "description" => "required"]);
+        if($valid->passes()){
+            $username = User::where('id',auth()->user()->id)->get()->first()->name;
+            $feedback = new Feedback();
+            $feedback->user_id = auth()->user()->id;
+            $feedback->user_name = $username;
+            $feedback->title = $request->title;
+            $feedback->description = $request->description;
+            if($feedback->save()){
+                return response()->json([
+                    'status' => true,
+                    'msg' => "Feedback Submitted"
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'msg' => "Something Went Wrong"
+                ]);
+            }
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => $valid->errors()->all()
+            ]);
+        }
+        
     }
     
 }

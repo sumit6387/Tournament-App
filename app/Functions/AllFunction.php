@@ -96,6 +96,7 @@
                 
                 if (Auth::check()){
                     $email = User::where('email' , auth()->user()->email)->get()->first();
+                    
                     if($email){
                         $created_by = 'User';
                         $new_tournament->id = $email->id;
@@ -130,9 +131,9 @@
                $test = 1;
                $winn = $winn+$tournament->winning;
            }else if($winner == 1 && $tournament->type == 'duo'){
-            $amount = $amount + ($tournament->winning*50)/100;
-            $test = 1;
-            $winn = $winn+($tournament->winning*50)/100;
+                $amount = $amount + ($tournament->winning*50)/100;
+                $test = 1;
+                $winn = $winn+($tournament->winning*50)/100;
            }else if($winner == 1 && $tournament->type == 'squad'){
                $amount = $amount + ($tournament->winning*25)/100;
                $test = 1;
@@ -141,19 +142,21 @@
            $amount = $amount + ($tournament->per_kill * $kill);
            $winn = $winn+($tournament->per_kill * $kill);
            $users->withdrawal_amount = $amount;
-           $transaction = new Transaction();
-            $transaction->user_id = $id;
-            $transaction->reciept_id = Str::random(20);
-            $transaction->amount = $winn;
-           if($test == 1 ){
-               $transaction->description = 'For Winning Tournament';
-           }else{
-            $transaction->description = 'For Tournament Reward';
-           }
-            $transaction->payment_id = Str::random(10);
-            $transaction->action = 'C';
-            $transaction->payment_done = 1;
-            $transaction->save();
+           if($kill > 0){
+                    $transaction = new Transaction();
+                    $transaction->user_id = $id;
+                    $transaction->reciept_id = Str::random(20);
+                    $transaction->amount = $winn;
+                    if($test == 1 ){
+                        $transaction->description = 'For Winning Tournament';
+                    }else{
+                        $transaction->description = 'For Tournament Reward';
+                    }
+                    $transaction->payment_id = Str::random(10);
+                    $transaction->action = 'C';
+                    $transaction->payment_done = 1;
+                    $transaction->save();
+             }
             $users->save();
             if($kill > 0){
                 $data = $this->sendNotification(['id' => $id , 'title' => 'Tournament Prize' , 'msg' => 'You participated in match.so You won the '.$winn.' rs.' , 'icon' => 'money']);
@@ -166,7 +169,7 @@
                 return true;
             }
         }
-
+        
         public function referCode($id,$ref_code){
             $ref = UserInfo::where('refferal_code',$ref_code)->get()->first();
             $valid = UserInfo::where('user_id',$id)->get()->first();
@@ -193,10 +196,10 @@
                 'Content-Type' => 'application/json',
                 'Authorization'=>'key=AAAA6lNbeY8:APA91bEVvPfXHiOg8w40IoJ4WS-mBlPmtuv9sCGIeszjEY2Q6clbu91PHgL5MEng7JdCVAFcUAbS4EyyCVKHA6bFT2GpRN8V4H_qi2Lm_ytoPseWbnw17RvvA8hfNbEyj0xTTl8nXvOy'
                 ])->post('https://fcm.googleapis.com/fcm/send',[
-                      'data' => [
-                        'title' => $data['title'],
-                        'message' => $data['msg']
-                      ],
+                      "notification" => [
+                        "body" => $data['msg'],
+                        "title"=> $data['title']
+                    ],
                         'to' => $user->notification_token
                 ]);
                 if($resp->status() == 200){

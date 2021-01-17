@@ -28,7 +28,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->call(function () {
             $user = User::get();
-            if($value->count() > 0){
+            if($user->count() > 0){
                 foreach ($user as $key => $value) {
                     if($value->Ex_date_membership >= date('y-m-d')){
                         $value->membership = 0;
@@ -40,7 +40,7 @@ class Kernel extends ConsoleKernel
                 }
             }
             
-        })->hourly();
+        })->daily();
     }
 
     /**

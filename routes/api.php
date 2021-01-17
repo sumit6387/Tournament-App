@@ -15,6 +15,8 @@ Route::group(['prefix' => '{version}','middleware' => 'CheckVersion'],function()
     Route::post('/verifyotp',[LoginController::class , 'verifyOtp']); // mobile_no , otp
     Route::post('/resendOtp' , [LoginController::class , 'resendOtp']); // mobile_no
     // Route::get('/check' , [LoginController::class , 'check']);
+    Route::post('/forgetPasswordProcess',[UserController::class , 'forgetPassword']); //mobile_no,otp,password
+    Route::post('/forgetPassword' , [LoginController::class , 'forgetOtp']); //mobile_no
     
     Route::group(['middleware' => 'auth:sanctum','api'], function(){
         Route::post('/updatedata',[UserController::class , 'store']); //name , image,email,state,country,mobike_no,gender
@@ -23,10 +25,9 @@ Route::group(['prefix' => '{version}','middleware' => 'CheckVersion'],function()
         Route::post('/startmatch' , [UserController::class , 'updatePassword']); //tournament_id,room_id,password    in this route we update games id and password realtime
         Route::get('/claimPrize',[UserController::class , 'claimPrize']);
         Route::post('/changePassword' , [UserController::class , 'changePassword']); // current_password,new_password , confirm_password
-        Route::post('/forgetPasswordProcess',[UserController::class , 'forgetPassword']); //mobile_no,otp,password
-        Route::post('/forgetPassword' , [LoginController::class , 'forgetOtp']); //mobile_no
         Route::post('/cancelMatch' , [UserController::class , 'cancelMatch']);   //tournament_id
         Route::post('/UpdateTournamentComplete' , [UserController::class , 'UpdateTournamentComplete']);//tournament_id , results this is json{user_id: , kill:, winner:0 or 1}
+        Route::post('/addFeedback' , [UserController::class , 'addFeedback']); //title,description
 
 
         // payment route for to add balance

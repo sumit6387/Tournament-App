@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Support\Str;
 use App\Models\Withdraw;
 use App\Models\UserInfo;
+use App\Models\User;
 use App\Functions\AllFunction;
 
 class WithdrawController extends Controller
@@ -30,6 +31,7 @@ class WithdrawController extends Controller
                         $withdraw->user_id = auth()->user()->id;
                         $withdraw->upi_id = $request->upi_id;
                         $withdraw->mode = $request->mode;
+                        $withdraw->name = User::where('id',auth()->user()->id)->get()->first()->name;
                         $withdraw->transaction_id = $transaction_id;
                         $withdraw->amount = $userinfo->withdrawal_amount;
                         if($withdraw->save()){
@@ -71,6 +73,7 @@ class WithdrawController extends Controller
                         $withdraw->user_id = auth()->user()->id;
                         $withdraw->paytm_no = $request->paytm_no;
                         $withdraw->mode = $request->mode;
+                        $withdraw->name = User::where('id',auth()->user()->id)->get()->first()->name;
                         $withdraw->transaction_id = $transaction_id;
                         $withdraw->amount = $userinfo->withdrawal_amount;
                         if($withdraw->save()){

@@ -102,7 +102,7 @@ class PaymentController extends Controller
                     $newTransaction = new Transaction();
                     $newTransaction->user_id = $users->user_id;
                     $newTransaction->reciept_id = Str::random(12);
-                    $newTransaction->amount = $transaction->amount * 50;
+                    $newTransaction->amount = ($transaction->amount * 50)/100;
                     $newTransaction->description = "Referal Friend Added Money You Get 50% of your friends added money first time";
                     $newTransaction->action = "C";
                     $newTransaction->payment_done = 1;

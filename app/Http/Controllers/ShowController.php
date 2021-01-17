@@ -44,6 +44,7 @@ class ShowController extends Controller
                     }else{
                         $data[$key]->joined_user = 0;
                     }
+                    $data[$key]->created_by = User::where('id',$data[$key]->id)->get()->first()->name;
                 }
                 $data[$key]->created_by = User::where('id',$data[$key]->id)->get()->first()->name;
             } 
@@ -63,6 +64,7 @@ class ShowController extends Controller
                     }else{
                         $data[$key]->joined_user = 0;
                     }
+                    $data[$key]->created_by = User::where('id',$data[$key]->id)->get()->first()->name;
                 }
                 $data[$key]->created_by = User::where('id',$data[$key]->id)->get()->first()->name;
             }
