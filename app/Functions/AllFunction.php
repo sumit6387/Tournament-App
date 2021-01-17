@@ -156,17 +156,13 @@
                     $transaction->payment_done = 1;
                     $transaction->save();
              }
-            $users->save();
-            if($kill > 0){
+                $users->save();
                 $data = $this->sendNotification(['id' => $id , 'title' => 'Tournament Prize' , 'msg' => 'You participated in match.so You won the '.$winn.' rs.' , 'icon' => 'money']);
                 if($data){
                     return true;
                 }else{
                     return false;
                 }
-            }else{
-                return true;
-            }
         }
 
         public function referCode($id,$ref_code){
@@ -195,10 +191,10 @@
                 'Content-Type' => 'application/json',
                 'Authorization'=>'key=AAAA6lNbeY8:APA91bEVvPfXHiOg8w40IoJ4WS-mBlPmtuv9sCGIeszjEY2Q6clbu91PHgL5MEng7JdCVAFcUAbS4EyyCVKHA6bFT2GpRN8V4H_qi2Lm_ytoPseWbnw17RvvA8hfNbEyj0xTTl8nXvOy'
                 ])->post('https://fcm.googleapis.com/fcm/send',[
-                      'data' => [
-                        'title' => $data['title'],
-                        'message' => $data['msg']
-                      ],
+                    "notification" => [
+                        "body" => $data['msg'],
+                        "title"=> $data['title']
+                    ],
                         'to' => $user->notification_token
                 ]);
                 if($resp->status() == 200){
