@@ -11,7 +11,8 @@ use Validator;
 class WebController extends Controller
 {
     public function index(){
-      $data = Feedback::orderby('id','desc')->take(5);
+      $data = Feedback::select(['feedback.*','user_info.profile_image as img'])->orderby('feedback.id' , 'desc')->join('user_info','feedback.user_id','=','user_info.user_id')->take(5)->get();
+      
       return view('index',with(["feedback" => $data]));
     }
 
