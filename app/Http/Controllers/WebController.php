@@ -6,14 +6,17 @@ use Illuminate\Http\Request;
 use App\Models\Contact;
 use App\Models\NewsLetter;
 use App\Models\Feedback;
+use App\Models\AppVersion;
 use Validator;
 
 class WebController extends Controller
 {
     public function index(){
-      $data = Feedback::select(['feedback.*','user_info.profile_image as img'])->orderby('feedback.id' , 'desc')->join('user_info','feedback.user_id','=','user_info.user_id')->take(5)->get();
+      $data['feedback'] = Feedback::select(['feedback.*','user_info.profile_image as img'])->orderby('feedback.id' , 'desc')->join('user_info','feedback.user_id','=','user_info.user_id')->take(5)->get();
+
+      $data['link'] = AppVersion::orderby('id','desc')->get()->first()->app_link;
       
-      return view('index',with(["feedback" => $data]));
+      return view('index',$data);
     }
 
 

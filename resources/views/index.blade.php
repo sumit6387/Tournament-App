@@ -68,7 +68,7 @@
           <div>
             <h1>Best Tournament Application</h1>
             <h2>Participate or Organize your own tournament and play with your friends and also earn money</h2>
-            <a href="#" class="download-btn"><i class="bx bxs-download"></i> Download Now</a>
+            <a href="{{$link}}" class="download-btn"><i class="bx bxs-download"></i> Download Now</a>
           </div>
         </div>
         <div class="col-lg-6 d-lg-flex flex-lg-column align-items-stretch order-1 order-lg-2 hero-img" data-aos="fade-up">
@@ -251,7 +251,7 @@
         @foreach($feedback as $feed)
           <div class="testimonial-wrap">
             <div class="testimonial-item">
-              <img src="{{$feed->img}}" class="testimonial-img" alt="">
+              <img src="{{$feed->img}}" style="height: 65px;width: 83px;" class="testimonial-img" alt="">
               <h3>{{$feed->user_name}}</h3>
               <h4>{{$feed->title}}</h4>
               <p>
