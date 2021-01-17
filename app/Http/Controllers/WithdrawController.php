@@ -72,6 +72,7 @@ class WithdrawController extends Controller
                         $withdraw = new Withdraw();
                         $withdraw->user_id = auth()->user()->id;
                         $withdraw->paytm_no = $request->paytm_no;
+                        $withdraw->name = User::where('id',auth()->user()->id)->get()->first()->name;
                         $withdraw->mode = $request->mode;
                         $withdraw->name = User::where('id',auth()->user()->id)->get()->first()->name;
                         $withdraw->transaction_id = $transaction_id;

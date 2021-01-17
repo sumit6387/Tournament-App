@@ -336,7 +336,6 @@ class UserController extends Controller
                     $trans->action = 'C';
                     $trans->payment_done = 1;
                     $trans->save();
-                    
                     $user->save();
                     History::where('tournament_id',$req->tournament_id)->update(['status' => 'past']);
                     return response()->json([
@@ -576,6 +575,35 @@ class UserController extends Controller
                 'msg' => $valid->errors()->all()
             ]);
         }
+    }
+
+    public function addFeedback(Request $request){
+        $valid = Validator::make($request->all() , ["title" => "required" , "description" => "required"]);
+        if($valid->passes()){
+            $username = User::where('id',auth()->user()->id)->get()->first()->name;
+            $feedback = new Feedback();
+            $feedback->user_id = auth()->user()->id;
+            $feedback->user_name = $username;
+            $feedback->title = $request->title;
+            $feedback->description = $request->description;
+            if($feedback->save()){
+                return response()->json([
+                    'status' => true,
+                    'msg' => "Feedback Submitted"
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'msg' => "Something Went Wrong"
+                ]);
+            }
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => $valid->errors()->all()
+            ]);
+        }
+        
     }
     
      public function addFeedback(Request $request){

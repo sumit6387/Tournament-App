@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        Commands\CheckMembership::class,
     ];
 
     /**
@@ -26,21 +26,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call(function () {
-            $user = User::get();
-            if($user->count() > 0){
-                foreach ($user as $key => $value) {
-                    if($value->Ex_date_membership >= date('y-m-d')){
-                        $value->membership = 0;
-                        $value->Ex_date_membership = null;
-                        $value->save();
-                        $notifi = new AllFunction();
-                        $notifi->sendNotification(array('id' => $value->id ,'title' => 'Membership Expired' , 'msg' => 'Your Membership Expired ','icon'=> 'gamepad'));
-                    }
-                }
-            }
-            
-        })->daily();
+        $schedule->command('membership:check')->daily();
     }
 
     /**
