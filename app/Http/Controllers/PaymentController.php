@@ -83,6 +83,7 @@ class PaymentController extends Controller
             if($completeStatus){
                 $transaction = Transaction::where('payment_id' , $request->razorpay_order_id)->get()->first();
                 $transaction->payment_done  = 1;
+                $transaction->razorpay_id  = $request->razorpay_payment_id;
                 $transaction->save();
                 $user = UserInfo::where('user_id' , auth()->user()->id)->get()->first();
                 $user->wallet_amount = $user->wallet_amount + $transaction->amount;

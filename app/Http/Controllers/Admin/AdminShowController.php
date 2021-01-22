@@ -115,7 +115,8 @@ class AdminShowController extends Controller
         $todayCompletedTournamentPrivate = Tournament::where(['completed'=>1, 'tournament_type'=>'private','created_at'=> Carbon::today()])->get()->count();
         $totalUsers = User::get()->count();
         $allTransactions = Transaction::where('razorpay_id','!=',null)->where('payment_done',1)->get()->count();
-        $data = array('totalPublic' => $publicTournament , 'todayPublic' =>$todayPublicTournament,'totalPrivate'=>$privateTournament,'todayPrivate' => $todayPrivateTournament , 'totalCompletedPublic' =>$completedTournamentPublic,'todayCompletedPublic'=>$todayCompletedTournamentPublic , 'completedTournamentPrivate' => $completedTournamentPrivate , 'todayCompletedTournamentPrivate'=>$todayCompletedTournamentPrivate,'totalUser' => $totalUsers,'totalTransactions' => $allTransactions);
+        $users = User::select(['users.*','user_info.profile_image as img','user_info.withdrawal_amount','user_info.wallet_amount'])->orderby('users.id' , 'desc')->join('user_info','users.id','=','user_info.user_id')->take(5)->get();
+        $data = array('totalPublic' => $publicTournament , 'todayPublic' =>$todayPublicTournament,'totalPrivate'=>$privateTournament,'todayPrivate' => $todayPrivateTournament , 'totalCompletedPublic' =>$completedTournamentPublic,'todayCompletedPublic'=>$todayCompletedTournamentPublic , 'completedTournamentPrivate' => $completedTournamentPrivate , 'todayCompletedTournamentPrivate'=>$todayCompletedTournamentPrivate,'totalUser' => $totalUsers,'totalTransactions' => $allTransactions,'users' => $users);
         return response()->json([
             'status'=> true,
             'data' => $data

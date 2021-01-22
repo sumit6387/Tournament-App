@@ -7,9 +7,12 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ShowController;
 use App\Http\Controllers\WithdrawController;
+use App\Http\Controllers\LudoController;
+use App\Http\Controllers\CheckMembershipController;
 
 
 Route::group(['prefix' => '{version}','middleware' => 'CheckVersion'],function(){
+    Route::get('/CheckMembership' , [CheckMembershipController::class , 'CheckMembershipUser']);
     Route::post('/register',[LoginController::class , 'register']); //mobile_no,name, email,password,gender,ref_code
     Route::post('/login',[LoginController::class , 'login']); //mobile_no , password,notification_token
     Route::post('/verifyotp',[LoginController::class , 'verifyOtp']); // mobile_no , otp
@@ -29,6 +32,10 @@ Route::group(['prefix' => '{version}','middleware' => 'CheckVersion'],function()
         Route::post('/UpdateTournamentComplete' , [UserController::class , 'UpdateTournamentComplete']);//tournament_id , results this is json{user_id: , kill:, winner:0 or 1}
         Route::post('/addFeedback' , [UserController::class , 'addFeedback']); //title,description
 
+
+        // ludo king game's route
+        Route::post('/joinLudoTournament' , [LudoController::class , 'joinLudoTournament']); //tournament_id , username
+        Route::post('/createLudoTournament' , [LudoController::class , 'createLudoTournament']); //username,entry_fee,game,room_id
 
         // payment route for to add balance
         Route::post('/payment-request' , [PaymentController::class , 'createPaymentOrder']); //amount
