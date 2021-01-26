@@ -4,8 +4,6 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use App\Models\User;
-use App\Functions\AllFunction;
 
 class Kernel extends ConsoleKernel
 {
@@ -15,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\CheckMembership::class,
+    
     ];
 
     /**
@@ -26,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('membership:check')->daily();
+        
     }
 
     /**

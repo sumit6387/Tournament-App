@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Functions\AllFunction;
+
 class CheckMembershipController extends Controller
 {
     public function CheckMembershipUser(){

@@ -7,6 +7,7 @@
     use App\Models\Admin;
     use App\Models\Notification;
     use App\Models\Transaction;
+    use App\Models\LudoTournament;
     use Exception;
     use Illuminate\Support\Facades\Http;
     use Illuminate\Support\Str;
@@ -201,7 +202,7 @@
                     ],
                         'to' => $user->notification_token
                 ]);
-                if($resp->status() == 200){
+                // if($resp->status() == 200){
                     $notification =new Notification();
                     $notification->user_id = $data['id'];
                     $notification->title = $data['title'];
@@ -209,9 +210,9 @@
                     $notification->icon = $data['icon'];
                     $notification->save();
                     return true;
-                }else{
+                // }else{
                     return false;
-                }
+                // }
             
         }
 
@@ -234,6 +235,34 @@
              return false;
           }
         }
+
+        // for cancel tournament
+    public function ludoPrizeDistribution($user_id , $ludoTournamentId){
+        $tournament = LudoTournament::where("id",$ludoTournamentId)->get()->first();
+        $user = UserInfo::where('user_id',$user_id)->get()->first();
+        if($user && $tournament){
+            $data = $this->sendNotification(['id' => $user_id , 'title' => 'Tournament Cancel' , 'msg' => 'Tournament Canceled by the Organizer and your Money Added to your Account.' , 'icon' => 'money']);
+            
+            $user->wallet_amount = $user->wallet_amount + $tournament->entry_fee;
+            $user->save();
+            if($data){
+                $transaction = new Transaction();
+                $transaction->user_id = $user_id;
+                $transaction->reciept_id = Str::random(20);
+                $transaction->amount = $tournament->entry_fee;
+                $transaction->description = 'Tournament Canceled.';
+                $transaction->payment_id = Str::random(10);
+                $transaction->action = 'C';
+                $transaction->payment_done = 1;
+                $transaction->save();
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    } 
 }
             
 

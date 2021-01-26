@@ -13,6 +13,7 @@
   <link href="{{url('public/assets/img/favi.png')}}" rel="icon " type="image/png" sizes="72x72">
   <!--<link href="{{url('public/assets/img/apple-touch-icon.png')}}" rel="apple-touch-icon">-->
 
+
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
@@ -248,21 +249,21 @@
         </div>
 
         <div class="owl-carousel testimonials-carousel" data-aos="fade-up">
-                @foreach($feedback as $feed)
-                  <div class="testimonial-wrap">
-                    <div class="testimonial-item">
-                      <img src="{{$feed->img}}" style="height: 65px;width: 83px;" class="testimonial-img" alt="">
-                      <h3>{{$feed->user_name}}</h3>
-                      <h4>{{$feed->title}}</h4>
-                      <p>
-                        <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                        {{$feed->description}}
-                        <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-                      </p>
-                    </div>
-                  </div>
-                @endforeach
-          
+
+        @foreach($feedback as $feed)
+          <div class="testimonial-wrap">
+            <div class="testimonial-item">
+              <img src="{{$feed->img}}" style="height: 65px;width: 83px;" class="testimonial-img" alt="">
+              <h3>{{$feed->user_name}}</h3>
+              <h4>{{$feed->title}}</h4>
+              <p>
+                <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                {{$feed->description}}
+                <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+              </p>
+            </div>
+          </div>
+        @endforeach
         </div>
 
       </div>
@@ -504,7 +505,6 @@
         </div>
       </div>
     </div>
-
     <div class="container py-4">
       <div class="copyright">
         &copy; Copyright <strong><span>Funlegends</span></strong>. All Rights Reserved
