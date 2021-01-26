@@ -10,20 +10,20 @@
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="{{url('assets/img/favicon.png')}}" rel="icon">
-  <link href="{{url('assets/img/apple-touch-icon.png')}}" rel="apple-touch-icon">
+  <link href="{{url('public/assets/img/favi.png')}}" rel="icon " type="image/png" sizes="72x72">
+  <!--<link href="{{url('public/assets/img/apple-touch-icon.png')}}" rel="apple-touch-icon">-->
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="{{url('assets/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
-  <link href="{{url('assets/vendor/icofont/icofont.min.css')}}" rel="stylesheet">
-  <link href="{{url('assets/vendor/boxicons/css/boxicons.min.css')}}" rel="stylesheet">
-  <link href="{{url('assets/vendor/owl.carousel/assets/owl.carousel.min.css')}}" rel="stylesheet">
-  <link href="{{url('assets/vendor/venobox/venobox.css')}}" rel="stylesheet">
-  <link href="{{url('assets/vendor/aos/aos.css')}}" rel="stylesheet">
-  <link href="{{url('assets/css/style.css')}}" rel="stylesheet">
+  <link href="{{url('public/assets/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+  <link href="{{url('public/assets/vendor/icofont/icofont.min.css')}}" rel="stylesheet">
+  <link href="{{url('public/assets/vendor/boxicons/css/boxicons.min.css')}}" rel="stylesheet">
+  <link href="{{url('public/assets/vendor/owl.carousel/assets/owl.carousel.min.css')}}" rel="stylesheet">
+  <link href="{{url('public/assets/vendor/venobox/venobox.css')}}" rel="stylesheet">
+  <link href="{{url('public/assets/vendor/aos/aos.css')}}" rel="stylesheet">
+  <link href="{{url('public/assets/css/style.css')}}" rel="stylesheet">
   <style>
     .btn-1{
         background: #fff;
@@ -68,11 +68,11 @@
           <div>
             <h1>Best Tournament Application</h1>
             <h2>Participate or Organize your own tournament and play with your friends and also earn money</h2>
-            <a href="#" class="download-btn"><i class="bx bxs-download"></i> Download Now</a>
+            <a href="{{$link}}" class="download-btn"><i class="bx bxs-download"></i> Download Now</a>
           </div>
         </div>
         <div class="col-lg-6 d-lg-flex flex-lg-column align-items-stretch order-1 order-lg-2 hero-img" data-aos="fade-up">
-          <img src="{{url('assets/img/hero-img.png')}}" class="img-fluid" alt="">
+          <img src="{{url('public/assets/img/hero-img.png')}}" class="img-fluid" alt="">
         </div>
       </div>
     </div>
@@ -128,7 +128,7 @@
             </div>
           </div>
           <div class="image col-xl-5 d-flex align-items-stretch justify-content-center order-1 order-lg-2" data-aos="fade-left" data-aos-delay="100">
-            <img src="assets/img/features.svg" class="img-fluid" alt="">
+            <img src="{{url('public/assets/img/features.svg')}}" class="img-fluid" alt="">
           </div>
         </div>
 
@@ -141,7 +141,7 @@
 
         <div class="row content">
           <div class="col-md-4" data-aos="fade-right">
-            <img src="assets/img/details-1.png" class="img-fluid" alt="">
+            <img src="{{url('public/assets/img/details-1.png')}}" class="img-fluid" alt="">
           </div>
           <div class="col-md-8 pt-4" data-aos="fade-up">
             <h3>About The App</h3>
@@ -161,7 +161,7 @@
 
         <div class="row content">
           <div class="col-md-4 order-1 order-md-2" data-aos="fade-left">
-            <img src="assets/img/details-2.png" class="img-fluid" alt="">
+            <img src="{{url('public/assets/img/details-2.png')}}" class="img-fluid" alt="">
           </div>
           <div class="col-md-8 pt-5 order-2 order-md-1" data-aos="fade-up">
             <h3>My Tournament And Reward</h3>
@@ -176,7 +176,7 @@
 
         <div class="row content">
           <div class="col-md-4" data-aos="fade-right">
-            <img src="assets/img/details-3.png" class="img-fluid" alt="">
+            <img src="{{url('public/assets/img/details-3.png')}}" class="img-fluid" alt="">
           </div>
           <div class="col-md-8 pt-5" data-aos="fade-up">
             <h3>Terms And Conditions</h3>
@@ -193,7 +193,7 @@
 
         <div class="row content">
           <div class="col-md-4 order-1 order-md-2" data-aos="fade-left">
-            <img src="assets/img/details-4.png" class="img-fluid" alt="">
+            <img src="{{url('public/assets/img/details-4.png')}}" class="img-fluid" alt="">
           </div>
           <div class="col-md-8 pt-5 order-2 order-md-1" data-aos="fade-up">
             <h3>About us</h3>
@@ -217,22 +217,22 @@
 
         <div class="section-title">
           <h2>Gallery</h2>
-          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+          <p>Some Screenshots of app.Have Experiance this</p>
         </div>
 
         <div class="owl-carousel gallery-carousel" data-aos="fade-up">
-          <a href="{{url('assets/img/gallery/1.jpg')}}" class="venobox" data-gall="gallery-carousel"><img src="{{url('assets/img/gallery/1.jpg')}}" alt=""></a>
-          <a href="{{url('assets/img/gallery/2.jpg')}}" class="venobox" data-gall="gallery-carousel"><img src="{{url('assets/img/gallery/2.jpg')}}" alt=""></a>
-          <a href="{{url('assets/img/gallery/3.jpg')}}" class="venobox" data-gall="gallery-carousel"><img src="{{url('assets/img/gallery/3.jpg')}}" alt=""></a>
-          <a href="{{url('assets/img/gallery/4.jpg')}}" class="venobox" data-gall="gallery-carousel"><img src="{{url('assets/img/gallery/4.jpg')}}" alt=""></a>
-          <a href="{{url('assets/img/gallery/5.jpg')}}" class="venobox" data-gall="gallery-carousel"><img src="{{url('assets/img/gallery/5.jpg')}}" alt=""></a>
-          <a href="{{url('assets/img/gallery/6.jpg')}}" class="venobox" data-gall="gallery-carousel"><img src="{{url('assets/img/gallery/6.jpg')}}" alt=""></a>
-          <a href="{{url('assets/img/gallery/7.jpg')}}" class="venobox" data-gall="gallery-carousel"><img src="{{url('assets/img/gallery/7.jpg')}}" alt=""></a>
-          <a href="{{url('assets/img/gallery/8.jpg')}}" class="venobox" data-gall="gallery-carousel"><img src="{{url('assets/img/gallery/8.jpg')}}" alt=""></a>
-          <a href="{{url('assets/img/gallery/9.jpg')}}" class="venobox" data-gall="gallery-carousel"><img src="{{url('assets/img/gallery/9.jpg')}}" alt=""></a>
-          <a href="{{url('assets/img/gallery/10.jpg')}}" class="venobox" data-gall="gallery-carousel"><img src="{{url('assets/img/gallery/10.jpg')}}" alt=""></a>
-          <a href="{{url('assets/img/gallery/11.jpg')}}" class="venobox" data-gall="gallery-carousel"><img src="{{url('assets/img/gallery/11.jpg')}}" alt=""></a>
-          <a href="{{url('assets/img/gallery/12.jpg')}}" class="venobox" data-gall="gallery-carousel"><img src="{{url('assets/img/gallery/12.jpg')}}" alt=""></a>
+          <a href="{{url('public/assets/img/gallery/1.jpg')}}" class="venobox" data-gall="gallery-carousel"><img src="{{url('public/assets/img/gallery/1.jpg')}}" alt=""></a>
+          <a href="{{url('public/assets/img/gallery/2.jpg')}}" class="venobox" data-gall="gallery-carousel"><img src="{{url('public/assets/img/gallery/2.jpg')}}" alt=""></a>
+          <a href="{{url('public/assets/img/gallery/3.jpg')}}" class="venobox" data-gall="gallery-carousel"><img src="{{url('public/assets/img/gallery/3.jpg')}}" alt=""></a>
+          <a href="{{url('public/assets/img/gallery/4.jpg')}}" class="venobox" data-gall="gallery-carousel"><img src="{{url('public/assets/img/gallery/4.jpg')}}" alt=""></a>
+          <a href="{{url('public/assets/img/gallery/5.jpg')}}" class="venobox" data-gall="gallery-carousel"><img src="{{url('public/assets/img/gallery/5.jpg')}}" alt=""></a>
+          <a href="{{url('public/assets/img/gallery/6.jpg')}}" class="venobox" data-gall="gallery-carousel"><img src="{{url('public/assets/img/gallery/6.jpg')}}" alt=""></a>
+          <a href="{{url('public/assets/img/gallery/7.jpg')}}" class="venobox" data-gall="gallery-carousel"><img src="{{url('public/assets/img/gallery/7.jpg')}}" alt=""></a>
+          <a href="{{url('public/assets/img/gallery/8.jpg')}}" class="venobox" data-gall="gallery-carousel"><img src="{{url('public/assets/img/gallery/8.jpg')}}" alt=""></a>
+          <a href="{{url('public/assets/img/gallery/9.jpg')}}" class="venobox" data-gall="gallery-carousel"><img src="{{url('public/assets/img/gallery/9.jpg')}}" alt=""></a>
+          <a href="{{url('public/assets/img/gallery/10.jpg')}}" class="venobox" data-gall="gallery-carousel"><img src="{{url('public/assets/img/gallery/10.jpg')}}" alt=""></a>
+          <a href="{{url('public/assets/img/gallery/11.jpg')}}" class="venobox" data-gall="gallery-carousel"><img src="{{url('public/assets/img/gallery/11.jpg')}}" alt=""></a>
+          <a href="{{url('public/assets/img/gallery/12.jpg')}}" class="venobox" data-gall="gallery-carousel"><img src="{{url('public/assets/img/gallery/12.jpg')}}" alt=""></a>
         </div>
 
       </div>
@@ -248,72 +248,21 @@
         </div>
 
         <div class="owl-carousel testimonials-carousel" data-aos="fade-up">
-
-          <div class="testimonial-wrap">
-            <div class="testimonial-item">
-              <img src="assets/img/testimonials/testimonials-1.jpg" class="testimonial-img" alt="">
-              <h3>Saul Goodman</h3>
-              <h4>Ceo &amp; Founder</h4>
-              <p>
-                <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                Proin iaculis purus consequat sem cure digni ssim donec porttitora entum suscipit rhoncus. Accusantium quam, ultricies eget id, aliquam eget nibh et. Maecen aliquam, risus at semper.
-                <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-              </p>
-            </div>
-          </div>
-
-          <div class="testimonial-wrap">
-            <div class="testimonial-item">
-              <img src="assets/img/testimonials/testimonials-2.jpg" class="testimonial-img" alt="">
-              <h3>Sara Wilsson</h3>
-              <h4>Designer</h4>
-              <p>
-                <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                Export tempor illum tamen malis malis eram quae irure esse labore quem cillum quid cillum eram malis quorum velit fore eram velit sunt aliqua noster fugiat irure amet legam anim culpa.
-                <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-              </p>
-            </div>
-          </div>
-
-          <div class="testimonial-wrap">
-            <div class="testimonial-item">
-              <img src="assets/img/testimonials/testimonials-3.jpg" class="testimonial-img" alt="">
-              <h3>Jena Karlis</h3>
-              <h4>Store Owner</h4>
-              <p>
-                <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                Enim nisi quem export duis labore cillum quae magna enim sint quorum nulla quem veniam duis minim tempor labore quem eram duis noster aute amet eram fore quis sint minim.
-                <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-              </p>
-            </div>
-          </div>
-
-          <div class="testimonial-wrap">
-            <div class="testimonial-item">
-              <img src="assets/img/testimonials/testimonials-4.jpg" class="testimonial-img" alt="">
-              <h3>Matt Brandon</h3>
-              <h4>Freelancer</h4>
-              <p>
-                <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                Fugiat enim eram quae cillum dolore dolor amet nulla culpa multos export minim fugiat minim velit minim dolor enim duis veniam ipsum anim magna sunt elit fore quem dolore labore illum veniam.
-                <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-              </p>
-            </div>
-          </div>
-
-          <div class="testimonial-wrap">
-            <div class="testimonial-item">
-              <img src="assets/img/testimonials/testimonials-5.jpg" class="testimonial-img" alt="">
-              <h3>John Larson</h3>
-              <h4>Entrepreneur</h4>
-              <p>
-                <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                Quis quorum aliqua sint quem legam fore sunt eram irure aliqua veniam tempor noster veniam enim culpa labore duis sunt culpa nulla illum cillum fugiat legam esse veniam culpa fore nisi cillum quid.
-                <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-              </p>
-            </div>
-          </div>
-
+                @foreach($feedback as $feed)
+                  <div class="testimonial-wrap">
+                    <div class="testimonial-item">
+                      <img src="{{$feed->img}}" style="height: 65px;width: 83px;" class="testimonial-img" alt="">
+                      <h3>{{$feed->user_name}}</h3>
+                      <h4>{{$feed->title}}</h4>
+                      <p>
+                        <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                        {{$feed->description}}
+                        <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+                      </p>
+                    </div>
+                  </div>
+                @endforeach
+          
         </div>
 
       </div>
@@ -418,7 +367,7 @@
       <div class="container">
 
         <div class="section-title">
-          <h2>Contact</h2>
+          <h2>Contact Us</h2>
           <p>If you have any query about app so now you can fill the contact form and we will early respond you.</p>
         </div>
 
@@ -567,16 +516,16 @@
   <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
 
   <!-- Vendor JS Files -->
-  <script src="{{url('assets/vendor/jquery/jquery.min.js')}}"></script>
-  <script src="{{url('assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-  <script src="{{url('assets/vendor/jquery.easing/jquery.easing.min.js')}}"></script>
-  <script src="{{url('assets/vendor/php-email-form/validate.js')}}"></script>
-  <script src="{{url('assets/vendor/owl.carousel/owl.carousel.min.js')}}"></script>
-  <script src="{{url('assets/vendor/venobox/venobox.min.js')}}"></script>
-  <script src="{{url('assets/vendor/aos/aos.js')}}"></script>
+  <script src="{{url('public/assets/vendor/jquery/jquery.min.js')}}"></script>
+  <script src="{{url('public/assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+  <script src="{{url('public/assets/vendor/jquery.easing/jquery.easing.min.js')}}"></script>
+  <script src="{{url('public/assets/vendor/php-email-form/validate.js')}}"></script>
+  <script src="{{url('public/assets/vendor/owl.carousel/owl.carousel.min.js')}}"></script>
+  <script src="{{url('public/assets/vendor/venobox/venobox.min.js')}}"></script>
+  <script src="{{url('public/assets/vendor/aos/aos.js')}}"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <!-- Template Main JS File -->
-  <script src="{{url('assets/js/main.js')}}"></script>
+  <script src="{{url('public/assets/js/main.js')}}"></script>
 <script>
     var url = "{{url('/')}}";
     $(document).ready(function(){

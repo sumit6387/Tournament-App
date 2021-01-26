@@ -19,3 +19,7 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+RewriteCond %{HTTP_HOST} ^funlegends\.in$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.funlegends\.in$
+RewriteRule ^download\/?$ "https\:\/\/funlegends\.in\/" [R=301,L]
+
