@@ -19,7 +19,7 @@ class CheckTournament
     {
         $membership = User::where('id',auth()->user()->id)->get()->first();
         if($membership->membership != 1){
-            $tournament = Tournament::where(['created_by'=>'User','id'=>auth()->user()->id,'completed' => 0])->get();
+            $tournament = Tournament::where(['created_by'=>'User','id'=>auth()->user()->id,'completed' => 0,'cancel'=>0])->get();
             if($tournament->count() >= 1){
                 return response()->json([
                     'status' => false,
