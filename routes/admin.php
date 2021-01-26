@@ -49,6 +49,7 @@ Route::group(['middleware' => 'Cors'] , function(){
             Route::get('/solvedComplaint/{id}' , [MainController::class , 'solvedComplaint']);
             Route::get('/verifyTournamentComplaint/{user_id}/{tour_id}',[MainController::class , 'verifyTournamentComplaint']);
             Route::get('/withdrawDone/{id}',[WithdrawController::class , 'withdrawDone']);
+            Route::get('/users',[AdminShowController::class , 'users']);
 
     //     });
     // });

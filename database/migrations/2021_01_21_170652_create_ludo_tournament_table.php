@@ -21,7 +21,7 @@ class CreateLudoTournamentTable extends Migration
             $table->string("winning"); //after cut the comission
             $table->string("entry_fee"); //entry fee
             $table->string("game"); //Ludo,snake & ladders
-            $table->string("room_id"); //ludo's room ID
+            $table->string("room_id")->nullable(); //ludo's room ID
             $table->string("completed")->default(false);
             $table->string("cancel")->default(false);
             $table->timestamps();

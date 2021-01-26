@@ -161,7 +161,15 @@ class AdminShowController extends Controller
                 'status' => false,
                 'data' => 'No Records Found'
             ]);
-        }
+        }  
+    }
+
+    public function users(){
+        $user = User::select(['users.*','user_info.profile_image as img','user_info.withdrawal_amount','user_info.wallet_amount','user_info.ptr_reward'])->orderby('users.id' , 'desc')->join('user_info','users.id','=','user_info.user_id')->paginate(10);
+        return response()->json([
+            'status' => true,
+            'data' => $user
+        ]);
     }
 
 }
