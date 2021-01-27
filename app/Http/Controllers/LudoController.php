@@ -212,6 +212,15 @@ class LudoController extends Controller
                     if($user[0]->user_id == auth()->user()->id){
                             array_push($data,$value);
                             $key = count($data)-1;
+                            $data[$key]->iswinner = false;
+                            if($value->completed){
+                                $result = LudoResult::where('tournament_id',$value->tournament_id)->get()->first();
+                                if($result){
+                                    if($result->winner == auth()->user()->id && $result->status == 1){
+                                        $data[$key]->iswinner = true;
+                                    }
+                                }
+                            }
                             $data[$key]->img = UserInfo::where("user_id",auth()->user()->id)->get()->first()->profile_image;
                             $data[$key]->username = $user[0]->username;
                 }
