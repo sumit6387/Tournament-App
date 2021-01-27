@@ -213,8 +213,8 @@ class LudoController extends Controller
                             array_push($data,$value);
                             $key = count($data)-1;
                             $data[$key]->iswinner = false;
-                            if($value->completed){
-                                $result = LudoResult::where('tournament_id',$value->tournament_id)->get()->first();
+                            if($value->completed == 1){
+                                $result = LudoResult::where('tournament_id',$value->id)->get()->first();
                                 if($result){
                                     if($result->winner == auth()->user()->id && $result->status == 1){
                                         $data[$key]->iswinner = true;
@@ -239,7 +239,7 @@ class LudoController extends Controller
         }
     }
 
-    public function liveChallenges(){
+    public function liveChallenges($v,$page){
         $tournament = LudoTournament::orderby('id','desc')->whereDate('created_at', Carbon::today())->where('cancel',0)->get();
         $data = array();
         foreach ($tournament as $value) {
@@ -258,10 +258,17 @@ class LudoController extends Controller
                 $data[$key]->ujoined = true;
             }
         }
+        $page = (int)$page;
+        if($page == 1){
+            $start_data = 1;
+        }else{
+            $start_data = $page *10 + 1 ;
+        }
+        
         if(count($data) > 0){
             return response()->json([
                 'status' => true,
-                'data' => $data
+                'data' => collect($data)->forPage($start_data ,1)
             ]);
         }else{
             return response()->json([
