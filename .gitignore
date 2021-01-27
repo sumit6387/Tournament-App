@@ -3,8 +3,8 @@
 /public/storage
 /storage/*.key
 /vendor
-.htaccess
-index.php
+server.php
+/public/.htaccess
 .env
 .env.backup
 .phpunit.result.cache

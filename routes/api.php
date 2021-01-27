@@ -46,8 +46,9 @@ Route::group(['prefix' => '{version}','middleware' => 'CheckVersion'],function()
         Route::get('/myChallenges',[LudoController::class,"myChallenges"]);
         Route::get('/liveChallenges/{page}',[LudoController::class,'liveChallenges']);
         Route::get('/ludoTournamentDetail/{tournament_id}',[LudoController::class,'ludoTournamentDetail']);
+        Route::get('/ludoHistory/{game}/{status}/{page}',[LudoController::class,"ludoHistory"]);
 
-        
+
         // payment route for to add balance
         Route::post('/payment-request' , [PaymentController::class , 'createPaymentOrder']); //amount
         Route::post('/payment-complete', [PaymentController::class , 'paymentComplete']); //razorpay_payment_id,razorpay_order_id,razorpay_signature
