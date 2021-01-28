@@ -14,8 +14,8 @@ use Exception;
 use App\Models\User;
 class PaymentController extends Controller
 {
-    private $razorpayId = "rzp_test_c1rvyv7xbgstcZ";
-    private $razorpayKey = "im2eSBzk4Y51VTtKxgT1SK36";
+    private $razorpayId = "rzp_live_V1aim9m5siBEAW";
+    private $razorpayKey = "ekN1fffpTtiJgh4ZgWrfwXGT";
 
     public function createPaymentOrder(Request $request){
         $valid = Validator::make($request->all(), ['amount' => 'required']);

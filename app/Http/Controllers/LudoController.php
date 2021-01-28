@@ -212,6 +212,15 @@ class LudoController extends Controller
                     if($user[0]->user_id == auth()->user()->id){
                             array_push($data,$value);
                             $key = count($data)-1;
+                            $data[$key]->iswinner = false;
+                            if($value->completed == 1){
+                                $result = LudoResult::where('tournament_id',$value->id)->get()->first();
+                                if($result){
+                                    if($result->winner == auth()->user()->id && $result->status == 1){
+                                        $data[$key]->iswinner = true;
+                                    }
+                                }
+                            }
                             $data[$key]->img = UserInfo::where("user_id",auth()->user()->id)->get()->first()->profile_image;
                             $data[$key]->username = $user[0]->username;
                 }
@@ -230,7 +239,7 @@ class LudoController extends Controller
         }
     }
 
-    public function liveChallenges(){
+    public function liveChallenges($v,$page){
         $tournament = LudoTournament::orderby('id','desc')->whereDate('created_at', Carbon::today())->where('cancel',0)->get();
         $data = array();
         foreach ($tournament as $value) {
@@ -249,10 +258,17 @@ class LudoController extends Controller
                 $data[$key]->ujoined = true;
             }
         }
+        $page = (int)$page;
+        if($page == 1){
+            $start_data = 1;
+        }else{
+            $start_data = $page *10 + 1 ;
+        }
+        
         if(count($data) > 0){
             return response()->json([
                 'status' => true,
-                'data' => $data
+                'data' => collect($data)->forPage($start_data ,1)
             ]);
         }else{
             return response()->json([
@@ -629,6 +645,55 @@ class LudoController extends Controller
             return response()->json([
                 'status' => false,
                 "msg" => $valid->errors()->all()
+            ]);
+        }
+    }
+
+    public function ludoHistory($v,$game,$status,$page){
+        $History = History::where(["user_id"=>auth()->user()->id,"game" => $game,"status"=>$status])->orderby('id','desc')->get();
+        $data = array();
+        foreach ($History as $value) {
+            array_push($data,$value);
+            $key = count($data) -1;
+            $tournament = LudoTournament::where('id',$value->tournament_id)->get()->first();
+            $data[$key]->ludo_id = $tournament->ludo_id;
+            $data[$key]->entry_fee = $tournament->entry_fee;
+            $user1 = json_decode($tournament->user1);
+            $data[$key]->username1 = $user1[0]->username;
+            $data[$key]->img1 = UserInfo::where('user_id',$user1[0]->user_id)->get()->first()->profile_image;
+            $data[$key]->iswinner = false; 
+            if($tournament->completed == 1){
+                $result = LudoResult::where('tournament_id',$tournament->id)->get()->first();
+                if($result){
+                    if($result->winner == auth()->user()->id && $result->status == 1){
+                        $data[$key]->iswinner = true;
+                    }
+                }
+            } 
+            $data[$key]->username2 = null; 
+            $data[$key]->img2 = null;
+            if($tournament->user2){
+                $user2 = json_decode($tournament->user2);
+                $data[$key]->username2 = $user2[0]->username; 
+                $data[$key]->img2 = UserInfo::where('user_id',$user2[0]->user_id)->get()->first()->profile_image; 
+            }
+            
+        }
+        $page = (int)$page;
+        if($page == 1){
+            $start_data = 1;
+        }else{
+            $start_data = $page *10 + 1 ;
+        }
+        if($data){
+            return response()->json([
+                'status' => true,
+                'data' => collect($data)->forPage($start_data,10)
+            ]);
+        }else{
+            return response()->json([
+                'status' => false,
+                "data" => "No History Found"
             ]);
         }
     }

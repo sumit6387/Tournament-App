@@ -98,9 +98,9 @@ class LoginController extends Controller
                                         $user->ref_by = $code;
                                         $user->wallet_amount = 5;
                                         $user->save();
-                                        $data = User::select(['users.name as name','user_info.user_id'])->where('userinfo.refferal_code' , $code)->join('user_info','users.id','=','user_info.user_id')->get();
+                                        $data = UserInfo::where('refferal_code' , $code)->get()->first();
                                         // sending the notification to the user
-                                        $sendsms->sendNotification(array('id' => $user_id ,'title' => 'Refer Code Used' , 'msg' => 'your friend '.$data->name.'used your refer code','icon'=> 'gamepad'));
+                                        $sendsms->sendNotification(array('id' => $data->user_id ,'title' => 'Refer Code Used' , 'msg' => 'your friend '.$new_user->name.'  used your refer code','icon'=> 'gamepad'));
                                     }
                                 }
                             }
