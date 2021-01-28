@@ -209,9 +209,16 @@ class LudoController extends Controller
             $data = array();
             foreach ($tournament as $value) {
                     $user = json_decode($value->user1);
-                    if($user[0]->user_id == auth()->user()->id){
+                    $user2 = json_decode($value->user2);
+                    if($user[0]->user_id == auth()->user()->id || $user2[0]->user_id == auth()->user()->id){
                             array_push($data,$value);
                             $key = count($data)-1;
+                            $data[$key]->iscreated = false;
+                            if($value->user1){
+                                if($user[0]->user_id == auth()->user()->id){
+                                    $data[$key]->iscreated = true;
+                                }
+                            }
                             $data[$key]->iswinner = false;
                             if($value->completed == 1){
                                 $result = LudoResult::where('tournament_id',$value->id)->get()->first();
@@ -219,6 +226,12 @@ class LudoController extends Controller
                                     if($result->winner == auth()->user()->id && $result->status == 1){
                                         $data[$key]->iswinner = true;
                                     }
+                                }
+                            }
+                            $data[$key]->isjoined = false;
+                            if($value->user2){
+                                if($user2[0]->user_id == auth()->user()->id){
+                                    $data[$key]->isjoined = true;
                                 }
                             }
                             $data[$key]->img = UserInfo::where("user_id",auth()->user()->id)->get()->first()->profile_image;
