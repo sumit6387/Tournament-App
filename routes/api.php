@@ -35,7 +35,7 @@ Route::group(['prefix' => '{version}','middleware' => 'CheckVersion'],function()
 
         // ludo king game's route
         Route::post('/joinLudoTournament' , [LudoController::class , 'joinLudoTournament']); //tournament_id , username
-        Route::post('/createLudoTournament' , [LudoController::class , 'createLudoTournament']); //username,entry_fee,game
+        Route::post('/createLudoTournament' , [LudoController::class , 'createLudoTournament']); //username,entry_fee,game=>ludo, snake
         Route::post('/cancel',[LudoController::class, 'cancel']); //tournament_id
         Route::post('/updateRoomId',[LudoController::class , 'updateRoomId']); //tournament_id , roomid
         Route::post('/looser',[LudoController::class , 'looser']); //tournament_id
