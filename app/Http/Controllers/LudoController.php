@@ -204,7 +204,7 @@ class LudoController extends Controller
     }
 
     public function myChallenges(){
-        $tournament = LudoTournament::orderby('id','desc')->whereDate('created_at', Carbon::today())->get();
+        $tournament = LudoTournament::select(['id','ludo_id','winning','entry_fee','game','room_id','completed','cancel','user1','user2'])->orderby('id','desc')->whereDate('created_at', Carbon::today())->get();
         if($tournament){
             $data = array();
             foreach ($tournament as $value) {
