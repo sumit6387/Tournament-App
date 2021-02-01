@@ -662,8 +662,8 @@ class LudoController extends Controller
         }
     }
 
-    public function ludoHistory($v,$game,$status,$page){
-        $History = History::where(["user_id"=>auth()->user()->id,"game" => $game,"status"=>$status])->orderby('id','desc')->get();
+    public function ludoHistory($v,$status,$page){
+        $History = History::where(["user_id"=>auth()->user()->id,"game" => 'ludo',"status"=>$status])->orderby('id','desc')->get();
         $data = array();
         foreach ($History as $value) {
             array_push($data,$value);

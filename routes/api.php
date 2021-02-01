@@ -46,7 +46,7 @@ Route::group(['prefix' => '{version}','middleware' => 'CheckVersion'],function()
         Route::get('/myChallenges',[LudoController::class,"myChallenges"]);
         Route::get('/liveChallenges/{page}',[LudoController::class,'liveChallenges']);
         Route::get('/ludoTournamentDetail/{tournament_id}',[LudoController::class,'ludoTournamentDetail']);
-        Route::get('/ludoHistory/{game}/{status}/{page}',[LudoController::class,"ludoHistory"]);
+        Route::get('/ludoHistory/{status}/{page}',[LudoController::class,"ludoHistory"]);
 
 
         // payment route for to add balance
