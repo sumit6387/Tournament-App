@@ -256,20 +256,23 @@ class LudoController extends Controller
         $tournament = LudoTournament::orderby('id','desc')->whereDate('created_at', Carbon::today())->where('cancel',0)->get();
         $data = array();
         foreach ($tournament as $value) {
-            array_push($data,$value);
-            $key = count($data)-1;
             $user = json_decode($value->user1);
-            $data[$key]->img1 = UserInfo::where("user_id",$user[0]->user_id)->get()->first()->profile_image;
-            $data[$key]->username1=$user[0]->username;
-            $data[$key]->img2 = null;
-            $data[$key]->username2 = null;
-            $data[$key]->ujoined = false;
-            if($value->user2){
-                $user_id = json_decode($value->user2);
-                $data[$key]->img2 = UserInfo::where("user_id",$user_id[0]->user_id)->get()->first()->profile_image;
-                $data[$key]->username2=$user_id[0]->username;
-                $data[$key]->ujoined = true;
+            if($user[0]->user_id != auth()->user()->id){
+                array_push($data,$value);
+                $key = count($data)-1;
+                $data[$key]->img1 = UserInfo::where("user_id",$user[0]->user_id)->get()->first()->profile_image;
+                $data[$key]->username1=$user[0]->username;
+                $data[$key]->img2 = null;
+                $data[$key]->username2 = null;
+                $data[$key]->ujoined = false;
+                if($value->user2){
+                    $user_id = json_decode($value->user2);
+                    $data[$key]->img2 = UserInfo::where("user_id",$user_id[0]->user_id)->get()->first()->profile_image;
+                    $data[$key]->username2=$user_id[0]->username;
+                    $data[$key]->ujoined = true;
+                }
             }
+            
         }
         $page = (int)$page;
         if($page == 1){
