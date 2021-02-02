@@ -281,7 +281,7 @@ class LudoController extends Controller
         if(count($data) > 0){
             return response()->json([
                 'status' => true,
-                'data' => collect($data)->forPage($start_data ,1)
+                'data' => collect($data)->forPage($start_data ,10)
             ]);
         }else{
             return response()->json([
