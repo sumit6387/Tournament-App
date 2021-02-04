@@ -210,7 +210,13 @@ class LudoController extends Controller
             foreach ($tournament as $value) {
                     $user = json_decode($value->user1);
                     $user2 = json_decode($value->user2);
-                    if($user[0]->user_id == auth()->user()->id || $user2[0]->user_id == auth()->user()->id){
+                    $user12 = false;
+                    if($value->user2){
+                        if($user2[0]->user_id == auth()->user()->id){
+                            $user12 = true;
+                        }
+                    }
+                    if($user[0]->user_id == auth()->user()->id || $user12){
                             array_push($data,$value);
                             $key = count($data)-1;
                             $data[$key]->iscreated = false;
