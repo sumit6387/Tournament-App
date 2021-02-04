@@ -354,11 +354,19 @@ class LudoController extends Controller
             $tournament->img2 = null;
             $tournament->ujoined = false;
             $tournament->username2 = null;
+            $tournament->isjoined = false;
+            $tournament->iscreated = false;
+            if($user1[0]->user_id == auth()->user()->id){
+                $tournament->iscreated = true;
+            }
             if($tournament->user2){
                 $user2 = json_decode($tournament->user2);
                 $tournament->img2 = UserInfo::where('user_id',$user2[0]->user_id)->get()->first()->profile_image;
                 $tournament->username2 = $user2[0]->username;
                 $tournament->ujoined = true;
+                if($user2[0]->user_id == auth()->user()->id){
+                    $tournament->isjoined = true;
+                }
             }
             return response()->json([
                 'status' => true,
