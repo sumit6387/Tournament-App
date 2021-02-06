@@ -240,7 +240,7 @@ class LoginController extends Controller
             if($data){
                 $sendsms = new AllFunction();
                 // send the sms
-                $otp = $sendsms->sendSms($request->mobile_no);
+                $otp = $sendsms->sendSms($data->mobile_no);
                 $data->verification_code = $otp;
                 $data->save();
                 if($otp){

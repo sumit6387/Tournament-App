@@ -50,6 +50,9 @@ Route::group(['middleware' => 'Cors'] , function(){
             Route::get('/verifyTournamentComplaint/{user_id}/{tour_id}',[MainController::class , 'verifyTournamentComplaint']);
             Route::get('/withdrawDone/{id}',[WithdrawController::class , 'withdrawDone']);
             Route::get('/users',[AdminShowController::class , 'users']);
+            Route::get('/ludoTournament',[AdminShowController::class , 'ludoTournament']);
+            Route::get('/ludoResult/{tournament_id}',[AdminShowController::class ,'ludoResult']);
+            Route::post('/updateLudoResult',[AdminShowController::class, 'updateLudoResult']);
 
     //     });
     // });

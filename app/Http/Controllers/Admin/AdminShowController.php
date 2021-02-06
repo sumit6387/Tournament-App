@@ -10,6 +10,7 @@ use App\Models\Withdraw;
 use App\Models\AppVersion;
 use App\Models\User;
 use App\Models\UserName;
+use App\Models\ludoTournament;
 use App\Models\Transaction;
 use App\Models\Complaint;
 use Carbon\Carbon;
@@ -170,6 +171,38 @@ class AdminShowController extends Controller
             'status' => true,
             'data' => $user
         ]);
+    }
+
+    public function ludoTournament(){
+        $ludotournament = ludoTournament::select(['ludo_tournament.*','ludo_tournament.id as ludoID','ludotournamentresult.*'])
+                            ->orderby('ludo_tournament.id' , 'desc')->where(['ludo_tournament.completed'=>0,'ludo_tournament.cancel'=>0,'ludotournamentresult.status'=>0])->where('ludotournamentresult.winner','!=', null)
+                            ->orwhere('ludotournamentresult.winner','!=', null)
+                            ->where('ludotournamentresult.error1','!=', null)
+                            ->join('ludotournamentresult','ludo_tournament.id','=','ludotournamentresult.tournament_id')->get();
+        return response()->json([
+            'status' => true,
+            'data' => $ludotournament
+        ]);
+    }
+    
+    public function ludoResult($tournament_id){
+        $tournamentDetail = ludoTournament::select(['ludo_tournament.user1','ludo_tournament.user2','ludotournamentresult.img1','ludotournamentresult.img2','ludotournamentresult.winner','ludotournamentresult.looser1','ludotournamentresult.error1'])->where('ludo_tournament.id',$tournament_id)->join('ludotournamentresult','ludo_tournament.id','=','ludotournamentresult.tournament_id')->get()->first();
+        if($tournamentDetail){
+            $user1 = json_decode($tournamentDetail->user1);
+            $user2 = json_decode($tournamentDetail->user2);
+            $tournamentDetail->username1 = $user1[0]->username;
+            $tournamentDetail->username2 = $user2[0]->username;
+            $tournamentDetail->user_id1 = $user1[0]->user_id;
+            $tournamentDetail->user_id2 = $user2[0]->user_id;
+            return response()->json([
+                'status' => true,
+                "data" => $tournamentDetail
+            ]);
+        }
+    }
+
+    public function updateLudoResult(Request $request){
+        return $request->all();
     }
 
 }

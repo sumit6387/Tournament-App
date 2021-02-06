@@ -51,11 +51,11 @@
 
             }
 
-            public function sendEmail($email){
+            public function sendEmail($email,$name){
                 $code = rand(1111,9999);
                 $to_name = 'User';
                 $to_email = $email;
-                $data = ['code'=> $code];
+                $data = ['code'=> $code,'name'=>$name];
                $status =  Mail::send('emails.verificationEmail', $data, function($message) use ($to_name, $to_email) {
                     $message->to($to_email, $to_name)
                     ->subject('Email Verification of Tournament App');

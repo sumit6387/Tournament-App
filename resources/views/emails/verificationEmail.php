@@ -11,10 +11,11 @@
         <div class="container" style="background-color:#F3ECEC; font-size:20px;" >
         <br>
             <div style="margin-left:5%;margin-right:5%;"> 
-                <p style="margin-top: 10px;"><i>Hello <b>User</b></i></p>
-                <p><i>Your One Time Password(OTP) is :- <?php echo $code; ?></i></p>
+                <p style="margin-top: 10px;"><i>Hello <b><?php echo strtoupper($name);  ?></b></i></p><br>
+                <p>Thankyou For Applying for verification and</p>
+                <p><i>Your One Time Password(OTP) is :-<b><?php echo $code; ?></b></i></p>
                 <h5><i>Thankyou</i></h5>
-                <h5><i>Tournament App team</i></h5>
+                <h5><i>Funlegend Team</i></h5>
             </div>
         </div>
 </body>

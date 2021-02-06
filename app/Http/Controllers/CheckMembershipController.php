@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\LudoTournament;
+use App\Models\LudoResult;
+use App\Models\History;
 use App\Functions\AllFunction;
+use Illuminate\Support\Carbon;
 
 class CheckMembershipController extends Controller
 {
@@ -24,5 +28,37 @@ class CheckMembershipController extends Controller
                     }
                 }
             }
+    }
+
+    public function checkTournamentCompleteOrNot(){
+        $tournament = LudoTournament::where(['completed' => 0 , 'cancel' =>0])->whereDate('created_at','!=', Carbon::today())->get();
+        $date = date("Y-m-d  H:i:s");
+        $cancelPrize =new AllFunction();
+        foreach ($tournament as $value) {
+            if($value->user1){
+                $user1 = json_decode($value->user1);
+                $cancelPrize->ludoPrizeDistribution($user1[0]->user_id,$value->id);
+                $this->updateHistory($user1[0]->user_id,$value->id);
+            }
+            if($value->user2){
+                $user2 = json_decode($value->user2);
+                $cancelPrize->ludoPrizeDistribution($user2[0]->user_id,$value->id);
+                $this->updateHistory($user2[0]->user_id,$value->id);
+            }
+            $value->cancel = 1;
+            $value->save();
+            $ludoResult = LudoResult::where('tournament_id',$value->id)->get()->first();
+            if($ludoResult){
+                $ludoResult->delete();
+            }
+        }
+        return $tournament;
+    }
+
+    // for update history
+    private function updateHistory($user_id,$tournament_id){
+        $history = History::where(['user_id'=>$user_id , 'tournament_id' => $tournament_id,'game' => 'ludo'])->get()->first();
+        $history->status = "past";
+        $history->save();
     }
 }

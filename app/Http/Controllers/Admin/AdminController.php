@@ -58,7 +58,7 @@ class AdminController extends Controller
             if(Hash::check($request->password, $admin->password)){
                 $token = $admin->createToken('my-app-token')->plainTextToken;
                 $email = new AllFunction();
-                $code = $email->sendEmail($request->email);
+                $code = $email->sendEmail($request->email , $admin->name);
                 $admin->email_verification_code = $code;
                 if($admin->update()){
                     return response()->json([

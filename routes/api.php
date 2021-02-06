@@ -13,6 +13,7 @@ use App\Http\Controllers\CheckMembershipController;
 
 Route::group(['prefix' => '{version}','middleware' => 'CheckVersion'],function(){
     Route::get('/CheckMembership' , [CheckMembershipController::class , 'CheckMembershipUser']);
+    Route::get('/checkTournamentCompleteOrNot' , [CheckMembershipController::class , 'checkTournamentCompleteOrNot']);
     Route::post('/register',[LoginController::class , 'register']); //mobile_no,name, email,password,gender,ref_code
     Route::post('/login',[LoginController::class , 'login']); //mobile_no , password,notification_token
     Route::post('/verifyotp',[LoginController::class , 'verifyOtp']); // mobile_no , otp
