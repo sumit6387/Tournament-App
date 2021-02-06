@@ -688,6 +688,7 @@ class LudoController extends Controller
             $tournament = LudoTournament::where('id',$value->tournament_id)->get()->first();
             $data[$key]->ludo_id = $tournament->ludo_id;
             $data[$key]->entry_fee = $tournament->entry_fee;
+            $data[$key]->game = $tournament->game;
             $user1 = json_decode($tournament->user1);
             $data[$key]->username1 = $user1[0]->username;
             $data[$key]->img1 = UserInfo::where('user_id',$user1[0]->user_id)->get()->first()->profile_image;
