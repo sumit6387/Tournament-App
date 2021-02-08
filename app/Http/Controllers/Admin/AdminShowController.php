@@ -13,7 +13,12 @@ use App\Models\UserName;
 use App\Models\ludoTournament;
 use App\Models\Transaction;
 use App\Models\Complaint;
+use App\Models\UserInfo;
+use App\Models\History;
+use App\Models\LudoResult;
+use App\Functions\AllFunction;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class AdminShowController extends Controller
 {
@@ -174,10 +179,10 @@ class AdminShowController extends Controller
     }
 
     public function ludoTournament(){
-        $ludotournament = ludoTournament::select(['ludo_tournament.*','ludo_tournament.id as ludoID','ludotournamentresult.*'])
+        $ludotournament = LudoTournament::select(['ludo_tournament.*','ludo_tournament.id as ludoID','ludotournamentresult.*'])
                             ->orderby('ludo_tournament.id' , 'desc')->where(['ludo_tournament.completed'=>0,'ludo_tournament.cancel'=>0,'ludotournamentresult.status'=>0])->where('ludotournamentresult.winner','!=', null)
-                            ->orwhere('ludotournamentresult.winner','!=', null)
-                            ->where('ludotournamentresult.error1','!=', null)
+                            ->whereDate('ludo_tournament.created_at', Carbon::today())
+                            ->orwhere('ludotournamentresult.error1','!=', null)
                             ->join('ludotournamentresult','ludo_tournament.id','=','ludotournamentresult.tournament_id')->get();
         return response()->json([
             'status' => true,
@@ -202,7 +207,128 @@ class AdminShowController extends Controller
     }
 
     public function updateLudoResult(Request $request){
-        return $request->all();
+        $tournament = ludoTournament::where('id',$request->tournament_id)->get()->first();
+        if($tournament){
+            $user = UserInfo::where('user_id',$request->user_id)->get()->first();
+            if($user){
+                $user->withdrawal_amount = $user->withdrawal_amount + $tournament->winning;
+                $user->save();
+                
+                //send notification to winner user
+                $notifi = new AllFunction();
+                $notifi->sendNotification(['id' => $request->user_id , 'title' => 'Room ID Updated' , 'msg' => 'You win the ludo tournament.'.$tournament->winning.' added to your account.' , 'icon' => 'money']);
+
+                // transactions
+                $this->insertTransaction($request->user_id,$tournament->winning,"For Winning Ludo Tournament","C");
+                History::where(['tournament_id' => $request->tournament_id,'user_id' => $request->user_id,'game' => 'ludo'])->update(["status" => "past"]);
+                $user = json_decode($tournament->user1);
+                $user1 = json_decode($tournament->user2);
+        
+                if($user[0]->user_id != $request->user_id){
+                    History::where(['tournament_id' => $request->tournament_id,'user_id' => $user[0]->user_id,'game' => 'ludo'])->update(["status" => "past"]);
+                    $result = LudoResult::where('tournament_id',$request->tournament_id)->get()->first();
+                    if($result){
+                        $result->winner = $request->user_id;
+                        $result->looser1 = $user[0]->user_id;
+                        $result->looser2 = null;
+                        $result->error1 = null;
+                        $result->error2 = null;
+                        $result->img2 = null;
+                        $result->status = 1;
+                    }
+                }
+                if($user1[0]->user_id != $request->user_id){
+                    History::where(['tournament_id' => $request->tournament_id,'user_id' => $user1[0]->user_id,'game' => 'ludo'])->update(["status" => "past"]);
+                    $result = LudoResult::where('tournament_id',$request->tournament_id)->get()->first();
+                    if($result){
+                        $result->winner = $request->user_id;
+                        $result->looser1 = $user1[0]->user_id;
+                        $result->looser2 = null;
+                        $result->error1 = null;
+                        $result->error2 = null;
+                        $result->img2 = null;
+                        $result->status = 1;
+                    }
+                }
+                $tournament->completed = 1;
+                $tournament->save();
+                $result->save();
+                return response()->json([
+                    'status' => true,
+                    "msg" => "Result Updated"
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'msg' => "User's Info Not Found"
+                ]);
+            }
+        }else{
+            return response()->json([
+                'status' => false,
+                'msg' => "Something Went Wrong"
+            ]);
+        }
+    }
+
+    public function distributeAmount(Request $request){
+        $tournament = ludoTournament::where('id',$request->tournament_id)->get()->first();
+        $result = LudoResult::where('tournament_id',$request->tournament_id)->get()->first();
+        if($tournament && $result){
+            $user = json_decode($tournament->user1);
+            $user1 = json_decode($tournament->user2);
+            $amount = ($tournament->winning*5)/100;
+            $amount = ($amount*50)/100;
+            // for user1
+            $user3 = UserInfo::where('user_id',$user[0]->user_id)->get()->first();
+            $user3->withdrawal_amount = $user3->withdrawal_amount + $amount;
+            $user3->save();
+            $notifi = new AllFunction();
+            $notifi->sendNotification(['id' => $user[0]->user_id , 'title' => 'Result Update' , 'msg' => 'Your updated result are wrong so we distribute the prize.'.$amount.' added to your account.' , 'icon' => 'money']);
+
+            // transactions
+            $this->insertTransaction($user[0]->user_id,$amount,"For Winning Ludo Tournament","C");
+            History::where(['tournament_id' => $request->tournament_id,'user_id' => $user[0]->user_id,'game' => 'ludo'])->update(["status" => "past"]);
+
+            // for user2
+            $user4 = UserInfo::where('user_id',$user1[0]->user_id)->get()->first();
+            $user4->withdrawal_amount = $user4->withdrawal_amount + $amount;
+            $user4->save();
+
+            $notifi->sendNotification(['id' => $user1[0]->user_id , 'title' => 'Result Update' , 'msg' => 'Your updated result are wrong so we distribute the prize.'.$amount.' added to your account.' , 'icon' => 'money']);
+
+            // transactions
+            $this->insertTransaction($user1[0]->user_id,$amount,"For Winning Ludo Tournament","C");
+            History::where(['tournament_id' => $request->tournament_id,'user_id' => $user1[0]->user_id,'game' => 'ludo'])->update(["status" => "past"]);
+            $tournament->cancel = 1;
+            $tournament->save();
+            $result->status = 1;
+            $result->error1 = null;
+            $result->save();
+
+            return response()->json([
+                'status' => true,
+                'msg' => "Prize Distributed"
+            ]);
+
+        }else{
+            return response()->json([
+                'status' => false,
+                'mdg' => "Something Went Wrong"
+            ]);
+        }
+    }
+
+    private function insertTransaction($user_id,$amount,$desc,$action){
+        $transaction = new Transaction();
+        $transaction->user_id = $user_id;
+        $transaction->reciept_id = Str::random(10);
+        $transaction->amount = $amount;
+        $transaction->description = $desc;
+        $transaction->action = $action;
+        $transaction->payment_id = Str::random(10);
+        $transaction->payment_done = 1;
+        $transaction->save();
     }
 
 }

@@ -53,6 +53,7 @@ Route::group(['middleware' => 'Cors'] , function(){
             Route::get('/ludoTournament',[AdminShowController::class , 'ludoTournament']);
             Route::get('/ludoResult/{tournament_id}',[AdminShowController::class ,'ludoResult']);
             Route::post('/updateLudoResult',[AdminShowController::class, 'updateLudoResult']);
+            Route::post('/distributeAmount' , [AdminShowController::class , 'distributeAmount']);
 
     //     });
     // });

@@ -52,7 +52,6 @@ class CheckMembershipController extends Controller
                 $ludoResult->delete();
             }
         }
-        return $tournament;
     }
 
     // for update history
