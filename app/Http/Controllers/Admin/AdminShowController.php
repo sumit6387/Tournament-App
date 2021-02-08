@@ -10,7 +10,7 @@ use App\Models\Withdraw;
 use App\Models\AppVersion;
 use App\Models\User;
 use App\Models\UserName;
-use App\Models\ludoTournament;
+use App\Models\LudoTournament;
 use App\Models\Transaction;
 use App\Models\Complaint;
 use App\Models\UserInfo;
@@ -191,7 +191,7 @@ class AdminShowController extends Controller
     }
     
     public function ludoResult($tournament_id){
-        $tournamentDetail = ludoTournament::select(['ludo_tournament.user1','ludo_tournament.user2','completedtournamentResults.img1','completedtournamentResults.img2','completedtournamentResults.winner','completedtournamentResults.looser1','completedtournamentResults.error1'])->where('ludo_tournament.id',$tournament_id)->join('completedtournamentResults','ludo_tournament.id','=','completedtournamentResults.tournament_id')->get()->first();
+        $tournamentDetail = LudoTournament::select(['ludo_tournament.user1','ludo_tournament.user2','completedtournamentResults.img1','completedtournamentResults.img2','completedtournamentResults.winner','completedtournamentResults.looser1','completedtournamentResults.error1'])->where('ludo_tournament.id',$tournament_id)->join('completedtournamentResults','ludo_tournament.id','=','completedtournamentResults.tournament_id')->get()->first();
         if($tournamentDetail){
             $user1 = json_decode($tournamentDetail->user1);
             $user2 = json_decode($tournamentDetail->user2);
@@ -207,7 +207,7 @@ class AdminShowController extends Controller
     }
 
     public function updateLudoResult(Request $request){
-        $tournament = ludoTournament::where('id',$request->tournament_id)->get()->first();
+        $tournament = LudoTournament::where('id',$request->tournament_id)->get()->first();
         if($tournament){
             $user = UserInfo::where('user_id',$request->user_id)->get()->first();
             if($user){
@@ -272,7 +272,7 @@ class AdminShowController extends Controller
     }
 
     public function distributeAmount(Request $request){
-        $tournament = ludoTournament::where('id',$request->tournament_id)->get()->first();
+        $tournament = LudoTournament::where('id',$request->tournament_id)->get()->first();
         $result = LudoResult::where('tournament_id',$request->tournament_id)->get()->first();
         if($tournament && $result){
             $user = json_decode($tournament->user1);
