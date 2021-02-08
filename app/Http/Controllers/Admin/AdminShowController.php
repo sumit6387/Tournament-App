@@ -179,11 +179,11 @@ class AdminShowController extends Controller
     }
 
     public function ludoTournament(){
-        $ludotournament = LudoTournament::select(['ludo_tournament.*','ludo_tournament.id as ludoID','completedtournamentResults.*'])
-                            ->orderby('ludo_tournament.id' , 'desc')->where(['ludo_tournament.completed'=>0,'ludo_tournament.cancel'=>0,'completedtournamentResults.status'=>0])->where('completedtournamentResults.winner','!=', null)
+        $ludotournament = LudoTournament::select(['ludo_tournament.*','ludo_tournament.id as ludoID','ludoTournamentResult.*'])
+                            ->orderby('ludo_tournament.id' , 'desc')->where(['ludo_tournament.completed'=>0,'ludo_tournament.cancel'=>0,'ludoTournamentResult.status'=>0])->where('ludoTournamentResult.winner','!=', null)
                             ->whereDate('ludo_tournament.created_at', Carbon::today())
-                            ->orwhere('completedtournamentResults.error1','!=', null)
-                            ->join('completedtournamentResults','ludo_tournament.id','=','completedtournamentResults.tournament_id')->get();
+                            ->orwhere('ludoTournamentResult.error1','!=', null)
+                            ->join('ludoTournamentResult','ludo_tournament.id','=','ludoTournamentResult.tournament_id')->get();
         return response()->json([
             'status' => true,
             'data' => $ludotournament
@@ -191,7 +191,7 @@ class AdminShowController extends Controller
     }
     
     public function ludoResult($tournament_id){
-        $tournamentDetail = LudoTournament::select(['ludo_tournament.user1','ludo_tournament.user2','completedtournamentResults.img1','completedtournamentResults.img2','completedtournamentResults.winner','completedtournamentResults.looser1','completedtournamentResults.error1'])->where('ludo_tournament.id',$tournament_id)->join('completedtournamentResults','ludo_tournament.id','=','completedtournamentResults.tournament_id')->get()->first();
+        $tournamentDetail = LudoTournament::select(['ludo_tournament.user1','ludo_tournament.user2','ludoTournamentResult.img1','ludoTournamentResult.img2','ludoTournamentResult.winner','ludoTournamentResult.looser1','ludoTournamentResult.error1'])->where('ludo_tournament.id',$tournament_id)->join('ludoTournamentResult','ludo_tournament.id','=','ludoTournamentResult.tournament_id')->get()->first();
         if($tournamentDetail){
             $user1 = json_decode($tournamentDetail->user1);
             $user2 = json_decode($tournamentDetail->user2);
