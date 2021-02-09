@@ -63,7 +63,8 @@ class AdminController extends Controller
                 if($admin->update()){
                     return response()->json([
                         "status" => true,
-                        "token" => $token
+                        "token" => $token,
+                        "name" => $admin->name
                     ]);
                 }else{
                     return response()->json([
