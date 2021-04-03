@@ -168,7 +168,7 @@
                     return false;
                 }
         }
-        }
+    }
         
         public function referCode($id,$ref_code){
             $ref = UserInfo::where('refferal_code',$ref_code)->get()->first();
@@ -192,9 +192,10 @@
 
         public function sendNotification($data){
             $user = UserInfo::where('user_id' , $data['id'])->get()->first();
+            protected $key = 'key=AAAA6lNbeY8:APA91bEVvPfXHiOg8w40IoJ4WS-mBlPmtuv9sCGIeszjEY2Q6clbu91PHgL5MEng7JdCVAFcUAbS4EyyCVKHA6bFT2GpRN8V4H_qi2Lm_ytoPseWbnw17RvvA8hfNbEyj0xTTl8nXvOy';
             $resp = Http::withHeaders([
                 'Content-Type' => 'application/json',
-                'Authorization'=>'key=AAAA6lNbeY8:APA91bEVvPfXHiOg8w40IoJ4WS-mBlPmtuv9sCGIeszjEY2Q6clbu91PHgL5MEng7JdCVAFcUAbS4EyyCVKHA6bFT2GpRN8V4H_qi2Lm_ytoPseWbnw17RvvA8hfNbEyj0xTTl8nXvOy'
+                'Authorization'=>$key
                 ])->post('https://fcm.googleapis.com/fcm/send',[
                       "notification" => [
                         "body" => $data['msg'],
